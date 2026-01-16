@@ -1,0 +1,151 @@
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { getLenis } from '../utils/lenis'
+import './Header.css'
+
+const Header = ({ scrollY }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [currentSection, setCurrentSection] = useState('home')
+  const { scrollYProgress } = useScroll()
+  const logoRef = useRef(null)
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    setIsScrolled(latest > 0.05)
+  })
+
+  // Detectar seção atual
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'services', 'about', 'portfolio', 'contact']
+      const scrollPosition = window.scrollY + 200
+
+      for (const section of sections) {
+        const element = document.getElementById(section)
+        if (element) {
+          const { offsetTop, offsetHeight } = element
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setCurrentSection(section)
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Animação de fontes no logo
+  useEffect(() => {
+    if (!logoRef.current) return
+
+    const logoText = logoRef.current
+    const text = logoText.textContent || ''
+    logoText.innerHTML = ''
+
+    text.split('').forEach((char, index) => {
+      const charSpan = document.createElement('span')
+      charSpan.className = 'logo-char'
+      charSpan.textContent = char === ' ' ? '\u00A0' : char
+      charSpan.style.display = 'inline-block'
+      charSpan.style.setProperty('--char-index', index)
+      logoText.appendChild(charSpan)
+    })
+  }, [])
+
+  const menuItems = [
+    { label: 'Início', href: '#home' },
+    { label: 'Serviços', href: '#services' },
+    { label: 'Sobre', href: '#about' },
+    { label: 'Portfólio', href: '#portfolio' },
+    { label: 'Contato', href: '#contact' },
+  ]
+
+  const handleNavClick = (href) => {
+    setIsOpen(false)
+    const lenis = getLenis()
+    if (lenis) {
+      lenis.scrollTo(href, { duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
+    } else {
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }
+
+  return (
+    <motion.header
+      className={`header ${isScrolled ? 'scrolled' : ''} section-${currentSection}`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="container">
+        <div className="header-content">
+          <motion.a
+            href="#home"
+            className="logo"
+            ref={logoRef}
+            onClick={(e) => {
+              e.preventDefault()
+              handleNavClick('#home')
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="logo-text">botellho</span>
+            <span className="logo-co">co.</span>
+          </motion.a>
+
+          <nav className={`nav ${isOpen ? 'open' : ''}`}>
+            <ul className="nav-list">
+              {menuItems.map((item, index) => (
+                <motion.li
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <a
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleNavClick(item.href)
+                    }}
+                    className={`nav-link ${currentSection === item.href.slice(1) ? 'active' : ''}`}
+                  >
+                    <span>{item.label}</span>
+                    <motion.div
+                      className="nav-link-underline"
+                      whileHover={{ scaleX: 1 }}
+                      initial={{ scaleX: 0 }}
+                    />
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </nav>
+
+          <motion.button
+            className="menu-toggle"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <span className="menu-icon">
+              <span className={`menu-line ${isOpen ? 'open' : ''}`}></span>
+              <span className={`menu-line ${isOpen ? 'open' : ''}`}></span>
+              <span className={`menu-line ${isOpen ? 'open' : ''}`}></span>
+            </span>
+          </motion.button>
+        </div>
+      </div>
+    </motion.header>
+  )
+}
+
+export default Header

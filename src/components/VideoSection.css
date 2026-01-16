@@ -1,0 +1,120 @@
+.video-section {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.video-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.2) brightness(0.3);
+  opacity: 0.8;
+}
+
+.video-placeholder {
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.7) 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255, 255, 255, 0.01) 20px, rgba(255, 255, 255, 0.01) 40px);
+  background-size: 100% 100%, 40px 40px;
+  position: relative;
+  animation: videoPattern 25s linear infinite;
+}
+
+@keyframes videoPattern {
+  0% {
+    background-position: 0% 0%, 0 0;
+  }
+  100% {
+    background-position: 0% 0%, 40px 40px;
+  }
+}
+
+.video-overlay-gradient {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  animation: gradientMove 20s ease-in-out infinite;
+}
+
+@keyframes gradientMove {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+.video-text-overlay {
+  position: absolute;
+  z-index: 2;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.video-text-top-right {
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  text-align: right;
+}
+
+.video-text-bottom-left {
+  bottom: var(--spacing-xl);
+  left: var(--spacing-xl);
+  text-align: left;
+}
+
+.video-text {
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-light);
+  font-family: var(--font-body);
+  margin: 0;
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+  max-width: 300px;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .video-section {
+    min-height: 50vh;
+  }
+
+  .video-text-top-right,
+  .video-text-bottom-left {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .video-section {
+    min-height: 40vh;
+  }
+
+  .video-text {
+    font-size: 0.8125rem;
+    max-width: 250px;
+  }
+}

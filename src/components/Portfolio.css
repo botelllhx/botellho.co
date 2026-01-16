@@ -1,0 +1,273 @@
+.portfolio {
+  position: relative;
+  padding: var(--section-padding);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* Parallax background */
+.portfolio-parallax {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.portfolio-background-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+  background-size: 30px 30px;
+  opacity: 0.4;
+}
+
+.portfolio-background-lines {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.05) 50%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.05) 50%, transparent 100%);
+  background-size: 200% 200%;
+  animation: backgroundMove 25s linear infinite;
+}
+
+@keyframes backgroundMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.portfolio-container {
+  position: relative;
+  z-index: 2;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.portfolio-header {
+  margin-bottom: var(--spacing-4xl);
+  position: relative;
+}
+
+.portfolio-title {
+  font-size: var(--font-size-display-2);
+  font-weight: var(--font-weight-black);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-family: var(--font-serif);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  position: relative;
+  padding: var(--spacing-xl) 0;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.title-number {
+  font-size: 0.25em;
+  font-weight: var(--font-weight-light);
+  color: var(--color-text-inverse-secondary);
+  font-family: var(--font-accent);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.title-main {
+  color: var(--color-text-inverse);
+  position: relative;
+}
+
+/* Grid limpo - Sem deslocamentos, organizado */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap-medium);
+  position: relative;
+}
+
+.portfolio-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  background: var(--color-surface);
+  border: 3px solid var(--color-text-inverse);
+  opacity: 1 !important;
+  visibility: visible !important;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border-width: 4px;
+}
+
+/* Espaço para imagem de background */
+.portfolio-card-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--color-gray-200);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.portfolio-card:hover .portfolio-card-image {
+  opacity: 0.1;
+}
+
+.portfolio-number {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  font-size: var(--font-size-display-3);
+  font-weight: var(--font-weight-black);
+  line-height: 1;
+  color: var(--color-text-inverse);
+  font-family: var(--font-display);
+  opacity: 0.1;
+  transition: opacity var(--transition-base);
+  z-index: 1;
+}
+
+.portfolio-card:hover .portfolio-number {
+  opacity: 0.3;
+}
+
+.portfolio-card-content {
+  position: relative;
+  z-index: 2;
+  padding: var(--spacing-xl);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--color-surface);
+  transition: all var(--transition-base);
+}
+
+.portfolio-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.portfolio-category {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  padding: 0.5rem 1rem;
+  background: var(--color-text-inverse);
+  color: var(--color-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+}
+
+.portfolio-card-title {
+  font-size: var(--font-size-heading-1);
+  font-weight: var(--font-weight-black);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-family: var(--font-serif);
+  color: var(--color-text-inverse);
+  margin-bottom: var(--spacing-md);
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+}
+
+.portfolio-card:hover .portfolio-card-title {
+  transform: translateX(4px);
+  letter-spacing: 0.02em;
+}
+
+.portfolio-card-description {
+  font-size: var(--font-size-body);
+  line-height: 1.7;
+  color: var(--color-text-inverse-secondary);
+  font-weight: var(--font-weight-regular);
+  font-family: var(--font-body);
+  margin-bottom: var(--spacing-lg);
+  flex: 1;
+}
+
+.portfolio-link {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-family: var(--font-display);
+  transition: all var(--transition-base);
+  padding: 0.5rem 0;
+  text-decoration: none;
+}
+
+.portfolio-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-text-inverse);
+  transition: width var(--transition-base);
+}
+
+.portfolio-card:hover .portfolio-link::after {
+  width: 100%;
+}
+
+.portfolio-card:hover .portfolio-link {
+  transform: translateX(4px);
+  letter-spacing: 0.2em;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .portfolio-card {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .portfolio-card {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-title {
+    font-size: var(--font-size-display-3);
+  }
+}

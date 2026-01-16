@@ -1,0 +1,123 @@
+:root {
+  /* Paleta Monocromática - Preto, Branco e Cinzas */
+  --color-bg: #000000;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-tertiary: #1a1a1a;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f5f5f5;
+  --color-surface-tertiary: #e5e5e5;
+  
+  /* Cores de Texto */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e0e0e0;
+  --color-text-muted: #888888;
+  --color-text-inverse: #000000;
+  --color-text-inverse-secondary: #333333;
+  
+  /* Cinzas Neutros */
+  --color-gray-100: #1a1a1a;
+  --color-gray-200: #2a2a2a;
+  --color-gray-300: #4a4a4a;
+  --color-gray-400: #6a6a6a;
+  --color-gray-500: #8a8a8a;
+  --color-gray-600: #aaaaaa;
+  --color-gray-700: #cccccc;
+  --color-gray-800: #e0e0e0;
+  --color-gray-900: #f5f5f5;
+  
+  /* Acento Único (Opcional - usar com parcimônia) */
+  --color-accent: #ffffff;
+  --color-accent-hover: #f0f0f0;
+  
+  /* Tipografia - Mistura Serif e Sans-serif */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-accent: 'Playfair Display', Georgia, serif; /* Para números e acentos */
+  --font-comic: 'Inter', sans-serif; /* Para efeitos estilo quadrinhos */
+  
+  /* Tamanhos Tipográficos - Controlados e Responsivos */
+  --font-size-display-1: clamp(3rem, 8vw, 6rem);
+  --font-size-display-2: clamp(2rem, 6vw, 4rem);
+  --font-size-display-3: clamp(1.75rem, 5vw, 3rem);
+  --font-size-heading-1: clamp(1.5rem, 4vw, 2.5rem);
+  --font-size-heading-2: clamp(1.25rem, 3vw, 2rem);
+  --font-size-body-large: clamp(1.125rem, 2vw, 1.375rem);
+  --font-size-body: clamp(1rem, 1.75vw, 1.125rem);
+  --font-size-small: clamp(0.875rem, 1.5vw, 1rem);
+  
+  /* Pesos Tipográficos */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  
+  /* Espaçamentos Variáveis */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2.5rem;
+  --spacing-xl: 4rem;
+  --spacing-2xl: 6rem;
+  --spacing-3xl: 8rem;
+  --spacing-4xl: 12rem;
+  
+  /* Grid e Layout */
+  --grid-gap-small: 1rem;
+  --grid-gap-medium: 2rem;
+  --grid-gap-large: 4rem;
+  
+  /* Transições Refinadas */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Sombras e Profundidade */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.7);
+  
+  /* Layout */
+  --container-max-width: 1600px;
+  --section-padding: clamp(4rem, 10vw, 10rem) clamp(1rem, 4vw, 4rem);
+  --header-height: 80px;
+}
+
+@media (max-width: 1440px) {
+  :root {
+    --container-max-width: 1400px;
+    --section-padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 3vw, 3rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --container-max-width: 100%;
+    --section-padding: clamp(3rem, 6vw, 6rem) clamp(1rem, 2vw, 2rem);
+    --spacing-4xl: 8rem;
+    --spacing-3xl: 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: clamp(2.5rem, 5vw, 4rem) 1rem;
+    --spacing-4xl: 6rem;
+    --spacing-3xl: 4rem;
+    --spacing-2xl: 4rem;
+    --spacing-xl: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-padding: 2rem 1rem;
+    --spacing-4xl: 4rem;
+    --spacing-3xl: 3rem;
+  }
+}
