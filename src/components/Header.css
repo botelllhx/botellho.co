@@ -127,12 +127,13 @@
 }
 
 .logo-co {
+  display: inline-block;
   font-size: 0.6em;
   font-weight: var(--font-weight-light);
   color: var(--color-text-muted);
   font-family: var(--font-accent);
   font-style: italic;
-  text-transform: lowercase;
+  /* Não usar text-transform para preservar o ponto */
 }
 
 .logo:hover {

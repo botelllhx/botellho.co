@@ -1,14 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 import { getLenis } from '../utils/lenis'
+import { useTexts } from '../hooks/useTexts'
 import './Header.css'
 
 const Header = ({ scrollY }) => {
+  const { texts } = useTexts()
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [currentSection, setCurrentSection] = useState('home')
   const { scrollYProgress } = useScroll()
   const logoRef = useRef(null)
+  
+  const headerTexts = texts.header
 
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     setIsScrolled(latest > 0.05)
@@ -55,13 +59,7 @@ const Header = ({ scrollY }) => {
     })
   }, [])
 
-  const menuItems = [
-    { label: 'Início', href: '#home' },
-    { label: 'Serviços', href: '#services' },
-    { label: 'Sobre', href: '#about' },
-    { label: 'Portfólio', href: '#portfolio' },
-    { label: 'Contato', href: '#contact' },
-  ]
+  const menuItems = headerTexts.menu
 
   const handleNavClick = (href) => {
     setIsOpen(false)
@@ -96,8 +94,8 @@ const Header = ({ scrollY }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="logo-text">botellho</span>
-            <span className="logo-co">co.</span>
+            <span className="logo-text">{headerTexts.logo.main}</span>
+            <span className="logo-co">{headerTexts.logo.co}</span>
           </motion.a>
 
           <nav className={`nav ${isOpen ? 'open' : ''}`}>

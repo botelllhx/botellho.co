@@ -41,8 +41,8 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
 
   const words = text.split(' ')
   const middle = Math.floor(words.length / 2)
-  const beforeText = words.slice(0, middle).join(' ')
-  const afterText = words.slice(middle).join(' ')
+  const beforeWords = words.slice(0, middle)
+  const afterWords = words.slice(middle)
 
   return (
     <section
@@ -50,7 +50,18 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
       className={`typing-text-container ${className}`}
     >
       <p ref={textRef} className="typing-text">
-        <span>{beforeText} </span>
+        <span>
+          {beforeWords.map((word, index) => {
+            // Variação de fonte: alternar entre serif, display e accent
+            const fontVariation = index % 3 === 0 ? 'serif' : index % 3 === 1 ? 'display' : 'accent'
+            return (
+              <span key={index} className={`typing-word typing-word-${fontVariation}`}>
+                {word}
+                {index < beforeWords.length - 1 && <span className="typing-space"> </span>}
+              </span>
+            )
+          })}
+        </span>
 
         {gifSrc && (
           <span className="typing-text-gif-placeholder">
@@ -63,7 +74,18 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
           </span>
         )}
 
-        <span> {afterText}</span>
+        <span>
+          {afterWords.map((word, index) => {
+            // Variação de fonte: alternar entre display, accent e serif
+            const fontVariation = index % 3 === 0 ? 'display' : index % 3 === 1 ? 'accent' : 'serif'
+            return (
+              <span key={index} className={`typing-word typing-word-${fontVariation}`}>
+                {index > 0 && <span className="typing-space"> </span>}
+                {word}
+              </span>
+            )
+          })}
+        </span>
       </p>
     </section>
   )

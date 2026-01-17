@@ -1,17 +1,28 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useTexts } from '../hooks/useTexts'
 import './Hero.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const Hero = () => {
+  const { texts } = useTexts()
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
   const ctaRef = useRef(null)
   const parallaxRef = useRef(null)
   const decorativeElementsRef = useRef(null)
+  
+  // Fallback caso texts ainda não esteja carregado
+  const heroTexts = texts?.hero || {
+    title: { before: 'DESENVOLVIMENTO WEB', after: 'COM CRIATIVIDADE' },
+    subtitle: { line1: 'Transformamos ideias em', line1Strong: 'experiências digitais', line1Strong2: 'únicas', line2: 'Especializados em', line2Strong: 'WordPress', line2Rest: 'para museus, faculdades, empresas e startups.' },
+    cta: { primary: 'Começar Projeto', secondary: 'Explorar Serviços' },
+    decorative: { chars: ['*', '@', '#', '!'], miniTexts: ['creative', 'code', 'design'] },
+    scroll: 'Scroll'
+  }
 
   useEffect(() => {
     if (!sectionRef.current) return
@@ -147,10 +158,11 @@ const Hero = () => {
 
       {/* Elementos decorativos */}
       <div className="hero-decorative-elements" ref={decorativeElementsRef}>
-        <span className="decorative-char decorative-1">*</span>
-        <span className="decorative-char decorative-2">@</span>
-        <span className="decorative-char decorative-3">#</span>
-        <span className="decorative-char decorative-4">!</span>
+        {(heroTexts.decorative?.chars || ['*', '@', '#', '!']).map((char, index) => (
+          <span key={index} className={`decorative-char decorative-${index + 1}`}>
+            {char}
+          </span>
+        ))}
       </div>
 
       <div className="hero-container">
@@ -159,28 +171,19 @@ const Hero = () => {
               <div className="hero-title-wrapper">
                 <h1 className="hero-title" ref={titleRef}>
                   <span className="hero-title-before">
-                    <span className="title-word">
-                      <span className="title-char">D</span>
-                      <span className="title-char">E</span>
-                      <span className="title-char">S</span>
-                      <span className="title-char">E</span>
-                      <span className="title-char">N</span>
-                      <span className="title-char">V</span>
-                      <span className="title-char">O</span>
-                      <span className="title-char">L</span>
-                      <span className="title-char">V</span>
-                      <span className="title-char">I</span>
-                      <span className="title-char">M</span>
-                      <span className="title-char">E</span>
-                      <span className="title-char">N</span>
-                      <span className="title-char">T</span>
-                      <span className="title-char">O</span>
-                    </span>
-                    <span className="title-word">
-                      <span className="title-char">W</span>
-                      <span className="title-char">E</span>
-                      <span className="title-char">B</span>
-                    </span>
+                    {(heroTexts.title?.before || 'DESENVOLVIMENTO WEB').split(' ').map((word, wordIndex) => {
+                      // Variação de fonte: alternar entre serif e display
+                      const fontVariation = wordIndex % 3 === 0 ? 'serif' : wordIndex % 3 === 1 ? 'display' : 'accent'
+                      return (
+                        <span key={wordIndex} className={`title-word title-word-${fontVariation}`}>
+                          {word.split('').map((char, charIndex) => (
+                            <span key={charIndex} className="title-char">
+                              {char}
+                            </span>
+                          ))}
+                        </span>
+                      )
+                    })}
                   </span>
                   <span className="hero-title-gif-wrapper">
                     <img 
@@ -190,25 +193,19 @@ const Hero = () => {
                     />
                   </span>
                   <span className="hero-title-after">
-                    <span className="title-word">
-                      <span className="title-char">C</span>
-                      <span className="title-char">O</span>
-                      <span className="title-char">M</span>
-                    </span>
-                    <span className="title-word">
-                      <span className="title-char">C</span>
-                      <span className="title-char">R</span>
-                      <span className="title-char">I</span>
-                      <span className="title-char">A</span>
-                      <span className="title-char">T</span>
-                      <span className="title-char">I</span>
-                      <span className="title-char">V</span>
-                      <span className="title-char">I</span>
-                      <span className="title-char">D</span>
-                      <span className="title-char">A</span>
-                      <span className="title-char">D</span>
-                      <span className="title-char">E</span>
-                    </span>
+                    {(heroTexts.title?.after || 'COM CRIATIVIDADE').split(' ').map((word, wordIndex) => {
+                      // Variação de fonte: alternar entre serif e display
+                      const fontVariation = wordIndex % 3 === 0 ? 'display' : wordIndex % 3 === 1 ? 'accent' : 'serif'
+                      return (
+                        <span key={wordIndex} className={`title-word title-word-${fontVariation}`}>
+                          {word.split('').map((char, charIndex) => (
+                            <span key={charIndex} className="title-char">
+                              {char}
+                            </span>
+                          ))}
+                        </span>
+                      )
+                    })}
                   </span>
                 </h1>
               </div>
@@ -216,19 +213,19 @@ const Hero = () => {
           {/* Subtítulo melhorado */}
           <div className="hero-subtitle-wrapper" ref={subtitleRef}>
             <p className="hero-subtitle">
-              Transformamos ideias em <strong>experiências digitais</strong> únicas.
+              {heroTexts.subtitle?.line1 || 'Criamos'} <strong>{heroTexts.subtitle?.line1Strong || 'produtos digitais'}</strong> {heroTexts.subtitle?.line1Strong2 || 'sob medida'}.
               <br />
-              Especializados em <strong>WordPress</strong> para museus, faculdades, empresas e startups.
+              {heroTexts.subtitle?.line2 || 'com foco em'} <strong>{heroTexts.subtitle?.line2Strong || 'WordPress'}</strong> {heroTexts.subtitle?.line2Rest || ', performance e crescimento sustentável.'}
             </p>
           </div>
 
           {/* CTAs */}
           <div className="hero-cta-wrapper" ref={ctaRef}>
             <a href="#contact" className="cta-primary">
-              <span className="cta-text">Começar Projeto</span>
+              <span className="cta-text">{heroTexts.cta?.primary || 'Iniciar Projeto'}</span>
             </a>
             <a href="#services" className="cta-secondary">
-              Explorar Serviços
+              {heroTexts.cta?.secondary || 'Conhecer Serviços'}
             </a>
           </div>
         </div>
@@ -236,14 +233,16 @@ const Hero = () => {
 
       {/* Mini textos decorativos */}
       <div className="hero-mini-texts">
-        <span className="mini-text mini-text-1">creative</span>
-        <span className="mini-text mini-text-2">code</span>
-        <span className="mini-text mini-text-3">design</span>
+        {(heroTexts.decorative?.miniTexts || ['creative', 'code', 'design']).map((text, index) => (
+          <span key={index} className={`mini-text mini-text-${index + 1}`}>
+            {text}
+          </span>
+        ))}
       </div>
 
       <div className="scroll-indicator">
         <div className="scroll-line"></div>
-        <span className="scroll-text">Scroll</span>
+        <span className="scroll-text">{heroTexts.scroll || 'Scroll'}</span>
       </div>
     </section>
   )

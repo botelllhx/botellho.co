@@ -1,0 +1,241 @@
+{
+  "meta": {
+    "title": "botellho.co - Desenvolvimento Web & WordPress",
+    "description": "botellho.co - Desenvolvimento de sites, sistemas e plugins WordPress. Soluções digitais modernas para empresas, instituições e projetos com propósito."
+  },
+  "header": {
+    "logo": {
+      "main": "botellho",
+      "co": "co."
+    },
+    "menu": [
+      { "label": "Início", "href": "#home" },
+      { "label": "Serviços", "href": "#services" },
+      { "label": "Sobre", "href": "#about" },
+      { "label": "Portfólio", "href": "#portfolio" },
+      { "label": "Contato", "href": "#contact" }
+    ]
+  },
+  "loader": {
+    "logo": {
+      "main": "botellho",
+      "co": "co."
+    }
+  },
+  "hero": {
+    "title": {
+      "before": "DESENVOLVIMENTO WEB",
+      "after": "COM ESTRATÉGIA E CRIATIVIDADE"
+    },
+    "subtitle": {
+      "line1": "Desenvolvemos",
+      "line1Strong": "soluções digitais",
+      "line1Strong2": "sob medida",
+      "line2": "com foco em",
+      "line2Strong": "WordPress",
+      "line2Rest": ", performance e evolução contínua."
+    },
+    "cta": {
+      "primary": "Começar Projeto",
+      "secondary": "Explorar Serviços"
+    },
+    "decorative": {
+      "chars": ["*", "@", "#", "!"],
+      "miniTexts": ["creative", "code", "design"]
+    },
+    "scroll": "Scroll"
+  },
+  "services": {
+    "title": {
+      "number": "01",
+      "main": "SERVIÇOS"
+    },
+    "items": [
+      {
+        "number": "01",
+        "title": "WordPress",
+        "description": "Desenvolvimento de sites WordPress personalizados, com temas próprios, alta performance e foco em experiência do usuário."
+      },
+      {
+        "number": "02",
+        "title": "Plugins",
+        "description": "Criação de plugins WordPress sob medida para automatizar processos, integrar sistemas e resolver necessidades específicas."
+      },
+      {
+        "number": "03",
+        "title": "Web",
+        "description": "Desenvolvimento de sistemas web modernos, escaláveis e seguros, seguindo boas práticas de arquitetura."
+      },
+      {
+        "number": "04",
+        "title": "Suporte",
+        "description": "Manutenção contínua, melhorias técnicas e acompanhamento para garantir estabilidade e crescimento."
+      },
+      {
+        "number": "05",
+        "title": "Institucional",
+        "description": "Soluções digitais para instituições, organizações e projetos que exigem clareza, robustez e confiabilidade."
+      },
+      {
+        "number": "06",
+        "title": "Segurança",
+        "description": "Otimização de segurança, performance e SEO técnico para ambientes WordPress e sistemas web."
+      }
+    ],
+    "typingText": "engenharia digital com propósito"
+  },
+  "videos": {
+    "video1": {
+      "text": "criamos experiências digitais pensadas para performance, clareza e impacto real"
+    },
+    "video2": {
+      "text": "wordpress como plataforma estratégica para projetos que precisam evoluir"
+    }
+  },
+  "about": {
+    "title": {
+      "number": "02",
+      "main": "SOBRE"
+    },
+    "heading": {
+      "text": "Tecnologia que",
+      "highlight": "resolve problemas reais"
+    },
+    "content": [
+      {
+        "text": "A",
+        "strong": "botellho.co",
+        "rest": "atua como um estúdio de desenvolvimento web focado na criação de soluções digitais sólidas, funcionais e alinhadas aos objetivos de cada projeto."
+      },
+      {
+        "text": "Com especialização em",
+        "strong": "WordPress",
+        "rest": "e",
+        "strong2": "liberdade criativa",
+        "rest2": ", desenvolvemos sites, sistemas e plugins que vão além do visual, entregando eficiência, controle e escalabilidade."
+      }
+    ],
+    "values": [
+      {
+        "title": "Resultados",
+        "description": "Projetos orientados a impacto real, com foco em eficiência e retorno técnico."
+      },
+      {
+        "title": "Tecnologia",
+        "description": "Uso consciente de ferramentas modernas e boas práticas de desenvolvimento."
+      },
+      {
+        "title": "Criatividade",
+        "description": "Soluções pensadas para resolver problemas, não apenas seguir tendências."
+      },
+      {
+        "title": "Qualidade",
+        "description": "Código limpo, organizado e preparado para evolução contínua."
+      }
+    ]
+  },
+  "portfolio": {
+    "title": {
+      "number": "03",
+      "main": "PORTFÓLIO"
+    },
+    "typingText": "projetos digitais na prática",
+    "projects": [
+      {
+        "title": "Sistema de Gestão",
+        "description": "Plataforma WordPress personalizada para gestão administrativa e institucional.",
+        "category": "Institucional"
+      },
+      {
+        "title": "E-commerce",
+        "description": "Loja virtual desenvolvida com WooCommerce e integrações avançadas.",
+        "category": "E-commerce"
+      },
+      {
+        "title": "Plugin Doações",
+        "description": "Plugin WordPress para captação online com múltiplos meios de pagamento.",
+        "category": "WordPress"
+      },
+      {
+        "title": "Site Institucional",
+        "description": "Projeto web moderno, responsivo e alinhado à identidade da marca.",
+        "category": "Web"
+      },
+      {
+        "title": "Sistema de Eventos",
+        "description": "Gestão completa de inscrições, certificados automáticos e relatórios.",
+        "category": "Institucional"
+      },
+      {
+        "title": "Dashboard Analytics",
+        "description": "Painel de dados com visualizações em tempo real e relatórios personalizados.",
+        "category": "Web"
+      }
+    ],
+    "linkText": "Ver Detalhes"
+  },
+  "contact": {
+    "title": {
+      "number": "05",
+      "main": "CONTATO"
+    },
+    "intro": "Tem um projeto em mente? Vamos conversar e entender como a tecnologia pode apoiar seus objetivos.",
+    "info": {
+      "email": {
+        "label": "Email",
+        "value": "contato@botellho.co"
+      },
+      "availability": {
+        "label": "Disponibilidade",
+        "value": "Segunda a Sexta, 9h às 18h"
+      },
+      "response": {
+        "label": "Resposta",
+        "value": "Até 24 horas úteis"
+      }
+    },
+    "form": {
+      "name": {
+        "label": "Nome",
+        "placeholder": "Seu nome completo"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "seu@email.com"
+      },
+      "subject": {
+        "label": "Assunto",
+        "placeholder": "Sobre o que você gostaria de conversar?"
+      },
+      "message": {
+        "label": "Mensagem",
+        "placeholder": "Conte um pouco mais sobre seu projeto, ideia ou necessidade..."
+      },
+      "submit": {
+        "default": "Enviar Mensagem",
+        "success": "Mensagem enviada com sucesso!"
+      }
+    }
+  },
+  "footer": {
+    "brand": {
+      "title": "botellho.co",
+      "tagline": "Soluções digitais bem construídas"
+    },
+    "links": {
+      "title": "Links Rápidos",
+      "items": [
+        { "label": "Início", "href": "#home" },
+        { "label": "Serviços", "href": "#services" },
+        { "label": "Sobre", "href": "#about" },
+        { "label": "Portfólio", "href": "#portfolio" },
+        { "label": "Contato", "href": "#contact" }
+      ]
+    },
+    "contact": {
+      "title": "Contato",
+      "email": "contato@botellho.co"
+    },
+    "copyright": "botellho.co Todos os direitos reservados."
+  }
+}

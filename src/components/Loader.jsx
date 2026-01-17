@@ -1,10 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTexts } from '../hooks/useTexts'
 import './Loader.css'
 
 const Loader = ({ onComplete }) => {
+  const { texts } = useTexts()
   const [progress, setProgress] = useState(0)
   const logoRef = useRef(null)
+  
+  // Fallback caso texts ainda não esteja carregado
+  const loaderTexts = texts?.loader || {
+    logo: {
+      main: 'botellho',
+      co: 'co.'
+    }
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,8 +74,8 @@ const Loader = ({ onComplete }) => {
               damping: 20,
             }}
           >
-            <span className="loader-logo-main">botellho</span>
-            <span className="loader-logo-co">co.</span>
+            <span className="loader-logo-main">{loaderTexts.logo.main}</span>
+            <span className="loader-logo-co">{loaderTexts.logo.co}</span>
           </motion.div>
 
           <motion.div

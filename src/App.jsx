@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCustomCursor } from './utils/cursor'
 import { initLenis, destroyLenis } from './utils/lenis'
+import { useTexts } from './hooks/useTexts'
 import Loader from './components/Loader'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -14,10 +15,20 @@ import Footer from './components/Footer'
 import './App.css'
 
 function App() {
+  const { texts } = useTexts()
   const [isLoading, setIsLoading] = useState(true)
   const [scrollY, setScrollY] = useState(0)
 
   useCustomCursor()
+
+  // Atualizar título e meta description dinamicamente
+  useEffect(() => {
+    document.title = texts.meta.title
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', texts.meta.description)
+    }
+  }, [texts])
 
   // Inicializar Lenis após o loader
   useEffect(() => {
@@ -62,7 +73,7 @@ function App() {
               {/* Primeira seção de vídeo - antes de About */}
               <VideoSection
                 id="videos-1"
-                text="criatividade que transforma ideias em experiências digitais únicas"
+                text={texts.videos.video1.text}
                 position="top-right"
                 videoSrc="/videos/video-1.mp4"
               />
@@ -71,7 +82,7 @@ function App() {
               {/* Segunda seção de vídeo - entre Portfolio e Contact */}
               <VideoSection
                 id="videos-2"
-                text="tecnologia com propósito, wordpress que faz a diferença"
+                text={texts.videos.video2.text}
                 position="bottom-left"
                 videoSrc="/videos/video-2.mp4"
               />

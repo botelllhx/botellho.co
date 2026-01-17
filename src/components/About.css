@@ -134,6 +134,9 @@
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-regular);
   font-family: var(--font-body);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .about-text strong {
@@ -215,6 +218,15 @@
   .about-layout {
     grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
+  }
+
+  .about-heading {
+    font-size: var(--font-size-display-3);
+  }
+
+  .about-text p {
+    font-size: var(--font-size-body);
+    line-height: 1.8;
   }
 }
 

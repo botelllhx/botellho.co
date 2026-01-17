@@ -266,8 +266,36 @@
   }
 }
 
+.portfolio-loading,
+.portfolio-error {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+}
+
+.portfolio-stats {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.portfolio-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 @media (max-width: 480px) {
   .portfolio-title {
     font-size: var(--font-size-display-3);
+  }
+
+  .portfolio-stats {
+    font-size: 0.625rem;
   }
 }

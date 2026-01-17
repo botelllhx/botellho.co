@@ -2,48 +2,20 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TypingText from './TypingText'
+import { useTexts } from '../hooks/useTexts'
 import './Services.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const Services = () => {
+  const { texts } = useTexts()
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const gridRef = useRef(null)
   const parallaxRef = useRef(null)
 
-  const services = [
-    {
-      title: 'WordPress',
-      description: 'Sites personalizados e otimizados com temas customizados para sua necessidade',
-      number: '01',
-    },
-    {
-      title: 'Plugins',
-      description: 'Desenvolvimento sob medida para necessidades específicas do seu negócio',
-      number: '02',
-    },
-    {
-      title: 'Web',
-      description: 'Sistemas modernos e escaláveis com tecnologias atuais e melhores práticas',
-      number: '03',
-    },
-    {
-      title: 'Suporte',
-      description: 'Manutenção contínua e otimização de performance para garantir excelência',
-      number: '04',
-    },
-    {
-      title: 'Institucional',
-      description: 'Soluções especializadas para museus, faculdades e organizações',
-      number: '05',
-    },
-    {
-      title: 'Segurança',
-      description: 'Proteção e otimização de segurança e SEO para máxima performance',
-      number: '06',
-    },
-  ]
+  const servicesTexts = texts.services
+  const services = servicesTexts.items
 
   useEffect(() => {
     if (!sectionRef.current) return
@@ -130,8 +102,8 @@ const Services = () => {
       <div className="services-container">
         <div className="services-header">
           <h2 className="services-title" ref={titleRef}>
-            <span className="title-number">01</span>
-            <span className="title-main">SERVIÇOS</span>
+            <span className="title-number">{servicesTexts.title.number}</span>
+            <span className="title-main">{servicesTexts.title.main}</span>
           </h2>
         </div>
 
@@ -151,7 +123,7 @@ const Services = () => {
 
       {/* Texto com typing integrado */}
       <TypingText
-        text="código que respira criatividade"
+        text={servicesTexts.typingText}
         gifSrc="/gifs/code.gif"
         className="services-typing"
       />

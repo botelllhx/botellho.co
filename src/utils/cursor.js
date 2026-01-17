@@ -41,8 +41,10 @@ export const useCustomCursor = () => {
       mouseY = e.clientY
     }
 
-    const handleMouseEnter = () => {
-      cursor.classList.add('hover')
+    const handleMouseEnter = (e) => {
+      if (e.target) {
+        cursor.classList.add('hover')
+      }
     }
 
     const handleMouseLeave = () => {
@@ -63,11 +65,26 @@ export const useCustomCursor = () => {
     document.addEventListener('mousedown', handleMouseDown)
     document.addEventListener('mouseup', handleMouseUp)
 
-    // Adicionar hover em elementos interativos
-    const interactiveElements = document.querySelectorAll('a, button, .service-card, .portfolio-card, .value-card, .stat-card')
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', handleMouseEnter)
-      el.addEventListener('mouseleave', handleMouseLeave)
+    // Adicionar hover em elementos interativos dinamicamente
+    const addInteractiveHover = () => {
+      const interactiveElements = document.querySelectorAll('a, button, .service-card, .portfolio-card, .value-item, .stat-card, input, textarea')
+      interactiveElements.forEach((el) => {
+        el.addEventListener('mouseenter', handleMouseEnter)
+        el.addEventListener('mouseleave', handleMouseLeave)
+      })
+    }
+    
+    // Adicionar hover inicialmente e observar mudanças no DOM
+    addInteractiveHover()
+    
+    // Observar mudanças no DOM para novos elementos
+    const observer = new MutationObserver(() => {
+      addInteractiveHover()
+    })
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
     })
 
     updateCursor()
@@ -78,6 +95,7 @@ export const useCustomCursor = () => {
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mouseup', handleMouseUp)
+      observer.disconnect()
       if (cursor.parentNode) cursor.parentNode.removeChild(cursor)
       if (cursorDot.parentNode) cursorDot.parentNode.removeChild(cursorDot)
     }

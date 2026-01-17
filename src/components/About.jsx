@@ -1,35 +1,21 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useTexts } from '../hooks/useTexts'
 import './About.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const About = () => {
+  const { texts } = useTexts()
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const contentRef = useRef(null)
   const valuesRef = useRef(null)
   const parallaxRef = useRef(null)
 
-  const values = [
-    {
-      title: 'Resultados',
-      description: 'Foco em impacto mensurável e transformação real para cada cliente',
-    },
-    {
-      title: 'Tecnologia',
-      description: 'Práticas modernas e ferramentas de ponta para soluções robustas',
-    },
-    {
-      title: 'Criatividade',
-      description: 'Soluções únicas e inovadoras que destacam seu projeto',
-    },
-    {
-      title: 'Qualidade',
-      description: 'Código limpo, documentado e manutenível para longo prazo',
-    },
-  ]
+  const aboutTexts = texts.about
+  const values = aboutTexts.values
 
   useEffect(() => {
     if (!sectionRef.current) return
@@ -134,8 +120,8 @@ const About = () => {
         {/* Título */}
         <div className="about-title-block">
           <h2 className="about-title" ref={titleRef}>
-            <span className="title-number">02</span>
-            <span className="title-main">SOBRE</span>
+            <span className="title-number">{aboutTexts.title.number}</span>
+            <span className="title-main">{aboutTexts.title.main}</span>
           </h2>
         </div>
 
@@ -144,20 +130,18 @@ const About = () => {
           {/* Conteúdo principal - Esquerda */}
           <div className="about-content-block" ref={contentRef}>
             <h3 className="about-heading">
-              Transformando ideias em <span className="text-underline">realidade digital</span>
+              {aboutTexts.heading.text} <span className="text-underline">{aboutTexts.heading.highlight}</span>
             </h3>
             <div className="about-text">
-              <p>
-                A <strong>botellho.co</strong> nasceu com o propósito de democratizar o acesso à
-                tecnologia de qualidade. Acreditamos que toda organização, independente do tamanho
-                ou segmento, merece ter uma presença digital profissional e eficiente.
-              </p>
-              <p>
-                Com foco especializado em <strong>WordPress</strong> e{' '}
-                <strong>liberdade criativa</strong>, desenvolvemos sites, sistemas e plugins que não
-                apenas funcionam, mas que realmente fazem a diferença para museus, faculdades,
-                empresas e startups.
-              </p>
+              {aboutTexts.content.map((paragraph, index) => (
+                <p key={index}>
+                  {paragraph.text && <>{paragraph.text} </>}
+                  {paragraph.strong && <strong>{paragraph.strong}</strong>}
+                  {paragraph.rest && <> {paragraph.rest} </>}
+                  {paragraph.strong2 && <strong>{paragraph.strong2}</strong>}
+                  {paragraph.rest2 && <> {paragraph.rest2}</>}
+                </p>
+              ))}
             </div>
           </div>
 

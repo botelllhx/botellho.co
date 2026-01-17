@@ -2,13 +2,17 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getLenis } from '../utils/lenis'
+import { useTexts } from '../hooks/useTexts'
 import './Footer.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const Footer = () => {
+  const { texts } = useTexts()
   const sectionRef = useRef(null)
   const scrollTopRef = useRef(null)
+  
+  const footerTexts = texts.footer
 
   const scrollToTop = () => {
     const lenis = getLenis()
@@ -54,38 +58,28 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-content">
           <div className="footer-brand">
-            <h3 className="footer-brand-title">botellho.co</h3>
+            <h3 className="footer-brand-title">{footerTexts.brand.title}</h3>
             <p className="footer-brand-tagline">
-              Desenvolvimento web com criatividade e propósito
+              {footerTexts.brand.tagline}
             </p>
           </div>
 
           <div className="footer-links">
-            <h4 className="footer-links-title">Links Rápidos</h4>
+            <h4 className="footer-links-title">{footerTexts.links.title}</h4>
             <ul className="footer-links-list">
-              <li>
-                <a href="#home">Início</a>
-              </li>
-              <li>
-                <a href="#services">Serviços</a>
-              </li>
-              <li>
-                <a href="#about">Sobre</a>
-              </li>
-              <li>
-                <a href="#portfolio">Portfólio</a>
-              </li>
-              <li>
-                <a href="#contact">Contato</a>
-              </li>
+              {footerTexts.links.items.map((link, index) => (
+                <li key={index}>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="footer-contact">
-            <h4 className="footer-contact-title">Contato</h4>
+            <h4 className="footer-contact-title">{footerTexts.contact.title}</h4>
             <ul className="footer-contact-list">
               <li>
-                <a href="mailto:contato@botellho.co">contato@botellho.co</a>
+                <a href={`mailto:${footerTexts.contact.email}`}>{footerTexts.contact.email}</a>
               </li>
             </ul>
           </div>
@@ -93,7 +87,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © {new Date().getFullYear()} botellho.co Todos os direitos reservados.
+            © {new Date().getFullYear()} {footerTexts.copyright}
           </p>
           <button
             className="footer-scroll-top"
