@@ -236,6 +236,14 @@
       "title": "Contato",
       "email": "contato@botellho.co"
     },
+    "social": {
+      "title": "Redes Sociais",
+      "items": [
+        { "name": "LinkedIn", "url": "https://linkedin.com/company/botellho", "icon": "linkedin" },
+        { "name": "Instagram", "url": "https://instagram.com/botellho.co", "icon": "instagram" },
+        { "name": "YouTube", "url": "https://youtube.com/@botellho", "icon": "youtube" }
+      ]
+    },
     "copyright": "botellho.co Todos os direitos reservados."
   }
 }

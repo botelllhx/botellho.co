@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Linkedin, Instagram, Youtube } from 'lucide-react'
 import { getLenis } from '../utils/lenis'
 import { useTexts } from '../hooks/useTexts'
 import './Footer.css'
@@ -82,6 +83,40 @@ const Footer = () => {
                 <a href={`mailto:${footerTexts.contact.email}`}>{footerTexts.contact.email}</a>
               </li>
             </ul>
+            {footerTexts.social && (
+              <div className="footer-social">
+                <h4 className="footer-social-title">{footerTexts.social.title}</h4>
+                <ul className="footer-social-list">
+                  {footerTexts.social.items.map((social, index) => {
+                    const getIcon = () => {
+                      switch (social.icon) {
+                        case 'linkedin':
+                          return <Linkedin size={20} />
+                        case 'instagram':
+                          return <Instagram size={20} />
+                        case 'youtube':
+                          return <Youtube size={20} />
+                        default:
+                          return null
+                      }
+                    }
+                    return (
+                      <li key={index}>
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={social.name}
+                          className="footer-social-link"
+                        >
+                          {getIcon()}
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 

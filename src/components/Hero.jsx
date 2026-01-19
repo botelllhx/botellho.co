@@ -188,8 +188,9 @@ const Hero = () => {
                   <span className="hero-title-gif-wrapper">
                     <img 
                       src="/gifs/hero-logo.gif" 
-                      alt="" 
-                      className="hero-title-gif" 
+                      alt="Logo animado botellho.co"
+                      className="hero-title-gif"
+                      loading="eager"
                     />
                   </span>
                   <span className="hero-title-after">

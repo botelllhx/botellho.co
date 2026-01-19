@@ -67,9 +67,10 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
           <span className="typing-text-gif-placeholder">
             <img
               src={gifSrc}
-              alt=""
+              alt="Animação decorativa"
               className="typing-text-gif"
               draggable="false"
+              loading="lazy"
             />
           </span>
         )}
