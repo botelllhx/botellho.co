@@ -105,6 +105,8 @@
   opacity: 1 !important;
   visibility: visible !important;
   min-height: 280px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .service-card:hover {

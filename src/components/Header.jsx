@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 import { getLenis } from '../utils/lenis'
 import { useTexts } from '../hooks/useTexts'
@@ -6,9 +7,11 @@ import './Header.css'
 
 const Header = ({ scrollY }) => {
   const { texts } = useTexts()
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [currentSection, setCurrentSection] = useState('home')
+  const [isLightBackground, setIsLightBackground] = useState(false)
   const { scrollYProgress } = useScroll()
   const logoRef = useRef(null)
   
@@ -17,6 +20,18 @@ const Header = ({ scrollY }) => {
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     setIsScrolled(latest > 0.05)
   })
+
+  // Detectar se está em página com fundo branco
+  useEffect(() => {
+    const checkBackground = () => {
+      const path = location.pathname
+      // Páginas com fundo branco: serviços, blog
+      const lightPages = ['/services', '/blog']
+      const isLight = lightPages.some(page => path.startsWith(page))
+      setIsLightBackground(isLight)
+    }
+    checkBackground()
+  }, [location])
 
   // Detectar seção atual
   useEffect(() => {
@@ -63,40 +78,40 @@ const Header = ({ scrollY }) => {
 
   const handleNavClick = (href) => {
     setIsOpen(false)
-    const lenis = getLenis()
-    if (lenis) {
-      lenis.scrollTo(href, { duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
-    } else {
-      const element = document.querySelector(href)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+    // Se for hash link (#), fazer scroll suave
+    if (href.startsWith('#')) {
+      const lenis = getLenis()
+      if (lenis) {
+        lenis.scrollTo(href, { duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
+      } else {
+        const element = document.querySelector(href)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
       }
     }
   }
 
   return (
     <motion.header
-      className={`header ${isScrolled ? 'scrolled' : ''} section-${currentSection}`}
+      className={`header ${isScrolled ? 'scrolled' : ''} section-${currentSection} ${isLightBackground ? 'light-background' : ''}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="container">
         <div className="header-content">
-          <motion.a
-            href="#home"
+          <motion.div
             className="logo"
             ref={logoRef}
-            onClick={(e) => {
-              e.preventDefault()
-              handleNavClick('#home')
-            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="logo-text">{headerTexts.logo.main}</span>
-            <span className="logo-co">{headerTexts.logo.co}</span>
-          </motion.a>
+            <Link to="/" className="logo-link">
+              <span className="logo-text">{headerTexts.logo.main}</span>
+              <span className="logo-co">{headerTexts.logo.co}</span>
+            </Link>
+          </motion.div>
 
           <nav className={`nav ${isOpen ? 'open' : ''}`}>
             <ul className="nav-list">
@@ -107,21 +122,40 @@ const Header = ({ scrollY }) => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <a
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleNavClick(item.href)
-                    }}
-                    className={`nav-link ${currentSection === item.href.slice(1) ? 'active' : ''}`}
-                  >
-                    <span>{item.label}</span>
-                    <motion.div
-                      className="nav-link-underline"
-                      whileHover={{ scaleX: 1 }}
-                      initial={{ scaleX: 0 }}
-                    />
-                  </a>
+                  {item.href.startsWith('#') ? (
+                    <a
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (location.pathname === '/') {
+                          handleNavClick(item.href)
+                        } else {
+                          window.location.href = `/${item.href}`
+                        }
+                      }}
+                      className={`nav-link ${currentSection === item.href.slice(1) ? 'active' : ''}`}
+                    >
+                      <span>{item.label}</span>
+                      <motion.div
+                        className="nav-link-underline"
+                        whileHover={{ scaleX: 1 }}
+                        initial={{ scaleX: 0 }}
+                      />
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="nav-link"
+                    >
+                      <span>{item.label}</span>
+                      <motion.div
+                        className="nav-link-underline"
+                        whileHover={{ scaleX: 1 }}
+                        initial={{ scaleX: 0 }}
+                      />
+                    </Link>
+                  )}
                 </motion.li>
               ))}
             </ul>

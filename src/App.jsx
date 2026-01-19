@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCustomCursor } from './utils/cursor'
 import { initLenis, destroyLenis } from './utils/lenis'
 import { useTexts } from './hooks/useTexts'
 import Loader from './components/Loader'
 import Header from './components/Header'
-import Hero from './components/Hero'
-import Services from './components/Services'
-import VideoSection from './components/VideoSection'
-import About from './components/About'
-import Portfolio from './components/Portfolio'
-import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ExitIntentModal from './components/ExitIntentModal'
+import WhatsAppButton from './components/WhatsAppButton'
+import HomePage from './pages/HomePage'
+import ServicePage from './pages/ServicePage'
+import BlogPage from './pages/BlogPage'
+import BlogPostPage from './pages/BlogPostPage'
 import './App.css'
 
 function App() {
@@ -55,44 +56,33 @@ function App() {
   }, [])
 
   return (
-    <div className="app">
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
-      
-      <AnimatePresence>
-        {!isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Header scrollY={scrollY} />
-            <main>
-              <Hero />
-              <Services />
-              {/* Primeira seção de vídeo - antes de About */}
-              <VideoSection
-                id="videos-1"
-                text={texts.videos.video1.text}
-                position="top-right"
-                videoSrc="/videos/video-1.mp4"
-              />
-              <About />
-              <Portfolio />
-              {/* Segunda seção de vídeo - entre Portfolio e Contact */}
-              <VideoSection
-                id="videos-2"
-                text={texts.videos.video2.text}
-                position="bottom-left"
-                videoSrc="/videos/video-2.mp4"
-              />
-              <Contact />
-            </main>
-            <Footer />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+        
+        <AnimatePresence>
+          {!isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Header scrollY={scrollY} />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/services/:slug" element={<ServicePage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
+              </Routes>
+              <Footer />
+              <ExitIntentModal />
+              <WhatsAppButton />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </BrowserRouter>
   )
 }
 

@@ -9,11 +9,12 @@
       "co": "co."
     },
     "menu": [
-      { "label": "Início", "href": "#home" },
-      { "label": "Serviços", "href": "#services" },
-      { "label": "Sobre", "href": "#about" },
-      { "label": "Portfólio", "href": "#portfolio" },
-      { "label": "Contato", "href": "#contact" }
+      { "label": "Início", "href": "/" },
+      { "label": "Serviços", "href": "/#services" },
+      { "label": "Blog", "href": "/blog" },
+      { "label": "Sobre", "href": "/#about" },
+      { "label": "Portfólio", "href": "/#portfolio" },
+      { "label": "Contato", "href": "/#contact" }
     ]
   },
   "loader": {
@@ -54,32 +55,44 @@
       {
         "number": "01",
         "title": "WordPress",
-        "description": "Desenvolvimento de sites WordPress personalizados, com temas próprios, alta performance e foco em experiência do usuário."
+        "description": "Desenvolvimento de sites WordPress personalizados com UX/UI Design exclusivo, temas próprios e alta performance.",
+        "slug": "wordpress"
       },
       {
         "number": "02",
         "title": "Plugins",
-        "description": "Criação de plugins WordPress sob medida para automatizar processos, integrar sistemas e resolver necessidades específicas."
+        "description": "Criação de plugins WordPress sob medida com interfaces intuitivas para automatizar processos e integrar sistemas.",
+        "slug": "plugins"
       },
       {
         "number": "03",
-        "title": "Web",
-        "description": "Desenvolvimento de sistemas web modernos, escaláveis e seguros, seguindo boas práticas de arquitetura."
+        "title": "UX/UI Design",
+        "description": "Design de experiência e interface que une estética e funcionalidade. Pesquisa, prototipagem e design de interfaces.",
+        "slug": "ux-ui-design"
       },
       {
         "number": "04",
-        "title": "Suporte",
-        "description": "Manutenção contínua, melhorias técnicas e acompanhamento para garantir estabilidade e crescimento."
+        "title": "Web",
+        "description": "Desenvolvimento de sistemas web modernos com UX/UI Design integrado, escaláveis e seguros.",
+        "slug": "desenvolvimento-web"
       },
       {
         "number": "05",
-        "title": "Institucional",
-        "description": "Soluções digitais para instituições, organizações e projetos que exigem clareza, robustez e confiabilidade."
+        "title": "Suporte",
+        "description": "Manutenção contínua, melhorias técnicas e acompanhamento para garantir estabilidade e crescimento.",
+        "slug": "suporte-manutencao"
       },
       {
         "number": "06",
+        "title": "Institucional",
+        "description": "Soluções digitais para instituições com UX/UI Design profissional, clareza e confiabilidade.",
+        "slug": "sites-institucionais"
+      },
+      {
+        "number": "07",
         "title": "Segurança",
-        "description": "Otimização de segurança, performance e SEO técnico para ambientes WordPress e sistemas web."
+        "description": "Otimização de segurança, performance e SEO técnico para ambientes WordPress e sistemas web.",
+        "slug": "seguranca-performance"
       }
     ],
     "typingText": "engenharia digital com propósito"
@@ -234,7 +247,8 @@
     },
     "contact": {
       "title": "Contato",
-      "email": "contato@botellho.co"
+      "email": "contato@botellho.co",
+      "whatsapp": "5511999999999"
     },
     "social": {
       "title": "Redes Sociais",

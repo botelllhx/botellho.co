@@ -1,0 +1,313 @@
+.exit-intent-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  z-index: 9998;
+}
+
+.exit-intent-modal {
+  position: fixed;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-width: 500px;
+  width: calc(100% - 2rem);
+  background: var(--color-surface);
+  border-radius: 0;
+  padding: 0;
+  z-index: 9999;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0 !important;
+}
+
+.exit-intent-close {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: transparent;
+  border: none;
+  color: var(--color-text-inverse);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  transition: all var(--transition-base);
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+}
+
+.exit-intent-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: rotate(90deg);
+}
+
+.exit-intent-content {
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Badge superior */
+.exit-intent-badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-text-inverse);
+  color: var(--color-surface);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-body);
+}
+
+/* Título principal */
+.exit-intent-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-family: var(--font-serif);
+  color: var(--color-text-inverse);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+}
+
+/* Texto descritivo */
+.exit-intent-text {
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text-inverse-secondary);
+  margin: 0 0 var(--spacing-md) 0;
+  font-family: var(--font-body);
+  max-width: 100%;
+}
+
+/* Destaque final */
+.exit-intent-highlight {
+  font-size: var(--font-size-heading-3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  margin: 0 0 var(--spacing-lg) 0;
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+.exit-intent-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-text-inverse);
+  transform: scaleX(0);
+  animation: underlineExpand 0.8s ease-out 0.5s forwards;
+}
+
+@keyframes underlineExpand {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Botões */
+.exit-intent-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.exit-intent-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-body);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.exit-intent-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--color-text-inverse);
+  transition: left var(--transition-base);
+  z-index: 0;
+}
+
+.exit-intent-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.exit-intent-button-primary {
+  background: var(--color-text-inverse);
+  color: var(--color-surface);
+  border-color: var(--color-text-inverse);
+}
+
+.exit-intent-button-primary::before {
+  background: transparent;
+}
+
+.exit-intent-button-primary:hover {
+  background: transparent;
+  color: var(--color-text-inverse);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.exit-intent-button-secondary {
+  background: transparent;
+  color: var(--color-text-inverse);
+  border-color: var(--color-text-inverse);
+}
+
+.exit-intent-button-secondary::before {
+  background: var(--color-text-inverse);
+}
+
+.exit-intent-button-secondary:hover {
+  color: var(--color-surface);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.exit-intent-button-secondary:hover::before {
+  left: 0;
+}
+
+/* Elemento decorativo de fundo */
+.exit-intent-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.exit-intent-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .exit-intent-modal {
+    max-width: calc(100% - 2rem);
+    width: calc(100% - 2rem);
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .exit-intent-content {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .exit-intent-title {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .exit-intent-text {
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .exit-intent-highlight {
+    font-size: var(--font-size-body-large);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .exit-intent-buttons {
+    gap: var(--spacing-xs);
+  }
+
+  .exit-intent-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-small);
+  }
+}
+
+@media (max-width: 480px) {
+  .exit-intent-modal {
+    max-width: calc(100% - 1rem);
+    width: calc(100% - 1rem);
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .exit-intent-content {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .exit-intent-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .exit-intent-title {
+    font-size: clamp(1.1rem, 6vw, 1.5rem);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .exit-intent-text {
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .exit-intent-highlight {
+    font-size: var(--font-size-body);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .exit-intent-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+  }
+
+  .exit-intent-close {
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    width: 32px;
+    height: 32px;
+  }
+}

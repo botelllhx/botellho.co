@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TypingText from './TypingText'
@@ -110,13 +111,17 @@ const Services = () => {
         {/* Grid 2 colunas - Layout diferente de About */}
         <div className="services-grid" ref={gridRef}>
           {services.map((service, index) => (
-            <div key={index} className="service-card">
+            <Link 
+              key={index} 
+              to={`/services/${service.slug || service.title.toLowerCase().replace(/\s+/g, '-')}`}
+              className="service-card"
+            >
               <div className="service-card-number">{service.number}</div>
               <div className="service-card-content">
                 <h3 className="service-card-title">{service.title}</h3>
                 <p className="service-card-description">{service.description}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -37,6 +37,56 @@
   border-bottom-color: rgba(0, 0, 0, 0.12);
 }
 
+/* Header em páginas com fundo branco (serviços, blog) */
+.header.light-background {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.header.light-background.scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.header.light-background .logo-text,
+.header.light-background .logo-co,
+.header.light-background .nav-link {
+  color: var(--color-text-inverse) !important;
+}
+
+.header.light-background .logo-co {
+  color: var(--color-text-inverse-secondary) !important;
+}
+
+.header.light-background .logo-link {
+  color: inherit;
+}
+
+.header.light-background .logo-char {
+  color: var(--color-text-inverse) !important;
+}
+
+.header.light-background .nav-link:hover {
+  color: var(--color-text-inverse);
+}
+
+.header.light-background .menu-line {
+  background: var(--color-text-inverse);
+}
+
+.header.light-background .menu-toggle {
+  color: var(--color-text-inverse);
+}
+
+.header.light-background .nav-link-underline {
+  background: var(--color-text-inverse);
+}
+
 .header-content {
   display: flex;
   align-items: center;
@@ -52,17 +102,28 @@
   letter-spacing: -0.02em;
   font-family: var(--font-display);
   color: var(--color-text-primary);
-  text-decoration: none;
   display: flex;
   align-items: baseline;
   gap: 0.25rem;
   transition: all var(--transition-base);
 }
 
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
 .logo-text {
   color: var(--color-text-primary);
   display: inline-block;
   text-transform: lowercase;
+}
+
+.header.light-background .logo-text {
+  color: var(--color-text-inverse) !important;
 }
 
 .logo-char {
@@ -136,7 +197,11 @@
   /* Não usar text-transform para preservar o ponto */
 }
 
-.logo:hover {
+.header.light-background .logo-co {
+  color: var(--color-text-inverse-secondary) !important;
+}
+
+.logo-link:hover {
   transform: scale(1.05);
 }
 
