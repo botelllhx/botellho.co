@@ -52,8 +52,9 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
       <p ref={textRef} className="typing-text">
         <span>
           {beforeWords.map((word, index) => {
-            // Variação de fonte: alternar entre serif, display e accent
-            const fontVariation = index % 3 === 0 ? 'serif' : index % 3 === 1 ? 'display' : 'accent'
+            // Variação de fonte: alternar entre serif, display, accent e brs10
+            const fontVariations = ['serif', 'display', 'accent', 'brs10']
+            const fontVariation = fontVariations[index % 4]
             return (
               <span key={index} className={`typing-word typing-word-${fontVariation}`}>
                 {word}
@@ -77,8 +78,9 @@ const TypingText = ({ text, gifSrc, className = '' }) => {
 
         <span>
           {afterWords.map((word, index) => {
-            // Variação de fonte: alternar entre display, accent e serif
-            const fontVariation = index % 3 === 0 ? 'display' : index % 3 === 1 ? 'accent' : 'serif'
+            // Variação de fonte: alternar entre display, accent, serif e brs10
+            const fontVariations = ['display', 'accent', 'serif', 'brs10']
+            const fontVariation = fontVariations[index % 4]
             return (
               <span key={index} className={`typing-word typing-word-${fontVariation}`}>
                 {index > 0 && <span className="typing-space"> </span>}

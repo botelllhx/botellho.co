@@ -1,3 +1,12 @@
+/* Font Face - Brs10 (Brasil com S) */
+@font-face {
+  font-family: 'Brs10';
+  src: url('/fonts/Brs10-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
   overflow-x: hidden;
 }

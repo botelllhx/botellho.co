@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecionando...</title>
+  <script>
+    // GitHub Pages 404.html redirect para SPA
+    // Solução simples: sempre redireciona para index.html e o React Router cuida do resto
+    var path = window.location.pathname;
+    var search = window.location.search;
+    var hash = window.location.hash;
+    
+    // Se não estiver acessando index.html, redireciona
+    if (path !== '/' && !path.endsWith('/index.html')) {
+      // Redireciona para index.html com a rota como query string
+      window.location.replace('/index.html' + (path !== '/' ? '?redirect=' + encodeURIComponent(path) : '') + search + hash);
+    } else {
+      // Se já estiver em index.html, apenas recarrega
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecionando...</p>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=/">
+  </noscript>
+  <script>
+    // Fallback: se o JavaScript não funcionar, redireciona após 1 segundo
+    setTimeout(function() {
+      window.location.replace('/');
+    }, 1000);
+  </script>
+</body>
+</html>

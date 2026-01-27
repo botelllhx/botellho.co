@@ -140,6 +140,11 @@
     font-weight: var(--font-weight-black);
     font-style: normal;
   }
+  8% {
+    font-family: var(--font-brs10);
+    font-weight: var(--font-weight-bold);
+    font-style: normal;
+  }
   10% {
     font-family: 'Courier New', monospace;
     font-weight: var(--font-weight-bold);
@@ -155,6 +160,11 @@
     font-weight: var(--font-weight-bold);
     font-style: italic;
   }
+  38% {
+    font-family: var(--font-brs10);
+    font-weight: var(--font-weight-extrabold);
+    font-style: normal;
+  }
   40% {
     font-family: var(--font-accent);
     font-weight: var(--font-weight-extrabold);
@@ -168,6 +178,11 @@
   60% {
     font-family: var(--font-display);
     font-weight: var(--font-weight-bold);
+    font-style: normal;
+  }
+  68% {
+    font-family: var(--font-brs10);
+    font-weight: var(--font-weight-black);
     font-style: normal;
   }
   70% {

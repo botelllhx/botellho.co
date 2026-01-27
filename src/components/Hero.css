@@ -228,6 +228,11 @@
   font-weight: var(--font-weight-bold);
 }
 
+.title-word-brs10 {
+  font-family: var(--font-brs10);
+  font-weight: 400;
+}
+
 .hero-title-gif-wrapper {
   display: inline-flex;
   align-items: center;

@@ -50,6 +50,11 @@
   font-weight: var(--font-weight-bold);
 }
 
+.typing-word-brs10 {
+  font-family: var(--font-brs10);
+  font-weight: 400;
+}
+
 /* gif */
 .typing-text-gif-placeholder {
   display: inline-flex;

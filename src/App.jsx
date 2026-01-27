@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCustomCursor } from './utils/cursor'
 import { initLenis, destroyLenis } from './utils/lenis'
@@ -15,12 +15,25 @@ import BlogPage from './pages/BlogPage'
 import BlogPostPage from './pages/BlogPostPage'
 import './App.css'
 
-function App() {
+// Componente interno para lidar com redirecionamento
+function AppContent() {
   const { texts } = useTexts()
   const [isLoading, setIsLoading] = useState(true)
   const [scrollY, setScrollY] = useState(0)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useCustomCursor()
+
+  // Tratar redirecionamento do 404.html do GitHub Pages
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search)
+    const redirectPath = urlParams.get('redirect')
+    if (redirectPath) {
+      // Remove o parâmetro redirect da URL e navega para a rota correta
+      navigate(redirectPath, { replace: true })
+    }
+  }, [location.search, navigate])
 
   // Atualizar título e meta description dinamicamente
   useEffect(() => {
@@ -56,32 +69,38 @@ function App() {
   }, [])
 
   return (
+    <div className="app">
+      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+      
+      <AnimatePresence>
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Header scrollY={scrollY} />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/services/:slug" element={<ServicePage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+            </Routes>
+            <Footer />
+            <ExitIntentModal />
+            <WhatsAppButton />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function App() {
+  return (
     <BrowserRouter>
-      <div className="app">
-        {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
-        
-        <AnimatePresence>
-          {!isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Header scrollY={scrollY} />
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/services/:slug" element={<ServicePage />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:slug" element={<BlogPostPage />} />
-              </Routes>
-              <Footer />
-              <ExitIntentModal />
-              <WhatsAppButton />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <AppContent />
     </BrowserRouter>
   )
 }

@@ -35,6 +35,7 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-accent: 'Playfair Display', Georgia, serif; /* Para números e acentos */
   --font-comic: 'Inter', sans-serif; /* Para efeitos estilo quadrinhos */
+  --font-brs10: 'Brs10', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* Fonte Brasil com S */
   
   /* Tamanhos Tipográficos - Controlados e Responsivos */
   --font-size-display-1: clamp(3rem, 8vw, 6rem);

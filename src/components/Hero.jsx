@@ -172,8 +172,14 @@ const Hero = () => {
                 <h1 className="hero-title" ref={titleRef}>
                   <span className="hero-title-before">
                     {(heroTexts.title?.before || 'DESENVOLVIMENTO WEB').split(' ').map((word, wordIndex) => {
-                      // Variação de fonte: alternar entre serif e display
-                      const fontVariation = wordIndex % 3 === 0 ? 'serif' : wordIndex % 3 === 1 ? 'display' : 'accent'
+                      // Primeira palavra (DESENVOLVIMENTO) sempre usa brs10, depois alterna
+                      let fontVariation
+                      if (wordIndex === 0) {
+                        fontVariation = 'brs10'
+                      } else {
+                        const fontVariations = ['serif', 'display', 'accent']
+                        fontVariation = fontVariations[(wordIndex - 1) % 3]
+                      }
                       return (
                         <span key={wordIndex} className={`title-word title-word-${fontVariation}`}>
                           {word.split('').map((char, charIndex) => (
@@ -195,8 +201,9 @@ const Hero = () => {
                   </span>
                   <span className="hero-title-after">
                     {(heroTexts.title?.after || 'COM CRIATIVIDADE').split(' ').map((word, wordIndex) => {
-                      // Variação de fonte: alternar entre serif e display
-                      const fontVariation = wordIndex % 3 === 0 ? 'display' : wordIndex % 3 === 1 ? 'accent' : 'serif'
+                      // Variação de fonte: alternar entre display, accent, serif e brs10
+                      const fontVariations = ['display', 'accent', 'serif', 'brs10']
+                      const fontVariation = fontVariations[wordIndex % 4]
                       return (
                         <span key={wordIndex} className={`title-word title-word-${fontVariation}`}>
                           {word.split('').map((char, charIndex) => (

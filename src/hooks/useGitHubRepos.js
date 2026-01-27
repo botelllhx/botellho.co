@@ -225,11 +225,20 @@ export const useGitHubRepos = (username) => {
           headers['Authorization'] = `${authPrefix} ${githubToken}`
         }
         
+        // Criar AbortController para timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 segundos de timeout
+        
         // GitHub API - buscar mais repositórios para ter opções após filtrar
         const response = await fetch(
           `https://api.github.com/users/${username}/repos?sort=updated&per_page=30&type=all`,
-          { headers }
+          { 
+            headers,
+            signal: controller.signal
+          }
         )
+        
+        clearTimeout(timeoutId)
 
         // Tratamento específico para diferentes erros
         if (response.status === 403) {
@@ -364,8 +373,20 @@ export const useGitHubRepos = (username) => {
 
         setRepos(sortedRepos)
       } catch (err) {
-        console.error('Error fetching GitHub repos:', err)
-        setError(err.message)
+        // Não logar erros de abort (timeout) ou erros de rede silenciosamente
+        // Apenas logar outros erros em desenvolvimento
+        if (import.meta.env.DEV && err.name !== 'AbortError') {
+          console.error('Error fetching GitHub repos:', err)
+        }
+        
+        // Se for erro de abort (timeout) ou erro de rede, não definir erro
+        // Apenas deixar o componente usar fallback
+        if (err.name === 'AbortError') {
+          setError('Timeout ao carregar repositórios')
+        } else {
+          setError(err.message)
+        }
+        
         // Não definir repos vazio, deixar o componente usar fallback
         setRepos([])
       } finally {
@@ -373,7 +394,15 @@ export const useGitHubRepos = (username) => {
       }
     }
 
-    fetchRepos()
+    // Delay inicial para não bloquear renderização inicial (importante para SEO)
+    // Apenas buscar após um pequeno delay para não bloquear o carregamento da página
+    const timeoutId = setTimeout(() => {
+      fetchRepos()
+    }, 100)
+    
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [username])
 
   return { repos, loading, error }

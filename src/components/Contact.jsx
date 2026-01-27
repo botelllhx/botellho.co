@@ -60,7 +60,7 @@ const Contact = () => {
             from_email: formData.email,
             subject: formData.subject,
             message: formData.message,
-            to_email: 'contato@botellho.co',
+            to_email: 'contato@botellho.com',
           }
         )
       } else {
@@ -100,7 +100,7 @@ const Contact = () => {
       }, 3000)
     } catch (error) {
       console.error('Erro ao enviar formulário:', error)
-      alert('Erro ao enviar mensagem. Tente novamente ou envie um email diretamente para contato@botellho.co')
+      alert('Erro ao enviar mensagem. Tente novamente ou envie um email diretamente para contato@botellho.com')
     }
   }
 
