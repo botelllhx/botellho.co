@@ -1,0 +1,517 @@
+{
+  "wordpress": {
+    "slug": "wordpress",
+    "title": "Desenvolvimento WordPress Personalizado",
+    "subtitle": "Sites WordPress de alta performance com UX/UI Design exclusivo",
+    "meta": {
+      "title": "Desenvolvimento WordPress Personalizado | botellho.co",
+      "description": "Desenvolvimento de sites WordPress personalizados com temas próprios, UX/UI Design exclusivo, alta performance e foco em experiência do usuário. Soluções sob medida para empresas, instituições e startups.",
+      "keywords": "desenvolvimento wordpress, wordpress personalizado, tema wordpress, ux ui design wordpress, sites wordpress, wordpress performance"
+    },
+    "hero": {
+      "title": "WordPress",
+      "subtitle": "Desenvolvimento + UX/UI Design",
+      "description": "Criamos sites WordPress que unem desenvolvimento técnico sólido com design de experiência excepcional."
+    },
+    "sections": [
+      {
+        "title": "Desenvolvimento Técnico",
+        "content": "Desenvolvemos temas WordPress do zero, garantindo código limpo, performático e escalável. Utilizamos as melhores práticas de desenvolvimento, arquitetura moderna e padrões WordPress para entregar soluções robustas e manuteníveis.",
+        "items": [
+          "Temas WordPress personalizados",
+          "Desenvolvimento de componentes reutilizáveis",
+          "Otimização de performance e velocidade",
+          "Integração com APIs e serviços externos",
+          "Código limpo e bem documentado"
+        ]
+      },
+      {
+        "title": "UX/UI Design",
+        "content": "Nossa abordagem única combina desenvolvimento técnico com expertise em UX/UI Design. Criamos interfaces que não apenas funcionam perfeitamente, mas também proporcionam experiências memoráveis e intuitivas para os usuários.",
+        "items": [
+          "Pesquisa e análise de usuários",
+          "Wireframes e protótipos interativos",
+          "Design de interface moderno e responsivo",
+          "Testes de usabilidade e iteração",
+          "Design system e componentes visuais"
+        ]
+      },
+      {
+        "title": "Performance e SEO",
+        "content": "Sites rápidos e otimizados para mecanismos de busca são fundamentais. Implementamos técnicas avançadas de otimização, garantindo carregamento rápido e melhor posicionamento nos resultados de busca.",
+        "items": [
+          "Otimização de imagens e assets",
+          "Lazy loading e code splitting",
+          "SEO técnico e on-page",
+          "Schema.org e structured data",
+          "Core Web Vitals otimizados"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Diferencial Competitivo",
+        "description": "A combinação de desenvolvimento técnico sólido com UX/UI Design cria um diferencial único no mercado."
+      },
+      {
+        "title": "Experiência do Usuário",
+        "description": "Sites que não apenas funcionam, mas proporcionam experiências excepcionais para os visitantes."
+      },
+      {
+        "title": "Performance",
+        "description": "Código otimizado e arquitetura moderna garantem sites rápidos e eficientes."
+      },
+      {
+        "title": "Manutenibilidade",
+        "description": "Código limpo e bem estruturado facilita atualizações e manutenções futuras."
+      }
+    ],
+    "cta": {
+      "text": "Quer um site WordPress que une desenvolvimento técnico e design de experiência?",
+      "button": "Falar com Especialista"
+    }
+  },
+  "plugins": {
+    "slug": "plugins",
+    "title": "Plugins WordPress Sob Medida",
+    "subtitle": "Automação e integração com UX/UI Design pensado",
+    "meta": {
+      "title": "Plugins WordPress Personalizados | botellho.co",
+      "description": "Criação de plugins WordPress sob medida para automatizar processos, integrar sistemas e resolver necessidades específicas. Desenvolvimento técnico com foco em experiência do usuário.",
+      "keywords": "plugins wordpress, plugin personalizado, desenvolvimento plugin wordpress, automação wordpress, integração wordpress"
+    },
+    "hero": {
+      "title": "Plugins WordPress",
+      "subtitle": "Automação + Integração",
+      "description": "Desenvolvemos plugins que automatizam processos complexos e integram sistemas, sempre pensando na experiência do usuário final."
+    },
+    "sections": [
+      {
+        "title": "Desenvolvimento de Plugins",
+        "content": "Criamos plugins WordPress personalizados que atendem necessidades específicas do seu negócio. Desenvolvemos soluções robustas, seguras e escaláveis que se integram perfeitamente ao WordPress.",
+        "items": [
+          "Análise de requisitos e arquitetura",
+          "Desenvolvimento seguindo padrões WordPress",
+          "APIs RESTful e integrações",
+          "Segurança e validação de dados",
+          "Documentação completa"
+        ]
+      },
+      {
+        "title": "Interface e Experiência",
+        "content": "Mesmo plugins administrativos merecem uma interface bem pensada. Criamos painéis intuitivos e interfaces que facilitam o uso e aumentam a produtividade.",
+        "items": [
+          "Design de interfaces administrativas",
+          "UX para painéis e configurações",
+          "Feedback visual e validações",
+          "Documentação e ajuda contextual",
+          "Testes de usabilidade"
+        ]
+      },
+      {
+        "title": "Automação e Integração",
+        "content": "Automatizamos processos complexos e integramos com sistemas externos, sempre mantendo a simplicidade para o usuário final.",
+        "items": [
+          "Automação de workflows",
+          "Integração com APIs externas",
+          "Sincronização de dados",
+          "Webhooks e eventos",
+          "Processamento em background"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Automação Inteligente",
+        "description": "Reduza trabalho manual e aumente a eficiência com automações bem pensadas."
+      },
+      {
+        "title": "Interface Intuitiva",
+        "description": "Plugins com interfaces que facilitam o uso e aumentam a produtividade."
+      },
+      {
+        "title": "Integração Perfeita",
+        "description": "Soluções que se integram naturalmente ao WordPress e sistemas externos."
+      },
+      {
+        "title": "Manutenção Simplificada",
+        "description": "Código organizado e documentado facilita atualizações e manutenções."
+      }
+    ],
+    "cta": {
+      "text": "Precisa automatizar processos ou integrar sistemas no WordPress?",
+      "button": "Falar com Especialista"
+    }
+  },
+  "ux-ui-design": {
+    "slug": "ux-ui-design",
+    "title": "UX/UI Design",
+    "subtitle": "Design de Experiência e Interface",
+    "meta": {
+      "title": "UX/UI Design | botellho.co",
+      "description": "Serviços de UX/UI Design para sites e aplicações web. Pesquisa de usuários, prototipagem, design de interfaces e testes de usabilidade. Design que une estética e funcionalidade.",
+      "keywords": "ux design, ui design, design de experiência, design de interface, ux ui design, pesquisa de usuários, prototipagem"
+    },
+    "hero": {
+      "title": "UX/UI Design",
+      "subtitle": "Experiência + Interface",
+      "description": "Criamos interfaces que não apenas são bonitas, mas também funcionais, intuitivas e centradas no usuário."
+    },
+    "sections": [
+      {
+        "title": "Pesquisa e Análise",
+        "content": "Entendemos profundamente seus usuários, seus objetivos e suas necessidades. Realizamos pesquisas, análises de concorrência e definimos personas para guiar todas as decisões de design.",
+        "items": [
+          "Pesquisa de usuários e personas",
+          "Análise de concorrência",
+          "Mapeamento de jornadas do usuário",
+          "Definição de requisitos funcionais",
+          "Estratégia de conteúdo"
+        ]
+      },
+      {
+        "title": "Prototipagem e Wireframes",
+        "content": "Criamos protótipos interativos e wireframes detalhados que validam conceitos antes do desenvolvimento, economizando tempo e recursos.",
+        "items": [
+          "Wireframes de baixa e alta fidelidade",
+          "Prototipagem interativa",
+          "Testes de usabilidade",
+          "Iteração baseada em feedback",
+          "Documentação de design"
+        ]
+      },
+      {
+        "title": "Design de Interface",
+        "content": "Criamos interfaces visuais modernas, consistentes e alinhadas à identidade da marca, sempre priorizando a usabilidade e a acessibilidade.",
+        "items": [
+          "Design system e componentes",
+          "Identidade visual e branding",
+          "Design responsivo e mobile-first",
+          "Acessibilidade (WCAG)",
+          "Animações e microinterações"
+        ]
+      },
+      {
+        "title": "Desenvolvimento Colaborativo",
+        "content": "Trabalhamos em estreita colaboração com desenvolvedores, garantindo que o design seja implementado fielmente e que a experiência final seja excepcional.",
+        "items": [
+          "Handoff para desenvolvimento",
+          "Especificações técnicas detalhadas",
+          "Revisão de implementação",
+          "Ajustes e refinamentos",
+          "Garantia de qualidade visual"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Experiência do Usuário",
+        "description": "Interfaces pensadas para o usuário resultam em maior satisfação e conversão."
+      },
+      {
+        "title": "Diferencial Competitivo",
+        "description": "Design bem executado é um diferencial que destaca sua marca no mercado."
+      },
+      {
+        "title": "Redução de Custos",
+        "description": "Prototipagem e testes reduzem retrabalho e custos de desenvolvimento."
+      },
+      {
+        "title": "Acessibilidade",
+        "description": "Designs acessíveis ampliam seu público e melhoram a experiência para todos."
+      }
+    ],
+    "cta": {
+      "text": "Quer elevar a experiência do seu site ou aplicação?",
+      "button": "Falar com Designer"
+    }
+  },
+  "web": {
+    "slug": "desenvolvimento-web",
+    "title": "Desenvolvimento Web",
+    "subtitle": "Sistemas web modernos com UX/UI Design",
+    "meta": {
+      "title": "Desenvolvimento Web | botellho.co",
+      "description": "Desenvolvimento de sistemas web modernos, escaláveis e seguros. Soluções que unem desenvolvimento técnico sólido com UX/UI Design excepcional.",
+      "keywords": "desenvolvimento web, sistemas web, aplicações web, desenvolvimento frontend, desenvolvimento backend"
+    },
+    "hero": {
+      "title": "Desenvolvimento Web",
+      "subtitle": "Tecnologia + Design",
+      "description": "Criamos sistemas web modernos que unem desenvolvimento técnico de ponta com design de experiência excepcional."
+    },
+    "sections": [
+      {
+        "title": "Arquitetura e Desenvolvimento",
+        "content": "Desenvolvemos sistemas web escaláveis, seguros e performáticos, utilizando tecnologias modernas e seguindo as melhores práticas de arquitetura de software.",
+        "items": [
+          "Arquitetura de software moderna",
+          "Desenvolvimento frontend e backend",
+          "APIs RESTful e GraphQL",
+          "Banco de dados otimizado",
+          "Segurança e boas práticas"
+        ]
+      },
+      {
+        "title": "UX/UI Design Integrado",
+        "content": "Nossa abordagem única integra desenvolvimento e design desde o início. Criamos interfaces que são tanto funcionais quanto visualmente atraentes.",
+        "items": [
+          "Design de experiência integrado",
+          "Interfaces responsivas e acessíveis",
+          "Animações e interações fluidas",
+          "Design system consistente",
+          "Testes de usabilidade"
+        ]
+      },
+      {
+        "title": "Performance e Escalabilidade",
+        "content": "Sistemas que crescem com seu negócio. Implementamos soluções que são rápidas, eficientes e preparadas para escalar.",
+        "items": [
+          "Otimização de performance",
+          "Arquitetura escalável",
+          "Cache e CDN",
+          "Monitoramento e analytics",
+          "DevOps e CI/CD"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Tecnologia Moderna",
+        "description": "Utilizamos as tecnologias mais modernas e adequadas para cada projeto."
+      },
+      {
+        "title": "Design Integrado",
+        "description": "Design e desenvolvimento trabalhando juntos desde o início."
+      },
+      {
+        "title": "Escalabilidade",
+        "description": "Sistemas preparados para crescer com seu negócio."
+      },
+      {
+        "title": "Manutenibilidade",
+        "description": "Código limpo e bem estruturado facilita manutenções futuras."
+      }
+    ],
+    "cta": {
+      "text": "Precisa de um sistema web moderno e bem projetado?",
+      "button": "Falar com Especialista"
+    }
+  },
+  "suporte": {
+    "slug": "suporte-manutencao",
+    "title": "Suporte e Manutenção",
+    "subtitle": "Acompanhamento contínuo e melhorias",
+    "meta": {
+      "title": "Suporte e Manutenção WordPress | botellho.co",
+      "description": "Manutenção contínua, melhorias técnicas e acompanhamento para garantir estabilidade e crescimento. Suporte especializado em WordPress e desenvolvimento web.",
+      "keywords": "suporte wordpress, manutenção wordpress, suporte técnico, manutenção de sites"
+    },
+    "hero": {
+      "title": "Suporte e Manutenção",
+      "subtitle": "Acompanhamento Contínuo",
+      "description": "Garantimos que seu site continue funcionando perfeitamente e evoluindo com seu negócio."
+    },
+    "sections": [
+      {
+        "title": "Manutenção Preventiva",
+        "content": "Realizamos manutenções regulares para garantir que seu site esteja sempre atualizado, seguro e performático.",
+        "items": [
+          "Atualizações de WordPress e plugins",
+          "Backups regulares e restauração",
+          "Monitoramento de segurança",
+          "Otimização de performance",
+          "Correção de bugs e problemas"
+        ]
+      },
+      {
+        "title": "Melhorias e Evolução",
+        "content": "Não apenas mantemos, mas também melhoramos. Implementamos novas funcionalidades e refinamos a experiência do usuário.",
+        "items": [
+          "Novas funcionalidades",
+          "Melhorias de UX/UI",
+          "Otimizações de performance",
+          "Atualizações de design",
+          "Integrações e automações"
+        ]
+      },
+      {
+        "title": "Suporte Técnico",
+        "content": "Estamos sempre disponíveis para resolver problemas, responder dúvidas e ajudar com questões técnicas.",
+        "items": [
+          "Suporte por email e chat",
+          "Resolução rápida de problemas",
+          "Consultoria técnica",
+          "Treinamento e documentação",
+          "Análise e relatórios"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Tranquilidade",
+        "description": "Seu site sempre funcionando, sem preocupações."
+      },
+      {
+        "title": "Evolução Contínua",
+        "description": "Melhorias constantes mantêm seu site atualizado e competitivo."
+      },
+      {
+        "title": "Suporte Especializado",
+        "description": "Equipe técnica pronta para ajudar quando precisar."
+      },
+      {
+        "title": "Segurança",
+        "description": "Monitoramento e atualizações garantem a segurança do seu site."
+      }
+    ],
+    "cta": {
+      "text": "Quer garantir que seu site continue evoluindo?",
+      "button": "Falar sobre Suporte"
+    }
+  },
+  "institucional": {
+    "slug": "sites-institucionais",
+    "title": "Sites Institucionais",
+    "subtitle": "Soluções digitais para instituições",
+    "meta": {
+      "title": "Sites Institucionais | botellho.co",
+      "description": "Soluções digitais para instituições, organizações e projetos que exigem clareza, robustez e confiabilidade. WordPress com UX/UI Design profissional.",
+      "keywords": "sites institucionais, sites para instituições, wordpress institucional, sites para organizações"
+    },
+    "hero": {
+      "title": "Sites Institucionais",
+      "subtitle": "Clareza + Confiabilidade",
+      "description": "Criamos sites que transmitem credibilidade e profissionalismo, com foco em clareza de comunicação e experiência do usuário."
+    },
+    "sections": [
+      {
+        "title": "Desenvolvimento Institucional",
+        "content": "Desenvolvemos sites que refletem a seriedade e credibilidade de instituições, com foco em clareza de informação e facilidade de navegação.",
+        "items": [
+          "Arquitetura de informação clara",
+          "Design profissional e confiável",
+          "Acessibilidade e inclusão",
+          "Performance e segurança",
+          "Conformidade e padrões"
+        ]
+      },
+      {
+        "title": "UX/UI para Instituições",
+        "content": "Criamos experiências que facilitam o acesso à informação e melhoram a comunicação entre instituição e público.",
+        "items": [
+          "Pesquisa com stakeholders",
+          "Design centrado no usuário",
+          "Navegação intuitiva",
+          "Acessibilidade (WCAG)",
+          "Testes de usabilidade"
+        ]
+      },
+      {
+        "title": "Gestão de Conteúdo",
+        "content": "Sistemas de gestão de conteúdo que facilitam a atualização e manutenção de informações institucionais.",
+        "items": [
+          "WordPress customizado",
+          "Editorias e categorias",
+          "Gestão de usuários e permissões",
+          "Formulários e integrações",
+          "Documentação e treinamento"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Credibilidade",
+        "description": "Sites profissionais que transmitem confiança e seriedade."
+      },
+      {
+        "title": "Acessibilidade",
+        "description": "Sites acessíveis ampliam o alcance e inclusão."
+      },
+      {
+        "title": "Facilidade de Gestão",
+        "description": "Sistemas que facilitam a atualização de conteúdo."
+      },
+      {
+        "title": "Performance",
+        "description": "Sites rápidos e otimizados melhoram a experiência."
+      }
+    ],
+    "cta": {
+      "text": "Quer um site que reflita a credibilidade da sua instituição?",
+      "button": "Falar com Especialista"
+    }
+  },
+  "seguranca": {
+    "slug": "seguranca-performance",
+    "title": "Segurança e Performance",
+    "subtitle": "Otimização técnica e segurança",
+    "meta": {
+      "title": "Segurança e Performance WordPress | botellho.co",
+      "description": "Otimização de segurança, performance e SEO técnico para ambientes WordPress e sistemas web. Auditorias, melhorias e monitoramento contínuo.",
+      "keywords": "segurança wordpress, performance wordpress, otimização wordpress, seo técnico, auditoria wordpress"
+    },
+    "hero": {
+      "title": "Segurança e Performance",
+      "subtitle": "Otimização Técnica",
+      "description": "Garantimos que seu site seja rápido, seguro e otimizado para mecanismos de busca."
+    },
+    "sections": [
+      {
+        "title": "Segurança",
+        "content": "Implementamos medidas de segurança robustas para proteger seu site contra ameaças e vulnerabilidades.",
+        "items": [
+          "Auditoria de segurança",
+          "Proteção contra ataques",
+          "Atualizações e patches",
+          "Monitoramento de segurança",
+          "Backups e recuperação"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": "Otimizamos seu site para carregar rapidamente e proporcionar uma experiência fluida aos usuários.",
+        "items": [
+          "Otimização de código e assets",
+          "Cache e CDN",
+          "Otimização de banco de dados",
+          "Core Web Vitals",
+          "Monitoramento de performance"
+        ]
+      },
+      {
+        "title": "SEO Técnico",
+        "content": "Implementamos otimizações técnicas que melhoram o posicionamento nos mecanismos de busca.",
+        "items": [
+          "Schema.org e structured data",
+          "Otimização de URLs e sitemap",
+          "Meta tags e Open Graph",
+          "Velocidade e Core Web Vitals",
+          "Análise e relatórios"
+        ]
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Segurança",
+        "description": "Sites protegidos contra ameaças e vulnerabilidades."
+      },
+      {
+        "title": "Velocidade",
+        "description": "Sites rápidos melhoram a experiência e o SEO."
+      },
+      {
+        "title": "Visibilidade",
+        "description": "Otimizações técnicas melhoram o posicionamento."
+      },
+      {
+        "title": "Confiabilidade",
+        "description": "Sites estáveis e confiáveis geram mais confiança."
+      }
+    ],
+    "cta": {
+      "text": "Quer otimizar a segurança e performance do seu site?",
+      "button": "Falar com Especialista"
+    }
+  }
+}
