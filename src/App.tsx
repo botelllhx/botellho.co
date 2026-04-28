@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Studio from "./pages/Studio";
 // @ts-ignore
 import BlogPage from "./pages/legacy/BlogPage";
 // @ts-ignore
@@ -29,6 +30,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/studio" element={<Studio />} />
 
             {/* Legacy Routes */}
             {/* @ts-ignore */}
