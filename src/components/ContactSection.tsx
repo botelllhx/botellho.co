@@ -10,6 +10,7 @@ import { toast } from "sonner";
 const ContactSection = () => {
   const { ref, isInView } = useScrollAnimation({ threshold: 0.1 });
   const { sendEmail, loading } = useContactForm();
+  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -26,6 +27,16 @@ const ContactSection = () => {
 
     if (!formData.name || !formData.email || !formData.message) {
       toast.warning("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    // If reCAPTCHA key is not configured, fallback to send without token.
+    if (!recaptchaSiteKey) {
+      toast.warning("reCAPTCHA nao configurado. Envio em modo degradado.");
+      const success = await sendEmail(formData, null);
+      if (success) {
+        setFormData({ name: "", email: "", project: "", message: "" });
+      }
       return;
     }
 
@@ -253,14 +264,16 @@ const ContactSection = () => {
             </button>
 
             {/* ReCAPTCHA v2 Invisible */}
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              size="invisible"
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
-              onChange={() => { }} // Not used with executeAsync
-              onErrored={onCaptchaErrored}
-              theme="dark"
-            />
+            {recaptchaSiteKey ? (
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                size="invisible"
+                sitekey={recaptchaSiteKey}
+                onChange={() => { }} // Not used with executeAsync
+                onErrored={onCaptchaErrored}
+                theme="dark"
+              />
+            ) : null}
           </motion.form>
         </div>
       </div>

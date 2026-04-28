@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import SectionWireScene from "@/components/SectionWireScene";
 
 import { Link } from "react-router-dom";
 
@@ -46,6 +47,10 @@ const ServicesSection = () => {
       id="servicos"
       className="relative overflow-hidden bg-background py-32 md:py-48"
     >
+      <SectionWireScene
+        variant="cup"
+        className="absolute -right-10 top-20 hidden h-56 w-72 opacity-90 lg:block"
+      />
       {/* Section Label */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}

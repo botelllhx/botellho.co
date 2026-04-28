@@ -87,6 +87,7 @@ const AboutSection = () => {
                 Vamos Conversar
               </a>
             </motion.div>
+
           </div>
 
           {/* Right - Stats */}

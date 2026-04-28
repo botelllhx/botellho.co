@@ -191,6 +191,7 @@
     animation: scroll-bounce 2s ease-in-out infinite;
   }
 
+
   .logo-char {
     display: inline-block;
     animation: logoFontShuffle 12s ease-in-out infinite;
@@ -200,6 +201,17 @@
     width: 0.7em;
     text-align: center;
   }
+
+  .creative-card {
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .creative-card:hover {
+    transform: perspective(1400px) rotateX(1.8deg) rotateY(-2.2deg) translateY(-4px);
+  }
+
 }
 
 @layer utilities {
@@ -455,6 +467,7 @@
     transform: translateY(10px);
   }
 }
+
 
 @keyframes loader-progress {
   0% {

@@ -29,10 +29,10 @@ const PortfolioSection = () => {
     id: project.id,
     title: project.title,
     category: project.category || "Projeto",
-    year: new Date(project.updated_at).getFullYear().toString(),
     description: project.short_description,
     mediaUrl: project.cover_media_url || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length],
     mediaType: project.media_type,
+    tags: project.tags ?? [],
     link: project.project_url || project.repo_url || "#",
   }));
 
@@ -103,13 +103,13 @@ const PortfolioSection = () => {
 
 interface ProjectCardProps {
   project: {
-    id: number;
+    id: string;
     title: string;
     category: string;
-    year: string;
     description: string;
     mediaUrl: string;
     mediaType: PortfolioProject["media_type"];
+    tags: string[];
     link?: string;
   };
   index: number;
@@ -126,16 +126,16 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       initial={{ opacity: 0, y: 80 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex flex-col gap-8 ${isEven ? "md:flex-row" : "md:flex-row-reverse"}`}
+      className={`creative-card flex flex-col gap-8 ${isEven ? "md:flex-row" : "md:flex-row-reverse"}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden md:w-1/2">
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-primary md:w-[58%] md:flex-none xl:w-[64%] xl:aspect-[21/9]">
         {project.mediaType === "video" ? (
           <motion.video
             src={project.mediaUrl}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             autoPlay
             muted
             loop
@@ -162,13 +162,10 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       </div>
 
       {/* Info */}
-      <div className="flex flex-1 flex-col justify-center md:px-8">
+      <div className="flex w-full flex-col justify-center md:w-[42%] md:flex-none md:px-4 lg:px-6 xl:w-[36%]">
         <div className="flex items-center gap-4 mb-4">
           <span className="font-mono text-xs uppercase tracking-widest text-primary-foreground/60">
             {project.category}
-          </span>
-          <span className="font-mono text-xs text-primary-foreground/40">
-            {project.year}
           </span>
         </div>
 
@@ -179,6 +176,19 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         <p className="font-sans text-base leading-relaxed text-primary-foreground/70 mb-8">
           {project.description}
         </p>
+
+        {project.tags.length > 0 ? (
+          <div className="mb-6 flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="font-mono text-[10px] uppercase tracking-widest text-primary-foreground/80 border border-primary-foreground/20 px-2 py-1"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
 
         <motion.a
           href={project.link || "#"}

@@ -1,6 +1,7 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { useRef } from "react";
+import BrutalistThreeScene from "@/components/BrutalistThreeScene";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,31 +15,49 @@ const HeroSection = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+  const sceneY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const tiltX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), {
+    stiffness: 120,
+    damping: 18,
+  });
+  const tiltY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), {
+    stiffness: 120,
+    damping: 18,
+  });
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const normalizedX = (event.clientX - rect.left) / rect.width - 0.5;
+    const normalizedY = (event.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(normalizedX);
+    mouseY.set(normalizedY);
+  };
 
   return (
     <section
       ref={containerRef}
       className="relative min-h-screen overflow-hidden bg-background"
+      onMouseMove={handleMouseMove}
     >
+      <motion.div style={{ y: sceneY }} className="absolute inset-0">
+        <BrutalistThreeScene />
+      </motion.div>
+
       {/* Main Content */}
       <motion.div
         style={{ opacity, scale }}
-        className="container relative z-10 flex min-h-screen flex-col justify-center px-6 py-20"
+        className="container relative z-10 flex min-h-screen flex-col justify-center px-6 py-24 md:py-20"
       >
-        {/* Top bar */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="absolute left-6 top-32 md:top-40"
-        >
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Agência Digital
-          </span>
-        </motion.div>
+        <div className="absolute left-6 top-24 right-6 flex items-center justify-between md:top-28">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Botellho.co</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Issue 01</span>
+        </div>
 
         {/* Main Typography - Asymmetric Layout */}
-        <div className="mt-20 md:mt-0">
+        <div className="mt-20 md:mt-12 xl:mt-0">
           {/* Line 1 */}
           <motion.div
             style={{ y: y1 }}
@@ -48,7 +67,7 @@ const HeroSection = () => {
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-massive font-bold tracking-tighter text-foreground"
+              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-foreground"
             >
               CRIAMOS
             </motion.h1>
@@ -57,13 +76,13 @@ const HeroSection = () => {
           {/* Line 2 - Offset */}
           <motion.div
             style={{ y: y2 }}
-            className="overflow-hidden md:ml-[15vw]"
+            className="overflow-hidden md:ml-[11vw] xl:ml-[14vw]"
           >
             <motion.h1
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-massive font-bold tracking-tighter text-primary"
+              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-primary"
             >
               DIGITAL
             </motion.h1>
@@ -72,13 +91,13 @@ const HeroSection = () => {
           {/* Line 3 - Different offset */}
           <motion.div
             style={{ y: y3 }}
-            className="overflow-hidden md:ml-[5vw]"
+            className="overflow-hidden md:ml-[4vw] xl:ml-[6vw]"
           >
             <motion.h1
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-massive font-bold tracking-tighter text-stroke"
+              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-stroke"
             >
               ÚNICO
             </motion.h1>
@@ -90,20 +109,21 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="absolute bottom-32 right-6 max-w-md md:bottom-40 md:right-12 lg:right-24"
+          style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1200 }}
+          className="mt-10 max-w-xl self-start border-2 border-foreground/20 bg-background p-5 md:mt-12 md:p-6 xl:absolute xl:bottom-24 xl:right-12 xl:mt-0 xl:max-w-md 2xl:right-24"
         >
-          <p className="font-sans text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
             Agência de desenvolvimento de sites e sistemas em{" "}
             <span className="font-semibold text-foreground">Belo Horizonte</span>.
             Especialistas em WordPress e experiências web que{" "}
             <span className="font-semibold text-primary">transformam</span>.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#portfolio" className="neo-button">
+          <div className="mt-8 flex flex-wrap gap-3 md:gap-4">
+            <a href="#portfolio" className="neo-button px-6 py-3 text-xs">
               Ver Projetos
             </a>
-            <a href="#contato" className="neo-button-outline">
+            <a href="#contato" className="neo-button-outline px-6 py-3 text-xs">
               Contato
             </a>
           </div>
@@ -114,7 +134,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-12 left-6 flex items-center gap-4"
+          className="absolute bottom-12 left-6 hidden items-center gap-4 md:flex"
         >
           <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
             Scroll
@@ -127,7 +147,7 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Floating asterisk */}
+        {/* Floating marker */}
         <motion.div
           initial={{ opacity: 0, scale: 0, rotate: -180 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -137,7 +157,7 @@ const HeroSection = () => {
           <motion.span
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="block font-display text-8xl text-primary"
+            className="block border-2 border-primary px-5 py-2 font-display text-6xl text-primary"
           >
             ✱
           </motion.span>

@@ -14,7 +14,7 @@ const Index = () => {
   return (
     <>
       {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
-      <div className={`min-h-screen bg-background ${isLoading ? 'overflow-hidden h-screen' : ''}`}>
+      <div className={`relative min-h-screen bg-background ${isLoading ? "overflow-hidden h-screen" : ""}`}>
         <Navbar />
         <HeroSection />
         <ServicesSection />
