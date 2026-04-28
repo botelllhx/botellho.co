@@ -30,9 +30,35 @@ npm run build
 
 ## 📤 Deploy para GitHub Pages
 
-```bash
-npm run deploy
-```
+O deploy e feito automaticamente pelo GitHub Actions quando ha push/merge na branch `main`.
+
+- Branch de origem: `main`
+- Branch de publicacao: `gh-pages`
+- Workflow: `.github/workflows/deploy.yml`
+
+## 🌿 Convencao de Branches
+
+- `main`: branch unica de integracao e producao (cada merge pode disparar deploy)
+- `feature/<escopo-curto>`: novas funcionalidades
+- `hotfix/<escopo-curto>`: correcoes urgentes de producao
+- `chore/<escopo-curto>`: manutencao tecnica (deps, CI, lint, docs de infra)
+- `gh-pages`: branch tecnica de artefato; nao receber commits manuais
+
+## 🔀 Fluxo de PR e Merge
+
+1. Crie uma branch a partir de `main` (`feature/*`, `hotfix/*` ou `chore/*`)
+2. Abra PR para `main`
+3. Garanta checks obrigatorios passando (build/test/lint)
+4. Use merge por squash para manter historico limpo
+5. Apague a branch de trabalho apos merge
+
+## ✅ Checklist de protecao da main (GitHub Settings)
+
+- Exigir pull request antes de merge
+- Exigir status checks obrigatorios
+- Bloquear push direto para `main`
+- Exigir branch atualizada antes do merge
+- Restringir quem pode dar bypass nas regras (apenas administradores, se necessario)
 
 ## 🎨 Personalização de Cores
 
