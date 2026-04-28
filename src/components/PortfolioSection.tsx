@@ -2,6 +2,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ArrowUpRight } from "lucide-react";
+import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
+import type { PortfolioProject } from "@/types/portfolio";
 
 const PLACEHOLDER_IMAGES = [
   "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
@@ -12,10 +14,6 @@ const PLACEHOLDER_IMAGES = [
   "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=600&fit=crop"
 ];
 
-// Import hook (ignoring TS warning for JS file if needed, but allowJs should handle it)
-// @ts-ignore
-import { useGitHubRepos } from "../hooks/useGitHubRepos";
-
 const PortfolioSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -23,22 +21,20 @@ const PortfolioSection = () => {
     offset: ["start end", "end start"],
   });
 
-  const { repos, loading, error } = useGitHubRepos('botelllhx');
+  const { projects, loading, error, isConfigured } = usePortfolioProjects();
 
   const x = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
-  // Map GitHub repos to project format
-  const projects = repos && repos.length > 0
-    ? repos.map((repo: any, index: number) => ({
-      id: repo.id,
-      title: repo.name.replace(/-/g, ' ').replace(/_/g, ' '),
-      category: repo.category || "Web",
-      year: new Date(repo.updatedAt).getFullYear().toString(),
-      description: repo.description,
-      image: PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length],
-      link: repo.homepage || repo.url
-    }))
-    : []; // Fallback logic could be added here if needed
+  const displayProjects = projects.map((project, index) => ({
+    id: project.id,
+    title: project.title,
+    category: project.category || "Projeto",
+    year: new Date(project.updated_at).getFullYear().toString(),
+    description: project.short_description,
+    mediaUrl: project.cover_media_url || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length],
+    mediaType: project.media_type,
+    link: project.project_url || project.repo_url || "#",
+  }));
 
   return (
     <section
@@ -73,8 +69,16 @@ const PortfolioSection = () => {
             <div className="text-center text-primary-foreground">Carregando projetos...</div>
           ) : error ? (
             <div className="text-center text-red-400">Erro ao carregar projetos.</div>
+          ) : !isConfigured ? (
+            <div className="text-center text-primary-foreground/70">
+              Portfolio em configuracao. Defina o Supabase para exibir os projetos curados.
+            </div>
+          ) : displayProjects.length === 0 ? (
+            <div className="text-center text-primary-foreground/70">
+              Nenhum projeto publicado no studio ainda.
+            </div>
           ) : (
-            projects.map((project: any, index: number) => (
+            displayProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))
           )}
@@ -88,15 +92,9 @@ const PortfolioSection = () => {
           transition={{ duration: 0.8 }}
           className="mt-24 text-center"
         >
-          <a
-            href="https://github.com/botelllhx"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-60"
-          >
-            Ver todos os projetos no GitHub
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
+          <span className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-primary-foreground/70">
+            Projetos curados e gerenciados no studio privado
+          </span>
         </motion.div>
       </div>
     </section>
@@ -110,7 +108,8 @@ interface ProjectCardProps {
     category: string;
     year: string;
     description: string;
-    image: string;
+    mediaUrl: string;
+    mediaType: PortfolioProject["media_type"];
     link?: string;
   };
   index: number;
@@ -133,13 +132,26 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
     >
       {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden md:w-1/2">
-        <motion.img
-          src={project.image}
-          alt={project.title}
-          className="h-full w-full object-cover"
-          animate={{ scale: isHovered ? 1.05 : 1 }}
-          transition={{ duration: 0.6 }}
-        />
+        {project.mediaType === "video" ? (
+          <motion.video
+            src={project.mediaUrl}
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            animate={{ scale: isHovered ? 1.03 : 1 }}
+            transition={{ duration: 0.6 }}
+          />
+        ) : (
+          <motion.img
+            src={project.mediaUrl}
+            alt={project.title}
+            className="h-full w-full object-cover"
+            animate={{ scale: isHovered ? 1.05 : 1 }}
+            transition={{ duration: 0.6 }}
+          />
+        )}
         <motion.div
           className="absolute inset-0 bg-primary"
           initial={{ scaleX: 1 }}
