@@ -48,7 +48,7 @@ O deploy e feito automaticamente pelo GitHub Actions quando ha push/merge na bra
 
 1. Crie uma branch a partir de `main` (`feature/*`, `hotfix/*` ou `chore/*`)
 2. Abra PR para `main`
-3. Garanta checks obrigatorios passando (build/test/lint)
+3. Garanta checks obrigatorios passando (test/build)
 4. Use merge por squash para manter historico limpo
 5. Apague a branch de trabalho apos merge
 
