@@ -16,6 +16,12 @@ Site portfolio e prestação de serviços da botellho.co, especializada em desen
 npm install
 ```
 
+Copie variaveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
 ## 🛠️ Desenvolvimento
 
 ```bash
@@ -35,6 +41,24 @@ O deploy e feito automaticamente pelo GitHub Actions quando ha push/merge na bra
 - Branch de origem: `main`
 - Branch de publicacao: `gh-pages`
 - Workflow: `.github/workflows/deploy.yml`
+
+## 🔐 Studio privado do portfolio
+
+- URL privada: `/studio`
+- Autenticacao: Supabase Auth (email/senha)
+- Fonte de dados publica do portfolio: tabela `portfolio_projects`
+- Midia: bucket `portfolio-media`
+
+### Setup do Supabase
+
+1. Preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env`
+2. Rode o SQL de infraestrutura em `supabase/schema.sql` no SQL Editor do Supabase
+3. Crie seu usuario no Supabase Auth
+4. Cadastre seu usuario como admin:
+   ```sql
+   insert into public.admin_users (user_id) values ('SEU_AUTH_USER_UUID');
+   ```
+5. Acesse `/studio` e gerencie os projetos
 
 ## 🌿 Convencao de Branches
 
