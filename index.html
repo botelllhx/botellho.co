@@ -5,6 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <script type="text/javascript">
+    // Decoder do fallback SPA (tecnica spa-github-pages): restaura a rota
+    // codificada pelo 404.html antes do React Router assumir.
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+      }
+    }(window.location));
+  </script>
+
   <title>botellho | Estúdio de web e experiências digitais</title>
   <meta name="description"
     content="Estúdio brasileiro de web e experiências digitais para instituições culturais e marcas que querem ser lembradas. Craft de nível de prêmio, WebGL e domínio real do setor cultural." />
