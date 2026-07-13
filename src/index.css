@@ -362,6 +362,38 @@
   }
 }
 
+/* ===== Moldura CRT do hero (a "tela" e a excecao ao radius 0) ===== */
+.crt-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: hsl(var(--ink));
+  border: 1px solid hsl(var(--foreground) / 0.18);
+  box-shadow:
+    inset 0 0 0 8px hsl(var(--ink)),
+    inset 0 0 90px hsl(var(--ink) / 0.9),
+    0 0 0 1px hsl(var(--foreground) / 0.08);
+}
+
+/* Vidro: vinheta + scanlines discretas por cima do canvas */
+.crt-frame__glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 120% at 50% 50%, transparent 58%, hsl(var(--ink) / 0.85) 100%),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, hsl(var(--ink) / 0.22) 3px);
+}
+
+.crt-frame__tag {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  color: hsl(var(--phosphor));
+  opacity: 0.8;
+}
+
 /* ===== Boot / loader (peca de marca) ===== */
 .boot {
   position: fixed;

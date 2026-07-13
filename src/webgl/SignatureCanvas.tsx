@@ -12,6 +12,8 @@ interface SignatureCanvasProps {
   children: ReactNode;
   className?: string;
   camera?: { fov: number; position: [number, number, number] };
+  /** intensidade da curvatura/scanline CRT (0..1); o hero usa mais */
+  crt?: number;
   /** fallback estatico para reduced-motion e aparelho fraco */
   fallback?: ReactNode;
 }
@@ -29,12 +31,13 @@ const SignatureCanvas = ({
   children,
   className,
   camera = { fov: 38, position: [0, 0, 21] },
+  crt = SIGNATURE_DEFAULTS.crt,
   fallback,
 }: SignatureCanvasProps) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<"idle" | "live" | "static">("idle");
   const [inView, setInView] = useState(true);
-  const effect = useMemo(() => new PhosphorEffect(SIGNATURE_DEFAULTS), []);
+  const effect = useMemo(() => new PhosphorEffect({ ...SIGNATURE_DEFAULTS, crt }), [crt]);
 
   useEffect(() => {
     if (prefersStatic()) {

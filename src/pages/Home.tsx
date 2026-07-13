@@ -1,9 +1,9 @@
 import { Head } from "vite-react-ssg";
 import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
-import Decode from "@/motion/Decode";
+import SignalText from "@/motion/SignalText";
 import SignatureCanvas from "@/webgl/SignatureCanvas";
-import SignalScene from "@/webgl/SignalScene";
+import BanScene from "@/webgl/BanScene";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
 
 // Programas da home: indice de servicos no formato de diretorio DOS.
@@ -64,53 +64,33 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== Hero SINAL ===== */}
-      <section
-        className="relative flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-end overflow-hidden"
-        data-cursor="3d"
-      >
-        {/* A cena SINAL (3D -> dither): lazy, pausa fora de tela, fallback estatico */}
-        <SignatureCanvas
-          className="pointer-events-none absolute inset-0 z-0"
-          fallback={
-            <img
-              src="/hero-fallback.png"
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover opacity-80"
-            />
-          }
-        >
-          <SignalScene />
-        </SignatureCanvas>
-
-        <div className="relative z-10 flex items-center justify-between px-4 pt-6 md:px-6">
-          <span className="type-label text-muted-foreground">&gt; sinal: vivo</span>
-          <span className="type-label hidden text-muted-foreground md:block">
-            estúdio de web e experiências
-          </span>
-        </div>
-
-        <div className="relative z-10 mt-auto px-4 pb-16 md:px-6 md:pb-20">
-          <h1 className="type-tese max-w-6xl">
-            <LineReveal as="span" className="block">
-              Web que se move.
-            </LineReveal>
-            <span className="block text-phosphor">
-              <Decode text="Experiências digitais" delay={500} />
+      {/* ===== Hero: o Ban na tela ===== */}
+      <section className="relative overflow-hidden px-4 md:px-6">
+        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+          {/* Texto */}
+          <div className="order-2 lg:order-1">
+            <span className="type-label text-muted-foreground">
+              &gt; estúdio de web e experiências digitais
             </span>
-            <LineReveal as="span" className="block" delay={0.16}>
-              feitas para durar na memória.
-            </LineReveal>
-          </h1>
+            <h1 className="type-tese mt-6 max-w-2xl">
+              <LineReveal as="span" className="block">
+                Web que se move.
+              </LineReveal>
+              <span className="block text-phosphor">
+                <SignalText text="Experiências digitais" delay={500} />
+              </span>
+              <LineReveal as="span" className="block" delay={0.16}>
+                feitas para durar na memória.
+              </LineReveal>
+            </h1>
 
-          <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <p className="max-w-md font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
+            <p className="mt-8 max-w-md font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
               Estúdio de web e WebGL com craft de nível de prêmio, para marcas,
               cultura e instituições que tratam o digital como experiência, não
               como folheto.
             </p>
-            <div className="flex flex-wrap gap-3">
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contato" className="cmd-button">
                 Começar um projeto
               </Link>
@@ -119,9 +99,32 @@ const Home = () => {
               </Link>
             </div>
           </div>
+
+          {/* A tela CRT com o Ban 3D */}
+          <div className="order-1 lg:order-2">
+            <div className="crt-frame aspect-[4/3] w-full" data-cursor="3d">
+              <SignatureCanvas
+                className="absolute inset-0"
+                crt={0.5}
+                camera={{ fov: 34, position: [0.2, 0.5, 6.2] }}
+                fallback={
+                  <img
+                    src="/ban/ban-1.png"
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-contain p-8"
+                  />
+                }
+              >
+                <BanScene />
+              </SignatureCanvas>
+              <div className="crt-frame__glass" />
+              <span className="crt-frame__tag type-label">ban // idle</span>
+            </div>
+          </div>
         </div>
 
-        <div className="rule relative z-10" />
+        <div className="rule" />
       </section>
 
       {/* ===== Índice de programas ===== */}

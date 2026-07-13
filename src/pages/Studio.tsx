@@ -1,7 +1,7 @@
 import { Head } from "vite-react-ssg";
 import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
-import Decode from "@/motion/Decode";
+import SignalText from "@/motion/SignalText";
 import Typing from "@/motion/Typing";
 
 // manifesto.txt: a pagina e um arquivo de texto aberto no terminal,
@@ -74,7 +74,7 @@ const Studio = () => {
             Web e experiências digitais
           </LineReveal>
           <span className="block">
-            com <Decode text="craft de nível de prêmio" className="text-phosphor" delay={400} />.
+            com <SignalText text="craft de nível de prêmio" className="text-phosphor" delay={400} />.
           </span>
         </h1>
       </section>
