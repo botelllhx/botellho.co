@@ -36,6 +36,21 @@
 
     --radius: 0px;
 
+    /* Identidade 1-bit: ink (apagado) / paper (campo) / phosphor (aceso) */
+    --ink: 0 0% 5%;
+    --paper: 0 0% 100%;
+    --phosphor: 227 87% 34%;
+
+    /* Motion (base de tudo; nada de valor solto) */
+    --dur-instant: 80ms;
+    --dur-fast: 180ms;
+    --dur-base: 320ms;
+    --dur-slow: 640ms;
+    --dur-cine: 1000ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-inout: cubic-bezier(0.65, 0.05, 0.36, 1);
+    --ease-mech: steps(6, end);
+
     /* Typography */
     --font-display: 'Syne', sans-serif;
     --font-mono: 'Space Grotesk', sans-serif;
@@ -92,8 +107,40 @@
   }
 
   ::selection {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background: hsl(var(--phosphor));
+    color: hsl(var(--paper));
+  }
+
+  /* Foco visivel no idioma do terminal (phosphor) */
+  :focus-visible {
+    outline: 2px solid hsl(var(--phosphor));
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar DOS: trilho fino, thumb phosphor, radius 0 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--phosphor)) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--phosphor));
+    border-radius: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
