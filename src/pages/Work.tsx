@@ -31,7 +31,7 @@ const Work = () => {
         <main>
           <section className="container px-6 pt-40 pb-20 md:pt-48 md:pb-24">
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              (Trabalhos)
+              &gt; trabalhos
             </span>
             <h1 className="mt-8 max-w-4xl font-display text-[clamp(2.2rem,5.5vw,5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
               Do institucional ao imersivo, a mesma régua de{" "}

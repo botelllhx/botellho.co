@@ -51,7 +51,7 @@ const PortfolioSection = () => {
         className="container px-6 mb-16"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-primary-foreground/60">
-          (Trabalhos selecionados)
+          &gt; trabalhos selecionados
         </span>
       </motion.div>
 

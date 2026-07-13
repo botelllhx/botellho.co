@@ -65,7 +65,7 @@ const HeroSection = () => {
               transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="block text-foreground"
             >
-              Sites e experiências digitais
+              Web que se move.
             </motion.span>
           </motion.span>
 
@@ -76,7 +76,7 @@ const HeroSection = () => {
               transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="block text-primary"
             >
-              para instituições
+              Experiências digitais
             </motion.span>
           </motion.span>
 
@@ -87,7 +87,7 @@ const HeroSection = () => {
               transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="block text-foreground"
             >
-              que querem ser lembradas.
+              feitas para durar na memória.
             </motion.span>
           </motion.span>
         </h1>
@@ -101,10 +101,10 @@ const HeroSection = () => {
           className="mt-10 max-w-xl self-start border-2 border-foreground/20 bg-background p-5 md:mt-12 md:p-6 xl:absolute xl:bottom-24 xl:right-12 xl:mt-0 xl:max-w-md 2xl:right-24"
         >
           <p className="font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
-            Estúdio de web com craft de nível de prêmio e{" "}
-            <span className="font-semibold text-foreground">domínio real do setor cultural</span>.
-            Da marca ao acervo, do institucional ao{" "}
-            <span className="font-semibold text-primary">imersivo</span>.
+            Estúdio de web e WebGL com{" "}
+            <span className="font-semibold text-foreground">craft de nível de prêmio</span>, para
+            marcas, cultura e instituições que tratam o digital como{" "}
+            <span className="font-semibold text-primary">experiência</span>, não como folheto.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3 md:gap-4">
@@ -163,8 +163,8 @@ const HeroSection = () => {
                   key={i}
                   className="mx-8 font-mono text-sm font-medium uppercase tracking-widest text-primary-foreground"
                 >
-                  Instituições culturais • WebGL • Acervo e patrimônio •
-                  Experiências 3D • Direção de arte • Sites institucionais •{" "}
+                  Sites · Experiências 3D · WebGL · Motion · Direção de arte ·
+                  Cultura e instituições ·{" "}
                 </span>
               ))}
           </div>

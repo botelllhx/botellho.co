@@ -16,11 +16,11 @@ const modos = [
 ];
 
 const publicos = [
-  "Museus e centros culturais",
-  "Fundações e institutos",
-  "Festivais e exposições",
-  "Universidades e órgãos",
   "Marcas que tratam o digital como experiência",
+  "Festivais, eventos e lançamentos",
+  "Museus e centros culturais",
+  "Fundações, institutos e universidades",
+  "Produto digital",
   "Estúdios e designers (white-label)",
 ];
 
@@ -31,20 +31,20 @@ const Studio = () => {
         <title>Estúdio | botellho</title>
         <meta
           name="description"
-          content="botellho é um estúdio de web e experiências digitais para instituições culturais e marcas. Engenharia, direção de arte e domínio do setor cultural, do institucional ao imersivo."
+          content="botellho é um estúdio de web e experiências digitais. Engenharia, direção de arte e entendimento do setor cultural por dentro, do site institucional ao imersivo em 3D."
         />
         <link rel="canonical" href="https://botellho.com/studio" />
         <meta property="og:title" content="Estúdio | botellho" />
         <meta
           property="og:description"
-          content="Estúdio de web e experiências digitais para instituições culturais e marcas que querem ser lembradas."
+          content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas."
         />
         <meta property="og:url" content="https://botellho.com/studio" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
         <meta name="twitter:title" content="Estúdio | botellho" />
         <meta
           name="twitter:description"
-          content="Estúdio de web e experiências digitais para instituições culturais e marcas que querem ser lembradas."
+          content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas."
         />
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
@@ -56,15 +56,15 @@ const Studio = () => {
           {/* Intro */}
           <section className="container px-6 pt-40 pb-24 md:pt-48 md:pb-32">
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              (O estúdio)
+              &gt; o estúdio
             </span>
             <h1 className="mt-8 max-w-4xl font-display text-[clamp(2.2rem,5.5vw,5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
-              Craft de nível de prêmio,{" "}
-              <span className="text-primary">domínio real do setor cultural</span>.
+              Web e experiências digitais com{" "}
+              <span className="text-primary">craft de nível de prêmio</span>.
             </h1>
             <p className="mt-8 max-w-2xl font-sans text-lg leading-relaxed text-muted-foreground">
-              botellho é um estúdio de web e experiências digitais para
-              instituições culturais e marcas que querem ser lembradas.
+              botellho é um estúdio de web e experiências digitais para marcas,
+              cultura e instituições que querem ser lembradas.
             </p>
           </section>
 
@@ -76,9 +76,10 @@ const Studio = () => {
               </span>
               <div className="max-w-2xl space-y-6">
                 <p className="font-sans text-xl leading-relaxed text-foreground">
-                  A maior parte do digital institucional no Brasil é funcional e
-                  esquecível. A gente acredita no contrário: que uma instituição
-                  merece um site tão bem construído quanto o acervo que ela guarda.
+                  A maior parte do digital no Brasil é funcional e esquecível. A
+                  gente acredita no contrário: que um site pode ser tão bem
+                  construído quanto aquilo que ele apresenta, e que uma
+                  instituição merece isso tanto quanto uma marca.
                 </p>
                 <p className="font-sans text-lg leading-relaxed text-muted-foreground">
                   Juntamos três coisas que raramente andam juntas: engenharia de

@@ -18,20 +18,20 @@ const Index = () => {
         <title>botellho | Estúdio de web e experiências digitais</title>
         <meta
           name="description"
-          content="Estúdio brasileiro de web e experiências digitais para instituições culturais e marcas que querem ser lembradas. Craft de nível de prêmio, WebGL e domínio real do setor cultural."
+          content="Web que se move: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições. Estúdio brasileiro de web e experiências digitais."
         />
         <link rel="canonical" href="https://botellho.com/" />
         <meta property="og:title" content="botellho | Estúdio de web e experiências digitais" />
         <meta
           property="og:description"
-          content="Estúdio brasileiro de web e experiências digitais para instituições culturais e marcas que querem ser lembradas."
+          content="Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições."
         />
         <meta property="og:url" content="https://botellho.com/" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
         <meta name="twitter:title" content="botellho | Estúdio de web e experiências digitais" />
         <meta
           name="twitter:description"
-          content="Estúdio brasileiro de web e experiências digitais para instituições culturais e marcas que querem ser lembradas."
+          content="Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições."
         />
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>

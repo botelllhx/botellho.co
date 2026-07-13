@@ -4,9 +4,9 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const stats = [
   { value: "Craft", label: "Engenharia e direção de arte" },
-  { value: "Cultura", label: "Domínio do setor por dentro" },
   { value: "WebGL", label: "Assinatura técnica" },
-  { value: "Acesso", label: "Clareza e acessibilidade" },
+  { value: "Motion", label: "Movimento como linguagem" },
+  { value: "Cultura", label: "O setor por dentro" },
 ];
 
 const AboutSection = () => {
@@ -34,7 +34,7 @@ const AboutSection = () => {
         className="container px-6 mb-16"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          (O estúdio)
+          &gt; o estúdio
         </span>
       </motion.div>
 
@@ -50,9 +50,9 @@ const AboutSection = () => {
               transition={{ duration: 0.5 }}
               className="text-large font-display font-bold text-foreground mb-8"
             >
-              Uma instituição merece um site tão bem construído quanto o{" "}
-              <span className="text-primary">acervo</span> que ela{" "}
-              <span className="text-stroke-primary">guarda</span>.
+              A maior parte do digital é funcional e{" "}
+              <span className="text-stroke-primary">esquecível</span>. A gente
+              acredita no <span className="text-primary">contrário</span>.
             </motion.h2>
 
             <motion.div
@@ -63,15 +63,14 @@ const AboutSection = () => {
               className="space-y-6"
             >
               <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-                botellho é um estúdio de web e experiências digitais. Juntamos
-                três coisas que raramente andam juntas: engenharia de verdade,
-                direção de arte, e entendimento de como o setor cultural funciona
-                por dentro.
+                botellho é um estúdio de web e experiências digitais. Fazemos do
+                site institucional ao imersivo em 3D, para marcas, cultura,
+                eventos e produto, sempre com a mesma régua de craft.
               </p>
               <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-                Fazemos do site institucional ao imersivo em 3D, sempre com a
-                mesma régua de craft. Trabalhamos com quem trata o digital como
-                parte da obra, não como obrigação.
+                Juntamos engenharia de verdade com direção de arte, e entendemos
+                o setor cultural por dentro. Trabalhamos com quem trata o digital
+                como experiência, não como obrigação.
               </p>
             </motion.div>
 
@@ -123,7 +122,7 @@ const AboutSection = () => {
                   key={i}
                   className="mx-12 font-display text-5xl font-bold text-foreground/5 md:text-7xl"
                 >
-                  Craft • Cultura • WebGL • Patrimônio • Acervo • Experiências •{" "}
+                  Craft · WebGL · Motion · Marcas · Cultura · Experiências ·{" "}
                 </span>
               ))}
           </div>

@@ -93,7 +93,7 @@ const ContactSection = () => {
         className="container px-6 mb-16"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-background/60">
-          (Entre em contato)
+          &gt; contato
         </span>
       </motion.div>
 

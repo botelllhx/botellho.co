@@ -6,8 +6,8 @@ import SectionWireScene from "@/components/SectionWireScene";
 const services = [
   {
     number: "01",
-    title: "Sites e plataformas institucionais",
-    description: "Presença digital para instituições culturais, fundações e organizações, com clareza, acessibilidade e confiança.",
+    title: "Sites e plataformas",
+    description: "Presença digital com clareza, acessibilidade e confiança, do institucional ao produto. Sites que convertem sem parecer folheto.",
   },
   {
     number: "02",
@@ -16,13 +16,13 @@ const services = [
   },
   {
     number: "03",
-    title: "Acervo e patrimônio digital",
-    description: "Coleções, memória e patrimônio apresentados de um jeito que as pessoas querem explorar.",
+    title: "Direção de arte e identidade digital",
+    description: "O visual como diferencial, não como enfeite.",
   },
   {
     number: "04",
-    title: "Direção de arte e identidade digital",
-    description: "O visual como diferencial, não como enfeite.",
+    title: "Acervo e patrimônio digital",
+    description: "Para cultura e instituições: coleções, memória e patrimônio apresentados de um jeito que as pessoas querem explorar.",
   },
   {
     number: "05",
@@ -59,7 +59,7 @@ const ServicesSection = () => {
         className="container px-6 mb-16"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          (O que fazemos)
+          &gt; o que fazemos
         </span>
       </motion.div>
 
