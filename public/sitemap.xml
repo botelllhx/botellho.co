@@ -6,7 +6,7 @@
   
   <!-- Página Principal -->
   <url>
-    <loc>https://www.botellho.com/</loc>
+    <loc>https://botellho.com/</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
   
   <!-- Página de Blog -->
   <url>
-    <loc>https://www.botellho.com/blog</loc>
+    <loc>https://botellho.com/blog</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -22,49 +22,49 @@
   
   <!-- Páginas de Serviços -->
   <url>
-    <loc>https://www.botellho.com/services/wordpress</loc>
+    <loc>https://botellho.com/services/wordpress</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/plugins</loc>
+    <loc>https://botellho.com/services/plugins</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/ux-ui-design</loc>
+    <loc>https://botellho.com/services/ux-ui-design</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/desenvolvimento-web</loc>
+    <loc>https://botellho.com/services/desenvolvimento-web</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/suporte-manutencao</loc>
+    <loc>https://botellho.com/services/suporte-manutencao</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/sites-institucionais</loc>
+    <loc>https://botellho.com/services/sites-institucionais</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/services/seguranca-performance</loc>
+    <loc>https://botellho.com/services/seguranca-performance</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -72,35 +72,35 @@
   
   <!-- Posts do Blog -->
   <url>
-    <loc>https://www.botellho.com/blog/ux-ui-design-diferencial-desenvolvimento-web</loc>
+    <loc>https://botellho.com/blog/ux-ui-design-diferencial-desenvolvimento-web</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/blog/wordpress-performance-otimizacao-2024</loc>
+    <loc>https://botellho.com/blog/wordpress-performance-otimizacao-2024</loc>
     <lastmod>2024-01-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/blog/design-system-wordpress-beneficios</loc>
+    <loc>https://botellho.com/blog/design-system-wordpress-beneficios</loc>
     <lastmod>2024-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/blog/seo-tecnico-wordpress-2024</loc>
+    <loc>https://botellho.com/blog/seo-tecnico-wordpress-2024</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://www.botellho.com/blog/plugins-wordpress-personalizados-vantagens</loc>
+    <loc>https://botellho.com/blog/plugins-wordpress-personalizados-vantagens</loc>
     <lastmod>2023-12-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
