@@ -1,18 +1,16 @@
 import { Link } from "react-router-dom";
 
-const TAPE_ITEMS = "botellho · estúdio de web e experiências digitais · disponível para projetos · ";
+const TAPE = "botellho · estúdio de web e experiências digitais · disponível para projetos · ";
 
-// Rodape de status: fita lenta, contato direto e colofao em mono.
+// Rodape como momento: fita, contato, e um wordmark gigante dithered que
+// resolve o dither no hover. O selo do Ban e a dica do easter egg fecham.
 const SiteFooter = () => {
   return (
-    <footer className="border-t border-foreground/10 pb-12 md:pb-16">
-      {/* Fita */}
-      <div className="tape border-b border-foreground/10 py-5" aria-hidden>
+    <footer className="dark border-t border-foreground/15 bg-background pb-10 text-foreground">
+      <div className="tape border-b border-foreground/15 py-5" aria-hidden>
         <div className="tape-track">
           {Array.from({ length: 4 }, (_, i) => (
-            <span key={i} className="type-label mx-6 text-foreground/60">
-              {TAPE_ITEMS}
-            </span>
+            <span key={i} className="type-label mx-6 text-foreground/50">{TAPE}</span>
           ))}
         </div>
       </div>
@@ -26,7 +24,8 @@ const SiteFooter = () => {
           >
             contato@botellho.com
           </a>
-          <p className="mt-4 max-w-sm font-sans text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-4 flex items-center gap-3 font-sans text-sm leading-relaxed text-muted-foreground">
+            <img src="/ban/ban-1.png" alt="" className="h-9 w-9 object-contain" style={{ imageRendering: "pixelated" }} />
             Estúdio de web e experiências digitais para marcas, cultura e
             instituições que querem ser lembradas.
           </p>
@@ -43,12 +42,7 @@ const SiteFooter = () => {
               { to: "/contato", label: "/contato" },
             ].map((item) => (
               <li key={item.to}>
-                <Link
-                  to={item.to}
-                  className="font-mono text-sm text-foreground/70 transition-colors hover:text-phosphor"
-                >
-                  {item.label}
-                </Link>
+                <Link to={item.to} className="font-mono text-sm text-foreground/70 transition-colors hover:text-phosphor">{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -58,25 +52,21 @@ const SiteFooter = () => {
           <span className="type-label text-muted-foreground">&gt; rede</span>
           <ul className="mt-4 space-y-2">
             <li>
-              <a
-                href="https://instagram.com/botellho.co"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-sm text-foreground/70 transition-colors hover:text-phosphor"
-              >
-                instagram
-              </a>
+              <a href="https://instagram.com/botellho.co" target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-foreground/70 transition-colors hover:text-phosphor">instagram</a>
             </li>
           </ul>
+          <p className="type-dos mt-8 text-xs text-muted-foreground">&gt; pressione / para o terminal</p>
         </div>
       </div>
 
-      <div className="rule mx-4 md:mx-6" />
-      <div className="flex flex-col gap-2 px-4 pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
+      {/* Wordmark gigante dithered */}
+      <div className="overflow-hidden px-2" data-cursor="3d">
+        <span className="wordmark select-none">botellho</span>
+      </div>
+
+      <div className="mt-8 flex flex-col gap-2 px-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
         <span>© 2026 botellho. Todos os direitos reservados.</span>
-        <span>
-          feito em belo horizonte · <span className="text-phosphor">fósforo azul</span>
-        </span>
+        <span>feito em belo horizonte · <span className="text-phosphor">fósforo azul</span></span>
       </div>
     </footer>
   );

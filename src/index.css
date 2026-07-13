@@ -402,6 +402,45 @@
   }
 }
 
+/* ===== Wordmark gigante do rodape (dithered, resolve no hover) ===== */
+.wordmark {
+  display: block;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 22vw, 20rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px hsl(var(--foreground) / 0.22);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath fill='%230b2ca2' d='M0 0h2v2H0zM3 3h2v2H3z'/%3E%3C/svg%3E");
+  background-size: 6px 6px;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: wordmark-drift 8s linear infinite;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.wordmark:hover {
+  -webkit-text-stroke: 0;
+  background-image: none;
+  background-color: hsl(var(--phosphor));
+  animation: none;
+}
+
+@keyframes wordmark-drift {
+  to {
+    background-position: 60px 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark {
+    animation: none;
+  }
+}
+
 /* ===== Moldura CRT do hero (a "tela" e a excecao ao radius 0) ===== */
 .crt-frame {
   position: relative;
@@ -432,6 +471,30 @@
   bottom: 10px;
   color: hsl(var(--phosphor));
   opacity: 0.8;
+}
+
+/* ===== Ruido de "sem sinal" (404) ===== */
+.static-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.043 0 0 0 0 0.172 0 0 0 0 0.635 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  animation: static-shift 0.6s steps(4) infinite;
+}
+
+@keyframes static-shift {
+  0% { background-position: 0 0; }
+  25% { background-position: -40px 20px; }
+  50% { background-position: 30px -30px; }
+  75% { background-position: -20px -10px; }
+  100% { background-position: 10px 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .static-noise {
+    animation: none;
+  }
 }
 
 /* ===== Boot / loader (peca de marca) ===== */

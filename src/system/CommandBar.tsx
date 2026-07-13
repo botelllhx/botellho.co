@@ -42,9 +42,19 @@ const CommandBar = () => {
             ))}
           </nav>
 
-          <Link to="/contato" className="cmd-button hidden !py-1.5 text-[11px] md:inline-flex">
-            Começar um projeto
-          </Link>
+          <div className="hidden items-center gap-4 md:flex">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("open-palette"))}
+              className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor"
+              aria-label="Abrir terminal de comandos"
+            >
+              [ / ]
+            </button>
+            <Link to="/contato" className="cmd-button !py-1.5 text-[11px]">
+              Começar um projeto
+            </Link>
+          </div>
 
           <button
             type="button"

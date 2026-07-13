@@ -8,6 +8,7 @@ import CursorSystem from "@/system/CursorSystem";
 import RouteTransition from "@/system/RouteTransition";
 import BootOverlay from "@/system/BootOverlay";
 import CommandBar from "@/system/CommandBar";
+import CommandPalette from "@/system/CommandPalette";
 import StatusBar from "@/system/StatusBar";
 import SiteFooter from "@/system/SiteFooter";
 
@@ -32,6 +33,7 @@ const Layout = () => {
           <>
             <BootOverlay />
             <RouteTransition />
+            <CommandPalette />
             <CommandBar />
             <main className="pt-[var(--bar-h)]">
               <Outlet />
