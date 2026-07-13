@@ -1,7 +1,8 @@
 import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { useRef } from "react";
-import BrutalistThreeScene from "@/components/BrutalistThreeScene";
+import SignatureCanvas from "@/webgl/SignatureCanvas";
+import HeroTunnelScene from "@/webgl/HeroTunnelScene";
 import DecodeText from "@/components/DecodeText";
 
 const HeroSection = () => {
@@ -44,7 +45,19 @@ const HeroSection = () => {
       onMouseMove={handleMouseMove}
     >
       <motion.div style={{ y: sceneY }} className="absolute inset-0">
-        <BrutalistThreeScene />
+        <SignatureCanvas
+          className="absolute inset-0 z-[1] pointer-events-none"
+          fallback={
+            <img
+              src="/hero-fallback.png"
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover opacity-80"
+            />
+          }
+        >
+          <HeroTunnelScene />
+        </SignatureCanvas>
       </motion.div>
 
       {/* Main Content */}
