@@ -1,106 +1,70 @@
-# botellho.co - Portfolio Website
+# botellho
 
-Site portfolio e prestação de serviços da botellho.co, especializada em desenvolvimento WordPress, plugins e soluções para o terceiro setor.
+Estúdio de web e experiências digitais. Site do estúdio: sites institucionais, experiências 3D e WebGL, motion e direção de arte para marcas, cultura e instituições.
 
-## 🚀 Tecnologias
+Domínio canônico: https://botellho.com
 
-- React 18
-- Vite
-- Framer Motion (animações)
-- Lucide React (ícones)
-- CSS Modules
+## Stack
 
-## 📦 Instalação
+- Vite + React + TypeScript
+- Tailwind CSS + shadcn/ui (Radix)
+- Three.js, GSAP, Lenis, Framer Motion, split-type
+- Supabase (portfólio e admin), EmailJS + reCAPTCHA (contato)
+- vite-react-ssg (SSG por rota) + react-helmet-async (head por rota)
+- Deploy: GitHub Pages (branch `gh-pages`, via GitHub Actions)
+
+## Requisitos
+
+- Node 20+
+
+## Instalação
 
 ```bash
 npm install
-```
-
-Copie variaveis de ambiente:
-
-```bash
 cp .env.example .env
 ```
 
-## 🛠️ Desenvolvimento
+Preencha o `.env` com as chaves de Supabase, EmailJS e reCAPTCHA.
+
+## Scripts
 
 ```bash
-npm run dev
+npm run dev      # desenvolvimento (Vite)
+npm run build    # build estático com SSG (vite-react-ssg)
+npm run preview  # serve o build local
+npm run lint     # ESLint
+npm run test     # Vitest
 ```
 
-## 🏗️ Build
+## Rotas
 
-```bash
-npm run build
-```
+- `/` home
+- `/studio` manifesto do estúdio
+- `/work` e `/work/:slug` cases (Supabase)
+- `/lab` experimentos e teardowns
+- `/admin` área privada (Supabase auth)
 
-## 📤 Deploy para GitHub Pages
+## Supabase (portfólio e admin)
 
-O deploy e feito automaticamente pelo GitHub Actions quando ha push/merge na branch `main`.
+- Dados públicos do portfólio: tabela `portfolio_projects`
+- Mídia: bucket `portfolio-media`
+- Autenticação da área privada: Supabase Auth (email/senha)
 
-- Branch de origem: `main`
-- Branch de publicacao: `gh-pages`
-- Workflow: `.github/workflows/deploy.yml`
+Setup:
 
-## 🔐 Studio privado do portfolio
-
-- URL privada: `/studio`
-- Autenticacao: Supabase Auth (email/senha)
-- Fonte de dados publica do portfolio: tabela `portfolio_projects`
-- Midia: bucket `portfolio-media`
-
-### Setup do Supabase
-
-1. Preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env`
-2. Rode o SQL de infraestrutura em `supabase/schema.sql` no SQL Editor do Supabase
-3. Crie seu usuario no Supabase Auth
-4. Cadastre seu usuario como admin:
+1. Preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env`.
+2. Rode `supabase/schema.sql` no SQL Editor do Supabase.
+3. Crie seu usuário no Supabase Auth.
+4. Cadastre o usuário como admin:
    ```sql
    insert into public.admin_users (user_id) values ('SEU_AUTH_USER_UUID');
    ```
-5. Acesse `/studio` e gerencie os projetos
+5. Acesse `/admin` para administrar os projetos.
 
-## 🌿 Convencao de Branches
+## Deploy
 
-- `main`: branch unica de integracao e producao (cada merge pode disparar deploy)
-- `feature/<escopo-curto>`: novas funcionalidades
-- `hotfix/<escopo-curto>`: correcoes urgentes de producao
-- `chore/<escopo-curto>`: manutencao tecnica (deps, CI, lint, docs de infra)
-- `gh-pages`: branch tecnica de artefato; nao receber commits manuais
+Push na `main` dispara `.github/workflows/deploy.yml`, que builda e publica o conteúdo estático em `gh-pages`. O `CNAME` mantém o domínio `botellho.com`. As rotas públicas e o `sitemap.xml` são geradas no build.
 
-## 🔀 Fluxo de PR e Merge
+## Assets sociais
 
-1. Crie uma branch a partir de `main` (`feature/*`, `hotfix/*` ou `chore/*`)
-2. Abra PR para `main`
-3. Garanta checks obrigatorios passando (test/build)
-4. Use merge por squash para manter historico limpo
-5. Apague a branch de trabalho apos merge
-
-## ✅ Checklist de protecao da main (GitHub Settings)
-
-- Exigir pull request antes de merge
-- Exigir status checks obrigatorios
-- Bloquear push direto para `main`
-- Exigir branch atualizada antes do merge
-- Restringir quem pode dar bypass nas regras (apenas administradores, se necessario)
-
-## 🎨 Personalização de Cores
-
-As cores podem ser facilmente alteradas editando as variáveis CSS em `src/styles/variables.css`.
-
-## 🔑 GitHub API Token (Opcional)
-
-Para evitar erros de rate limit (403) ao buscar repositórios do GitHub:
-
-1. Crie um Personal Access Token em: https://github.com/settings/tokens
-   - Não precisa de permissões especiais (pode deixar tudo desmarcado)
-   - Apenas aumenta o limite de 60 para 5000 requisições/hora
-
-2. Crie um arquivo `.env` na raiz do projeto:
-   ```
-   VITE_GITHUB_TOKEN=seu_token_aqui
-   ```
-
-3. Reinicie o servidor de desenvolvimento
-
-**Nota:** O token é opcional. Sem ele, o site funciona mas pode ter limitações de rate limit.
+`og-image.jpg` e `apple-touch-icon.png` são gerados por `scripts/gen-og-assets.mjs` (requer `sharp` como dev).

@@ -2,7 +2,6 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { writeFileSync } from "fs";
-import { componentTagger } from "lovable-tagger";
 
 const SITE_URL = "https://botellho.com";
 
@@ -85,7 +84,7 @@ export default defineConfig(async ({ command, mode }) => {
         overlay: false,
       },
     },
-    plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+    plugins: [react()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
