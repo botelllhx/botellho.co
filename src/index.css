@@ -237,6 +237,22 @@
     color: hsl(var(--background));
   }
 
+  /* Linha de log (lab): hover acende uma scanline de fosforo */
+  .lab-row {
+    position: relative;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .lab-row:hover {
+    background: hsl(var(--phosphor) / 0.1);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      hsl(var(--phosphor) / 0.14) 3px
+    );
+  }
+
   /* ===== Fita (marquee) ===== */
 
   .tape {

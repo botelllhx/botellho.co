@@ -3,40 +3,21 @@ import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import SignalText from "@/motion/SignalText";
 import Typing from "@/motion/Typing";
+import SystemDivider from "@/system/SystemDivider";
 
-// manifesto.txt: a pagina e um arquivo de texto aberto no terminal,
-// com numeros de linha na margem e a tese em Geomini gigante.
-const MANIFESTO: { id: string; text: string; serif?: boolean }[] = [
-  {
-    id: "10",
-    text: "A maior parte do digital no Brasil é funcional e esquecível. A gente acredita no contrário: que um site pode ser tão bem construído quanto aquilo que ele apresenta.",
-    serif: true,
-  },
-  {
-    id: "20",
-    text: "botellho é um estúdio de web e experiências digitais. Juntamos engenharia de verdade com direção de arte, do site institucional ao imersivo em 3D, sempre com a mesma régua de craft.",
-  },
-  {
-    id: "30",
-    text: "Entendemos o setor cultural por dentro: leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.",
-  },
-  {
-    id: "40",
-    text: "Trabalhamos com quem trata o digital como parte da obra, não como obrigação.",
-  },
+const MANIFESTO = [
+  { id: "10", text: "A maior parte do digital no Brasil é funcional e esquecível. A gente acredita no contrário: que um site pode ser tão bem construído quanto aquilo que ele apresenta.", serif: true },
+  { id: "20", text: "botellho é um estúdio de web e experiências digitais. Juntamos engenharia de verdade com direção de arte, do site institucional ao imersivo em 3D, sempre com a mesma régua de craft." },
+  { id: "30", text: "Entendemos o setor cultural por dentro: leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio." },
+  { id: "40", text: "Trabalhamos com quem trata o digital como parte da obra, não como obrigação." },
 ];
 
-const MODOS = [
-  {
-    file: "modo_imersivo",
-    invert: true,
-    desc: "Quando a experiência é a mensagem: marca, festival, produto, lançamento. WebGL e 3D entram pesado, e o site vira a peça que as pessoas lembram.",
-  },
-  {
-    file: "modo_institucional",
-    invert: false,
-    desc: "Quando o cliente precisa de clareza, acessibilidade e confiança: universidade, museu, fundação. O 3D entra como acento, a serviço do conteúdo.",
-  },
+const PASSOS = [
+  { num: "01", nome: "imersão", desc: "Entender o setor, o público e a obra antes de desenhar qualquer tela." },
+  { num: "02", nome: "conceito", desc: "A ideia que organiza tudo, a tese que o projeto vai defender." },
+  { num: "03", nome: "arte + engenharia", desc: "Direção de arte e construção andando juntas, nunca em sequência." },
+  { num: "04", nome: "craft", desc: "O detalhe do qual a gente se orgulha: o shader, a transição, o sistema." },
+  { num: "05", nome: "no ar", desc: "Entrega medindo o que importa: performance, acessibilidade, memória." },
 ];
 
 const PUBLICOS = [
@@ -59,39 +40,34 @@ const Studio = () => {
         />
         <link rel="canonical" href="https://botellho.com/estudio" />
         <meta property="og:title" content="Estúdio | botellho" />
-        <meta
-          property="og:description"
-          content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas."
-        />
+        <meta property="og:description" content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas." />
         <meta property="og:url" content="https://botellho.com/estudio" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
+      {/* ===== A · Abertura (paper) ===== */}
       <section className="px-4 pt-16 md:px-6 md:pt-24">
-        <Typing text="> abrindo manifesto.txt" className="type-label text-muted-foreground" />
+        <Typing text="> abrindo estudio" className="type-label text-muted-foreground" />
         <h1 className="type-tese mt-8 max-w-5xl">
-          <LineReveal as="span" className="block">
-            Web e experiências digitais
-          </LineReveal>
-          <span className="block">
-            com <SignalText text="craft de nível de prêmio" className="text-phosphor" delay={400} />.
-          </span>
+          <LineReveal as="span" className="block">Web e experiências digitais</LineReveal>
+          <span className="block">com <SignalText text="craft de nível de prêmio" className="text-phosphor" delay={400} />.</span>
         </h1>
+        <p className="mt-8 max-w-2xl font-sans text-lg leading-relaxed text-muted-foreground">
+          botellho é um estúdio de web e experiências digitais para marcas,
+          cultura e instituições que querem ser lembradas.
+        </p>
       </section>
 
-      {/* O arquivo, com numeros de linha */}
-      <section className="mt-20 border-t border-foreground/10 px-4 py-20 md:px-6 md:py-28">
-        <div className="max-w-3xl space-y-10 md:ml-[20%]">
+      <SystemDivider text="manifesto" />
+
+      {/* ===== C · Manifesto (ink, editorial com numeros de linha) ===== */}
+      <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
+        <span className="type-label text-muted-foreground">&gt; manifesto.txt</span>
+        <div className="mt-10 max-w-3xl space-y-10 md:ml-[18%]">
           {MANIFESTO.map((par) => (
             <div key={par.id} className="grid grid-cols-[3rem_1fr] gap-4">
-              <span className="pt-1 font-mono text-xs text-muted-foreground">{par.id}</span>
-              <p
-                className={
-                  par.serif
-                    ? "font-serif text-xl leading-relaxed text-foreground md:text-2xl"
-                    : "font-sans text-lg leading-relaxed text-muted-foreground"
-                }
-              >
+              <span className="pt-1 font-mono text-xs text-phosphor">{par.id}</span>
+              <p className={par.serif ? "font-serif text-xl leading-relaxed text-foreground md:text-2xl" : "font-sans text-lg leading-relaxed text-foreground/75"}>
                 {par.text}
               </p>
             </div>
@@ -99,62 +75,53 @@ const Studio = () => {
         </div>
       </section>
 
-      {/* Modos de execucao */}
-      <section className="border-t border-foreground/10 px-4 py-20 md:px-6 md:py-28">
-        <span className="type-label text-muted-foreground">&gt; modos de execução</span>
-        <LineReveal as="h2" className="type-title mt-6 max-w-3xl">
-          Mesmo estúdio, dois modos.
-        </LineReveal>
+      <SystemDivider text="como trabalhamos" ban />
 
-        <div className="mt-14 grid gap-0 md:grid-cols-2">
-          {MODOS.map((modo) => (
-            <div
-              key={modo.file}
-              className={
-                modo.invert
-                  ? "bg-foreground p-8 text-background md:p-12"
-                  : "border border-foreground/15 p-8 md:p-12"
-              }
-            >
-              <h3 className="font-mono text-lg font-bold md:text-2xl">
-                {modo.file}
-                <span className="text-phosphor">()</span>
-              </h3>
-              <p className="mt-4 max-w-md font-sans text-base leading-relaxed opacity-75">
-                {modo.desc}
-              </p>
-            </div>
-          ))}
+      {/* ===== B · Como trabalhamos (paper, split-scroll) ===== */}
+      <section className="px-4 py-20 md:px-6 md:py-28">
+        <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+          <div className="md:sticky md:top-24 md:self-start">
+            <span className="type-label text-muted-foreground">&gt; processo</span>
+            <LineReveal as="h2" className="type-title mt-6">Como trabalhamos.</LineReveal>
+            <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
+              Cinco passos, do entendimento do setor à medição no ar.
+            </p>
+          </div>
+          <ol className="border-t border-foreground/15">
+            {PASSOS.map((passo) => (
+              <li key={passo.num} className="dir-row grid grid-cols-[2.5rem_1fr] gap-4 border-b border-foreground/15 px-2 py-8 md:px-4">
+                <span className="font-mono text-xs text-phosphor">{passo.num}</span>
+                <div>
+                  <h3 className="font-display text-2xl md:text-3xl">{passo.nome}</h3>
+                  <p className="mt-2 max-w-md font-sans text-sm leading-relaxed opacity-70">{passo.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* Com quem trabalhamos */}
-      <section className="border-t border-foreground/10 px-4 py-20 md:px-6 md:py-28">
-        <span className="type-label text-muted-foreground">&gt; ls /com-quem-trabalhamos</span>
-        <ul className="mt-10 max-w-3xl divide-y divide-foreground/10 border-y border-foreground/10">
-          {PUBLICOS.map((publico) => (
-            <li
-              key={publico}
-              className="dir-row px-2 py-4 font-mono text-sm md:px-4 md:text-base"
-            >
-              {publico}
-            </li>
-          ))}
-        </ul>
-      </section>
+      <SystemDivider text="com quem" />
 
-      {/* Chamada */}
-      <section className="border-t border-foreground/10 px-4 py-20 md:px-6 md:py-28">
-        <LineReveal as="h2" className="type-title max-w-3xl">
-          O digital como parte da obra.
-        </LineReveal>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link to="/contato" className="cmd-button">
-            Começar um projeto
-          </Link>
-          <Link to="/trabalhos" className="cmd-button-ghost">
-            Ver trabalhos
-          </Link>
+      {/* ===== D · Com quem / prova (ink, bloco de terminal) ===== */}
+      <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
+        <div className="max-w-4xl border border-foreground/20">
+          <div className="flex items-center justify-between border-b border-foreground/20 px-4 py-2">
+            <span className="type-dos text-xs text-phosphor">com-quem.log</span>
+            <span className="type-label text-muted-foreground">local · foco · disponível</span>
+          </div>
+          <div className="p-5 md:p-8">
+            <p className="type-dos mb-6 text-sm text-phosphor">&gt; ls /com-quem-trabalhamos</p>
+            <ul className="divide-y divide-foreground/10 border-y border-foreground/10">
+              {PUBLICOS.map((publico) => (
+                <li key={publico} className="dir-row px-2 py-4 font-mono text-sm md:px-4 md:text-base">{publico}</li>
+              ))}
+            </ul>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

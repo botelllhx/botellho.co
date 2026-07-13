@@ -1,14 +1,23 @@
+import { useMemo, useState } from "react";
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import Typing from "@/motion/Typing";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
-// O arquivo: indice de cases como tabela densa de terminal.
 const toHex = (index: number) => `0x${(index * 74 + 74).toString(16).toUpperCase().padStart(4, "0")}`;
 
+// /trabalhos (arquetipo B): diretorio denso do sistema, com filtros por tipo.
 const Work = () => {
   const { projects, configured } = useLoaderData() as WorksLoaderData;
+  const [filtro, setFiltro] = useState<string>("todos");
+
+  const categorias = useMemo(() => {
+    const set = new Set(projects.map((p) => p.category || "projeto"));
+    return ["todos", ...Array.from(set)];
+  }, [projects]);
+
+  const lista = filtro === "todos" ? projects : projects.filter((p) => (p.category || "projeto") === filtro);
 
   return (
     <>
@@ -20,59 +29,74 @@ const Work = () => {
         />
         <link rel="canonical" href="https://botellho.com/trabalhos" />
         <meta property="og:title" content="Trabalhos | botellho" />
-        <meta
-          property="og:description"
-          content="Arquivo de trabalhos do botellho: do institucional ao imersivo, com a mesma régua de craft."
-        />
+        <meta property="og:description" content="Arquivo de trabalhos do botellho: do institucional ao imersivo, com a mesma régua de craft." />
         <meta property="og:url" content="https://botellho.com/trabalhos" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
       <section className="px-4 pt-16 md:px-6 md:pt-24">
-        <Typing text="> ls /trabalhos" className="type-label text-muted-foreground" />
-        <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">
-          O arquivo do estúdio.
-        </LineReveal>
+        <Typing text="> listando trabalhos" className="type-label text-muted-foreground" />
+        <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">O arquivo do estúdio.</LineReveal>
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Do institucional ao imersivo, a mesma régua de craft. Cada bloco é um
           case com contexto, conceito, abordagem e resultado.
         </p>
+
+        {projects.length > 0 ? (
+          <div className="mt-10 flex flex-wrap gap-2">
+            {categorias.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setFiltro(cat)}
+                className={`type-dos px-3 py-1 text-xs uppercase transition-colors ${
+                  filtro === cat ? "bg-phosphor text-paper" : "border border-foreground/20 text-muted-foreground hover:border-phosphor"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </section>
 
-      <section className="mt-16 border-t border-foreground/10 pb-24 md:pb-32">
-        <div
-          className="hidden grid-cols-[6rem_10rem_1fr_8rem] gap-4 border-b border-foreground/10 px-4 py-3 md:grid md:px-6"
-          aria-hidden
-        >
-          {["endereço", "categoria", "projeto", "status"].map((coluna) => (
-            <span key={coluna} className="type-label text-muted-foreground">
-              {coluna}
-            </span>
-          ))}
-        </div>
-
+      <section className="px-4 py-16 md:px-6 md:py-24">
         {projects.length === 0 ? (
-          <p className="type-dos mt-12 px-4 text-sm text-muted-foreground md:px-6">
-            {configured
-              ? "[arquivo vazio] os primeiros cases chegam em breve."
-              : "[arquivo offline] configure a fonte de dados para listar os cases."}
+          <p className="type-dos text-sm text-muted-foreground">
+            {configured ? "[arquivo vazio] os primeiros cases chegam em breve." : "[arquivo offline] configure a fonte de dados para listar os cases."}
           </p>
         ) : (
-          <ul>
-            {projects.map((project, index) => (
-              <li key={project.id}>
-                <Link
-                  to={`/trabalhos/${project.slug}`}
-                  className="dir-row grid grid-cols-1 gap-1 border-b border-foreground/10 px-4 py-5 md:grid-cols-[6rem_10rem_1fr_8rem] md:items-baseline md:gap-4 md:px-6"
-                >
-                  <span className="font-mono text-xs opacity-60">{toHex(index)}</span>
-                  <span className="type-label opacity-60">{project.category || "projeto"}</span>
-                  <h2 className="font-display text-2xl font-bold md:text-4xl">{project.title}</h2>
-                  <span className="font-mono text-xs opacity-60">publicado</span>
-                </Link>
-              </li>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {lista.map((project, index) => (
+              <Link
+                key={project.id}
+                to={`/trabalhos/${project.slug}`}
+                data-cursor-label="[ ver ]"
+                className="group border border-foreground/15"
+              >
+                <div className="flex items-center justify-between border-b border-foreground/15 px-3 py-2">
+                  <span className="font-mono text-[11px] text-muted-foreground">{toHex(index)}</span>
+                  <span className="type-label text-muted-foreground">{project.category || "projeto"}</span>
+                </div>
+                {project.cover_media_url ? (
+                  <div className="aspect-[16/10] overflow-hidden bg-muted">
+                    <img
+                      src={project.cover_media_url}
+                      alt={`Capa do projeto ${project.title}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover grayscale contrast-[1.35] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100"
+                    />
+                  </div>
+                ) : (
+                  <div className="type-dos flex aspect-[16/10] items-center justify-center bg-muted text-phosphor">[sem visual]</div>
+                )}
+                <div className="flex items-baseline justify-between px-3 py-4">
+                  <h2 className="font-display text-2xl transition-colors group-hover:text-phosphor md:text-3xl">{project.title}</h2>
+                  <span className="font-mono text-xs text-muted-foreground">abrir →</span>
+                </div>
+              </Link>
             ))}
-          </ul>
+          </div>
         )}
       </section>
     </>

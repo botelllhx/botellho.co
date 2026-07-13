@@ -2,10 +2,11 @@ import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import Typing from "@/motion/Typing";
+import SystemDivider from "@/system/SystemDivider";
 import type { WorkCaseLoaderData } from "@/pages/workLoaders";
 
-// O case como heroi: abertura cinematografica, imagem full-bleed e a
-// anatomia do trabalho em leitura longa.
+// Case como heroi (A -> C -> B -> D), com alternancia de cor e a imagem
+// tratada na lingua da maquina.
 const WorkCase = () => {
   const { project } = useLoaderData() as WorkCaseLoaderData;
 
@@ -19,22 +20,16 @@ const WorkCase = () => {
         <section className="px-4 py-24 md:px-6">
           <p className="type-dos text-phosphor">&gt; erro · bloco não encontrado</p>
           <h1 className="type-title mt-6">Esse case não está publicado.</h1>
-          <Link to="/trabalhos" className="cmd-button mt-10">
-            Voltar ao arquivo
-          </Link>
+          <Link to="/trabalhos" className="cmd-button mt-10">Voltar ao arquivo</Link>
         </section>
       </>
     );
   }
 
   const ogImage =
-    project.media_type === "image" && project.cover_media_url
-      ? project.cover_media_url
-      : "https://botellho.com/og-image.jpg";
+    project.media_type === "image" && project.cover_media_url ? project.cover_media_url : "https://botellho.com/og-image.jpg";
   const externalLink = project.project_url || project.repo_url || null;
-  const paragraphs = (project.full_description ?? project.short_description)
-    .split("\n")
-    .filter(Boolean);
+  const paragraphs = (project.full_description ?? project.short_description).split("\n").filter(Boolean);
 
   return (
     <>
@@ -61,86 +56,80 @@ const WorkCase = () => {
         </script>
       </Head>
 
-      <article>
-        <section className="px-4 pt-16 md:px-6 md:pt-24">
-          <Typing
-            text={`> abrindo /trabalhos/${project.slug}`}
-            className="type-label text-muted-foreground"
-          />
-          <LineReveal as="h1" className="type-tese mt-8 max-w-5xl">
-            {project.title}
-          </LineReveal>
-
-          <div className="mt-10 grid gap-6 border-y border-foreground/10 py-4 font-mono text-xs uppercase tracking-widest text-muted-foreground md:grid-cols-3">
-            <span>categoria · {project.category || "projeto"}</span>
-            <span>status · publicado</span>
-            {project.tags.length > 0 ? <span>craft · {project.tags.join(", ")}</span> : <span />}
-          </div>
-        </section>
-
+      {/* ===== A · Abertura cinematografica (ink) ===== */}
+      <section className="dark bg-background px-4 pt-16 text-foreground md:px-6 md:pt-24">
+        <Typing text={`> abrindo /trabalhos/${project.slug}`} className="type-label text-muted-foreground" />
+        <LineReveal as="h1" className="type-tese mt-8 max-w-5xl">{project.title}</LineReveal>
+        <div className="mt-10 grid gap-4 border-y border-foreground/15 py-4 font-mono text-xs uppercase tracking-widest text-muted-foreground md:grid-cols-3">
+          <span>categoria · {project.category || "projeto"}</span>
+          <span>status · publicado</span>
+          {project.tags.length > 0 ? <span>craft · {project.tags.join(", ")}</span> : <span />}
+        </div>
         {project.cover_media_url ? (
-          <section className="mt-14 px-0 md:px-6">
-            <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
-              {project.media_type === "video" ? (
-                <video
-                  src={project.cover_media_url}
-                  className="h-full w-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={project.cover_media_url}
-                  alt={`Capa do projeto ${project.title}`}
-                  className="h-full w-full object-cover"
-                />
-              )}
-            </div>
-          </section>
-        ) : null}
-
-        <section className="px-4 py-20 md:px-6 md:py-28">
-          <div className="grid gap-12 md:grid-cols-[16rem_1fr] md:gap-20">
-            <div className="space-y-8">
-              <div>
-                <span className="type-label text-muted-foreground">&gt; resumo</span>
-                <p className="mt-3 font-serif text-lg leading-relaxed text-foreground">
-                  {project.short_description}
-                </p>
-              </div>
-              {externalLink ? (
-                <a
-                  href={externalLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cmd-button-ghost"
-                >
-                  Visitar projeto
-                </a>
-              ) : null}
-            </div>
-
-            <div className="max-w-2xl space-y-6">
-              {paragraphs.map((paragraph, index) => (
-                <p key={index} className="font-sans text-lg leading-relaxed text-muted-foreground">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+          <div className="mt-10 crt-frame aspect-[16/9] w-full" data-cursor="3d">
+            {project.media_type === "video" ? (
+              <video src={project.cover_media_url} className="h-full w-full object-cover" autoPlay muted loop playsInline />
+            ) : (
+              <img
+                src={project.cover_media_url}
+                alt={`Capa do projeto ${project.title}`}
+                className="h-full w-full object-cover grayscale contrast-[1.3] brightness-90"
+              />
+            )}
+            <div className="crt-frame__glass" />
           </div>
-        </section>
+        ) : null}
+      </section>
 
-        <section className="border-t border-foreground/10 px-4 py-10 md:px-6">
-          <Link
-            to="/trabalhos"
-            className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor"
-          >
+      <SystemDivider text="contexto" />
+
+      {/* ===== C · Contexto (paper, editorial serif) ===== */}
+      <section className="px-4 py-20 md:px-6 md:py-28">
+        <span className="type-label text-muted-foreground">&gt; contexto</span>
+        <p className="mt-6 max-w-3xl font-serif text-2xl leading-relaxed text-foreground md:text-3xl">
+          {project.short_description}
+        </p>
+      </section>
+
+      <SystemDivider text="abordagem" ban />
+
+      {/* ===== B · Abordagem (ink, leitura longa) ===== */}
+      <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
+        <div className="grid gap-10 md:grid-cols-[0.7fr_1.3fr] md:gap-16">
+          <div className="md:sticky md:top-24 md:self-start">
+            <span className="type-label text-muted-foreground">&gt; abordagem</span>
+            {project.tags.length > 0 ? (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span key={tag} className="border border-foreground/25 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{tag}</span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          <div className="max-w-2xl space-y-6">
+            {paragraphs.map((paragraph, index) => (
+              <p key={index} className="font-sans text-lg leading-relaxed text-foreground/80">{paragraph}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <SystemDivider text="fechar" />
+
+      {/* ===== D · Fecho (paper) ===== */}
+      <section className="px-4 py-16 md:px-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <Link to="/trabalhos" className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor">
             &lt; voltar ao arquivo
           </Link>
-        </section>
-      </article>
+          <div className="flex flex-wrap gap-3">
+            {externalLink ? (
+              <a href={externalLink} target="_blank" rel="noopener noreferrer" className="cmd-button-ghost">Visitar projeto</a>
+            ) : null}
+            <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
