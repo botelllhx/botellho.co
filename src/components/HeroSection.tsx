@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useScroll, useTransform } from "fram
 import { ArrowDown } from "lucide-react";
 import { useRef } from "react";
 import BrutalistThreeScene from "@/components/BrutalistThreeScene";
+import DecodeText from "@/components/DecodeText";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,7 +77,7 @@ const HeroSection = () => {
               transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="block text-primary"
             >
-              Experiências digitais
+              <DecodeText text="Experiências digitais" delay={900} duration={800} />
             </motion.span>
           </motion.span>
 

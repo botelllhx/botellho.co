@@ -4,12 +4,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCustomCursor } from "@/hooks/useCustomCursor";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import ExitIntentModal from "@/components/ExitIntentModal";
 
 const queryClient = new QueryClient();
 
 const Layout = () => {
   useCustomCursor();
+  useSmoothScroll();
 
   return (
     <QueryClientProvider client={queryClient}>
