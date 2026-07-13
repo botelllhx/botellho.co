@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
 import { prefersReducedMotion } from "@/motion/prefs";
 
-// Boot do terminal (Secao 5.2): so na primeira visita da sessao, flag em
-// memoria de runtime (sem browser storage). Overlay: cobre, nao bloqueia o
-// LCP do conteudo real por baixo. Reduced-motion: nao ha boot.
+// Boot da maquina (loader como peca de marca): power-on de CRT, o Ban
+// montando por scanline dithered, log de boot em bitmap e barra 1-bit.
+// So na primeira visita da sessao (flag em memoria; sem browser storage).
 let booted = false;
 
 const LINES = [
   "> botellho.sys",
   "> vídeo: fósforo azul .......... ok",
-  "> fontes: geomini + departure mono ok",
-  "> interface: carregando",
+  "> montando ban ................. ok",
+  "> interface .................... ok",
 ];
 
-const CELLS = 22;
-const BOOT_MS = 1500;
+const CELLS = 20;
+const BOOT_MS = 2000;
 
 const BootOverlay = () => {
   const [visible, setVisible] = useState(false);
-  const [leaving, setLeaving] = useState(false);
-  const [shownLines, setShownLines] = useState(0);
+  const [phase, setPhase] = useState<"on" | "boot" | "off">("on");
+  const [lines, setLines] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -30,45 +30,57 @@ const BootOverlay = () => {
     booted = true;
     setVisible(true);
 
-    const lineTimer = setInterval(() => {
-      setShownLines((n) => Math.min(n + 1, LINES.length));
-    }, 180);
-
+    const toBoot = setTimeout(() => setPhase("boot"), 260);
+    const lineTimer = setInterval(
+      () => setLines((n) => Math.min(n + 1, LINES.length)),
+      360,
+    );
     const start = performance.now();
     const progressTimer = setInterval(() => {
       const t = Math.min((performance.now() - start) / BOOT_MS, 1);
       setProgress(Math.floor(t * CELLS));
       if (t >= 1) clearInterval(progressTimer);
-    }, 66);
+    }, 60);
 
-    const exitTimer = setTimeout(() => setLeaving(true), BOOT_MS + 200);
-    const removeTimer = setTimeout(() => setVisible(false), BOOT_MS + 200 + 400);
+    const off = setTimeout(() => setPhase("off"), BOOT_MS + 300);
+    const remove = setTimeout(() => setVisible(false), BOOT_MS + 300 + 360);
 
     return () => {
+      clearTimeout(toBoot);
       clearInterval(lineTimer);
       clearInterval(progressTimer);
-      clearTimeout(exitTimer);
-      clearTimeout(removeTimer);
+      clearTimeout(off);
+      clearTimeout(remove);
     };
   }, []);
 
   if (!visible) return null;
 
   return (
-    <div
-      aria-hidden
-      className="fixed inset-0 z-[100] flex items-end bg-background transition-opacity duration-[400ms]"
-      style={{ opacity: leaving ? 0 : 1 }}
-    >
-      <div className="p-6 md:p-10">
-        {LINES.slice(0, shownLines).map((line) => (
-          <p key={line} className="type-dos text-sm leading-6 text-phosphor md:text-base">
-            {line}
+    <div className={`boot boot--${phase}`} aria-hidden>
+      <div className="boot__crt">
+        <div className="boot__scanlines" />
+
+        <div className="boot__ban">
+          <img
+            src="/ban/ban-1.png"
+            alt=""
+            className="boot__ban-img"
+            style={{ clipPath: `inset(${Math.max(0, 100 - progress * 5.4)}% 0 0 0)` }}
+          />
+          <span className="boot__scan" style={{ top: `${Math.min(100, progress * 5.4)}%` }} />
+        </div>
+
+        <div className="boot__log">
+          {LINES.slice(0, lines).map((line) => (
+            <p key={line} className="boot__line type-dos">
+              {line}
+            </p>
+          ))}
+          <p className="boot__bar type-dos">
+            [{"█".repeat(progress)}{"·".repeat(CELLS - progress)}]
           </p>
-        ))}
-        <p className="type-dos mt-4 text-sm text-phosphor md:text-base">
-          [{"▓".repeat(progress)}{"░".repeat(CELLS - progress)}]
-        </p>
+        </div>
       </div>
     </div>
   );
