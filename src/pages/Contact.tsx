@@ -100,13 +100,13 @@ const Contact = () => {
           name="description"
           content="Comece um projeto com o botellho: site institucional, experiência 3D, acervo digital ou parceria white-label. Conte o que você quer construir."
         />
-        <link rel="canonical" href="https://botellho.com/contact" />
+        <link rel="canonical" href="https://botellho.com/contato" />
         <meta property="og:title" content="Contato | botellho" />
         <meta
           property="og:description"
           content="Conte o que você quer construir. Quanto mais específico, melhor a nossa resposta."
         />
-        <meta property="og:url" content="https://botellho.com/contact" />
+        <meta property="og:url" content="https://botellho.com/contato" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 

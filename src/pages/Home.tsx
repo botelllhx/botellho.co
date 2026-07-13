@@ -111,10 +111,10 @@ const Home = () => {
               como folheto.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/contact" className="cmd-button">
+              <Link to="/contato" className="cmd-button">
                 Começar um projeto
               </Link>
-              <Link to="/work" className="cmd-button-ghost">
+              <Link to="/trabalhos" className="cmd-button-ghost">
                 Ver trabalhos
               </Link>
             </div>
@@ -158,7 +158,7 @@ const Home = () => {
       <section className="border-t border-foreground/10 py-24 md:py-32">
         <div className="flex items-baseline justify-between px-4 md:px-6">
           <span className="type-label text-muted-foreground">&gt; memória / trabalhos</span>
-          <Link to="/work" className="type-label text-phosphor hover:underline">
+          <Link to="/trabalhos" className="type-label text-phosphor hover:underline">
             ver arquivo completo →
           </Link>
         </div>
@@ -172,7 +172,7 @@ const Home = () => {
             {projects.map((project, index) => (
               <Link
                 key={project.id}
-                to={`/work/${project.slug}`}
+                to={`/trabalhos/${project.slug}`}
                 className="group w-[76vw] flex-none snap-start border border-foreground/15 sm:w-[420px]"
               >
                 <div className="flex items-center justify-between border-b border-foreground/15 px-3 py-2">
@@ -213,7 +213,7 @@ const Home = () => {
         <LineReveal as="h2" className="type-tese mt-8 max-w-4xl">
           Tem um projeto que merece ser lembrado?
         </LineReveal>
-        <Link to="/contact" className="cmd-button mt-10">
+        <Link to="/contato" className="cmd-button mt-10">
           Começar um projeto
         </Link>
       </section>

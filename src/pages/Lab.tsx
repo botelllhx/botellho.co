@@ -12,13 +12,13 @@ const Lab = () => {
           name="description"
           content="O lab do botellho: experimentos de WebGL e dither, teardowns de sites institucionais e notas técnicas sobre web e experiências digitais."
         />
-        <link rel="canonical" href="https://botellho.com/lab" />
+        <link rel="canonical" href="https://botellho.com/laboratorio" />
         <meta property="og:title" content="Lab | botellho" />
         <meta
           property="og:description"
           content="Experimentos de WebGL e dither, teardowns e notas técnicas."
         />
-        <meta property="og:url" content="https://botellho.com/lab" />
+        <meta property="og:url" content="https://botellho.com/laboratorio" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 

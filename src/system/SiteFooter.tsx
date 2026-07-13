@@ -37,10 +37,10 @@ const SiteFooter = () => {
           <ul className="mt-4 space-y-2">
             {[
               { to: "/", label: "/home" },
-              { to: "/studio", label: "/studio" },
-              { to: "/work", label: "/work" },
-              { to: "/lab", label: "/lab" },
-              { to: "/contact", label: "/contact" },
+              { to: "/estudio", label: "/estudio" },
+              { to: "/trabalhos", label: "/trabalhos" },
+              { to: "/laboratorio", label: "/laboratorio" },
+              { to: "/contato", label: "/contato" },
             ].map((item) => (
               <li key={item.to}>
                 <Link

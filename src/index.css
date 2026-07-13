@@ -1,17 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Geomini:wght@400;700;800&family=Inter:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Geist+Pixel&family=Inter:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Pixel/mono: Departure Mono (OFL, vendorizada em public/fonts/departure-mono) */
-@font-face {
-  font-family: 'Departure Mono';
-  src: url('/fonts/departure-mono/DepartureMono-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* DOS bitmap: IBM VGA 8x16 do int10h (CC BY-SA 4.0, charset Plus com acentos) */
 @font-face {
@@ -60,10 +51,10 @@
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-inout: cubic-bezier(0.65, 0.05, 0.36, 1);
 
-    /* Tipografia por papel (Secao 2.2) */
-    --font-display: 'Geomini', sans-serif;
-    --font-mono: 'Departure Mono', ui-monospace, monospace;
-    --font-bitmap: 'IBM VGA', 'Departure Mono', monospace;
+    /* Tipografia por papel (Secao 14 da direcao criativa) */
+    --font-display: 'Archivo Black', sans-serif;
+    --font-mono: 'Geist Pixel', ui-monospace, monospace;
+    --font-bitmap: 'IBM VGA', 'Geist Pixel', monospace;
     --font-serif: 'Averia Serif Libre', Georgia, serif;
     --font-sans: 'Inter', sans-serif;
 
@@ -142,21 +133,21 @@
 
   /* ===== Tipos do sistema ===== */
 
-  /* A tese: Geomini gigante, peso alto, tracking apertado */
+  /* A tese: Archivo Black gigante, tracking apertado (peso unico 400) */
   .type-tese {
     font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(2.4rem, 7.5vw, 7.5rem);
-    line-height: 0.94;
-    letter-spacing: -0.035em;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 7vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
   }
 
   .type-title {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.6rem, 4vw, 3.6rem);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 3.2rem);
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
 
   /* Rotulo tecnico: Departure Mono, caixa alta, tracking largo */

@@ -8,10 +8,10 @@ const SITE_URL = "https://botellho.com";
 // Rotas publicas estaticas. Fonte para pre-render (SSG) e sitemap.
 const STATIC_ROUTES: { path: string; changefreq: string; priority: string }[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/studio", changefreq: "monthly", priority: "0.8" },
-  { path: "/work", changefreq: "weekly", priority: "0.9" },
-  { path: "/lab", changefreq: "weekly", priority: "0.7" },
-  { path: "/contact", changefreq: "monthly", priority: "0.6" },
+  { path: "/estudio", changefreq: "monthly", priority: "0.8" },
+  { path: "/trabalhos", changefreq: "weekly", priority: "0.9" },
+  { path: "/laboratorio", changefreq: "weekly", priority: "0.7" },
+  { path: "/contato", changefreq: "monthly", priority: "0.6" },
 ];
 
 // Le os slugs de cases publicados no Supabase no momento do build.
@@ -44,7 +44,7 @@ const buildSitemap = (dir: string, slugs: string[]) => {
       priority: route.priority,
     })),
     ...slugs.map((slug) => ({
-      loc: `${SITE_URL}/work/${slug}`,
+      loc: `${SITE_URL}/trabalhos/${slug}`,
       changefreq: "monthly",
       priority: "0.7",
     })),
@@ -74,7 +74,7 @@ export default defineConfig(async ({ command, mode }) => {
   const slugs = command === "build" ? await getPublishedSlugs(mode) : [];
   const prerenderRoutes = [
     ...STATIC_ROUTES.map((route) => route.path),
-    ...slugs.map((slug) => `/work/${slug}`),
+    ...slugs.map((slug) => `/trabalhos/${slug}`),
   ];
 
   return {

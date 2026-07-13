@@ -9,6 +9,7 @@ import Lab from "./pages/Lab";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import SlugRedirect from "./system/SlugRedirect";
 import { worksLoader, workCaseLoader } from "./pages/workLoaders";
 
 export const routes: RouteRecord[] = [
@@ -18,17 +19,24 @@ export const routes: RouteRecord[] = [
     entry: "src/Layout.tsx",
     children: [
       { index: true, Component: Home },
-      { path: "studio", Component: Studio },
-      { path: "work", Component: Work, loader: worksLoader },
-      { path: "work/:slug", Component: WorkCase, loader: workCaseLoader },
-      { path: "lab", Component: Lab },
-      { path: "contact", Component: Contact },
+      { path: "estudio", Component: Studio },
+      { path: "trabalhos", Component: Work, loader: worksLoader },
+      { path: "trabalhos/:slug", Component: WorkCase, loader: workCaseLoader },
+      { path: "laboratorio", Component: Lab },
+      { path: "contato", Component: Contact },
       { path: "admin", Component: Admin },
 
-      // Legado -> novo (redirect client-side no GitHub Pages)
-      { path: "blog", element: <Navigate to="/lab" replace /> },
-      { path: "blog/:slug", element: <Navigate to="/lab" replace /> },
-      { path: "services/:slug", element: <Navigate to="/studio" replace /> },
+      // Slugs EN antigos -> PT
+      { path: "studio", element: <Navigate to="/estudio" replace /> },
+      { path: "work", element: <Navigate to="/trabalhos" replace /> },
+      { path: "work/:slug", element: <SlugRedirect base="/trabalhos" /> },
+      { path: "lab", element: <Navigate to="/laboratorio" replace /> },
+      { path: "contact", element: <Navigate to="/contato" replace /> },
+
+      // Legado WordPress
+      { path: "blog", element: <Navigate to="/laboratorio" replace /> },
+      { path: "blog/:slug", element: <Navigate to="/laboratorio" replace /> },
+      { path: "services/:slug", element: <Navigate to="/estudio" replace /> },
 
       { path: "*", Component: NotFound },
     ],

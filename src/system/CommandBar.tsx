@@ -3,10 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 
 // Barra de comando: a navegacao e a linha de prompt do terminal.
 const COMMANDS = [
-  { to: "/studio", label: "/studio" },
-  { to: "/work", label: "/work" },
-  { to: "/lab", label: "/lab" },
-  { to: "/contact", label: "/contact" },
+  { to: "/estudio", label: "/estudio" },
+  { to: "/trabalhos", label: "/trabalhos" },
+  { to: "/laboratorio", label: "/laboratorio" },
+  { to: "/contato", label: "/contato" },
 ];
 
 const CommandBar = () => {
@@ -42,7 +42,7 @@ const CommandBar = () => {
             ))}
           </nav>
 
-          <Link to="/contact" className="cmd-button hidden !py-1.5 text-[11px] md:inline-flex">
+          <Link to="/contato" className="cmd-button hidden !py-1.5 text-[11px] md:inline-flex">
             Começar um projeto
           </Link>
 
@@ -73,7 +73,7 @@ const CommandBar = () => {
                 {command.label}
               </NavLink>
             ))}
-            <Link to="/contact" onClick={() => setOpen(false)} className="cmd-button mt-8 self-start">
+            <Link to="/contato" onClick={() => setOpen(false)} className="cmd-button mt-8 self-start">
               Começar um projeto
             </Link>
           </nav>

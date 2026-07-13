@@ -18,18 +18,18 @@ const Work = () => {
           name="description"
           content="Arquivo de trabalhos do botellho: sites institucionais, experiências 3D e WebGL, direção de arte e acervo digital para marcas, cultura e instituições."
         />
-        <link rel="canonical" href="https://botellho.com/work" />
+        <link rel="canonical" href="https://botellho.com/trabalhos" />
         <meta property="og:title" content="Trabalhos | botellho" />
         <meta
           property="og:description"
           content="Arquivo de trabalhos do botellho: do institucional ao imersivo, com a mesma régua de craft."
         />
-        <meta property="og:url" content="https://botellho.com/work" />
+        <meta property="og:url" content="https://botellho.com/trabalhos" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
       <section className="px-4 pt-16 md:px-6 md:pt-24">
-        <Typing text="> ls /work" className="type-label text-muted-foreground" />
+        <Typing text="> ls /trabalhos" className="type-label text-muted-foreground" />
         <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">
           O arquivo do estúdio.
         </LineReveal>
@@ -62,7 +62,7 @@ const Work = () => {
             {projects.map((project, index) => (
               <li key={project.id}>
                 <Link
-                  to={`/work/${project.slug}`}
+                  to={`/trabalhos/${project.slug}`}
                   className="dir-row grid grid-cols-1 gap-1 border-b border-foreground/10 px-4 py-5 md:grid-cols-[6rem_10rem_1fr_8rem] md:items-baseline md:gap-4 md:px-6"
                 >
                   <span className="font-mono text-xs opacity-60">{toHex(index)}</span>

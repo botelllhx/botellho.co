@@ -57,13 +57,13 @@ const Studio = () => {
           name="description"
           content="botellho é um estúdio de web e experiências digitais. Engenharia, direção de arte e entendimento do setor cultural por dentro, do site institucional ao imersivo em 3D."
         />
-        <link rel="canonical" href="https://botellho.com/studio" />
+        <link rel="canonical" href="https://botellho.com/estudio" />
         <meta property="og:title" content="Estúdio | botellho" />
         <meta
           property="og:description"
           content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas."
         />
-        <meta property="og:url" content="https://botellho.com/studio" />
+        <meta property="og:url" content="https://botellho.com/estudio" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
@@ -149,10 +149,10 @@ const Studio = () => {
           O digital como parte da obra.
         </LineReveal>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link to="/contact" className="cmd-button">
+          <Link to="/contato" className="cmd-button">
             Começar um projeto
           </Link>
-          <Link to="/work" className="cmd-button-ghost">
+          <Link to="/trabalhos" className="cmd-button-ghost">
             Ver trabalhos
           </Link>
         </div>

@@ -19,7 +19,7 @@ const WorkCase = () => {
         <section className="px-4 py-24 md:px-6">
           <p className="type-dos text-phosphor">&gt; erro · bloco não encontrado</p>
           <h1 className="type-title mt-6">Esse case não está publicado.</h1>
-          <Link to="/work" className="cmd-button mt-10">
+          <Link to="/trabalhos" className="cmd-button mt-10">
             Voltar ao arquivo
           </Link>
         </section>
@@ -41,11 +41,11 @@ const WorkCase = () => {
       <Head>
         <title>{`${project.title} | botellho`}</title>
         <meta name="description" content={project.short_description} />
-        <link rel="canonical" href={`https://botellho.com/work/${project.slug}`} />
+        <link rel="canonical" href={`https://botellho.com/trabalhos/${project.slug}`} />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`${project.title} | botellho`} />
         <meta property="og:description" content={project.short_description} />
-        <meta property="og:url" content={`https://botellho.com/work/${project.slug}`} />
+        <meta property="og:url" content={`https://botellho.com/trabalhos/${project.slug}`} />
         <meta property="og:image" content={ogImage} />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -54,7 +54,7 @@ const WorkCase = () => {
             name: project.title,
             about: project.category,
             description: project.short_description,
-            url: `https://botellho.com/work/${project.slug}`,
+            url: `https://botellho.com/trabalhos/${project.slug}`,
             image: ogImage,
             creator: { "@type": "Organization", name: "botellho", url: "https://botellho.com" },
           })}
@@ -64,7 +64,7 @@ const WorkCase = () => {
       <article>
         <section className="px-4 pt-16 md:px-6 md:pt-24">
           <Typing
-            text={`> abrindo /work/${project.slug}`}
+            text={`> abrindo /trabalhos/${project.slug}`}
             className="type-label text-muted-foreground"
           />
           <LineReveal as="h1" className="type-tese mt-8 max-w-5xl">
@@ -134,7 +134,7 @@ const WorkCase = () => {
 
         <section className="border-t border-foreground/10 px-4 py-10 md:px-6">
           <Link
-            to="/work"
+            to="/trabalhos"
             className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor"
           >
             &lt; voltar ao arquivo
