@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import SignalText from "@/motion/SignalText";
 import SignatureCanvas from "@/webgl/SignatureCanvas";
-import BanScene from "@/webgl/BanScene";
+import DioramaScene from "@/webgl/DioramaScene";
 import SystemDivider from "@/system/SystemDivider";
 import ContactForm from "@/system/ContactForm";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
@@ -39,38 +39,32 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== A · Hero: o Ban na tela (interim; a cena-mundo vem no final) ===== */}
-      <section className="relative overflow-hidden px-4 md:px-6">
-        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-          <div className="order-2 lg:order-1">
-            <span className="type-label text-muted-foreground">&gt; estúdio de web e experiências digitais</span>
-            <h1 className="type-tese mt-6 max-w-2xl">
-              <LineReveal as="span" className="block">Web que se move.</LineReveal>
-              <span className="block text-phosphor"><SignalText text="Experiências digitais" delay={500} /></span>
-              <LineReveal as="span" className="block" delay={0.16}>feitas para durar na memória.</LineReveal>
-            </h1>
-            <p className="mt-8 max-w-md font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
-              Estúdio de web e WebGL com craft de nível de prêmio, para marcas,
-              cultura e instituições que tratam o digital como experiência, não como folheto.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
-              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
-            </div>
-          </div>
-          <div className="order-1 lg:order-2">
-            <div className="crt-frame aspect-[4/3] w-full" data-cursor="3d">
-              <SignatureCanvas
-                className="absolute inset-0"
-                crt={0.5}
-                camera={{ fov: 34, position: [0.2, 0.5, 6.2] }}
-                fallback={<img src="/ban/ban-1.png" alt="" loading="lazy" className="h-full w-full object-contain p-8" />}
-              >
-                <BanScene />
-              </SignatureCanvas>
-              <div className="crt-frame__glass" />
-              <span className="crt-frame__tag type-label">ban // idle</span>
-            </div>
+      {/* ===== A · Hero: o estudio-diorama do Ban (cena cheia) ===== */}
+      <section className="relative min-h-[calc(100svh-var(--bar-h))] overflow-hidden" data-cursor="3d">
+        <SignatureCanvas
+          className="absolute inset-0"
+          crt={0.5}
+          camera={{ fov: 42, position: [-3.2, 1.4, 7.5] }}
+          fallback={<img src="/hero-fallback.png" alt="" loading="lazy" className="h-full w-full object-cover" />}
+        >
+          <DioramaScene />
+        </SignatureCanvas>
+        <div className="hero-glass" />
+
+        <div className="relative z-10 flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-end px-4 pb-16 md:px-6 md:pb-20">
+          <span className="type-label text-phosphor">&gt; estúdio de web e experiências digitais</span>
+          <h1 className="type-tese mt-6 max-w-4xl text-paper">
+            <LineReveal as="span" className="block">Web que se move.</LineReveal>
+            <span className="block text-phosphor"><SignalText text="Experiências digitais" delay={500} /></span>
+            <LineReveal as="span" className="block" delay={0.16}>feitas para durar na memória.</LineReveal>
+          </h1>
+          <p className="mt-8 max-w-md font-sans text-sm leading-relaxed text-paper/70 md:text-base">
+            Estúdio de web e WebGL com craft de nível de prêmio, para marcas,
+            cultura e instituições que tratam o digital como experiência, não como folheto.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+            <Link to="/trabalhos" className="cmd-button-ghost !text-paper !border-paper/40">Ver trabalhos</Link>
           </div>
         </div>
       </section>

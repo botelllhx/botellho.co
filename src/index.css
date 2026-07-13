@@ -441,6 +441,18 @@
   }
 }
 
+/* ===== Vidro do hero cena-cheia: scrim + vinheta + scanlines ===== */
+.hero-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, hsl(var(--ink) / 0.94) 0%, hsl(var(--ink) / 0.25) 46%, transparent 72%),
+    radial-gradient(125% 125% at 50% 42%, transparent 54%, hsl(var(--ink) / 0.7) 100%),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, hsl(var(--ink) / 0.18) 3px);
+}
+
 /* ===== Moldura CRT do hero (a "tela" e a excecao ao radius 0) ===== */
 .crt-frame {
   position: relative;
