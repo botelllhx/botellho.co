@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import CursorSystem from "@/system/CursorSystem";
+import RouteTransition from "@/system/RouteTransition";
 import BootOverlay from "@/system/BootOverlay";
 import CommandBar from "@/system/CommandBar";
 import StatusBar from "@/system/StatusBar";
@@ -30,6 +31,7 @@ const Layout = () => {
         ) : (
           <>
             <BootOverlay />
+            <RouteTransition />
             <CommandBar />
             <main className="pt-[var(--bar-h)]">
               <Outlet />
