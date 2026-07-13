@@ -15,7 +15,9 @@ const CursorSystem = () => {
     block.className = "cursor";
     const dot = document.createElement("div");
     dot.className = "cursor-dot";
-    document.body.append(block, dot);
+    const label = document.createElement("div");
+    label.className = "cursor-label";
+    document.body.append(block, dot, label);
 
     let mouseX = -100;
     let mouseY = -100;
@@ -30,6 +32,8 @@ const CursorSystem = () => {
       block.style.top = `${blockY}px`;
       dot.style.left = `${mouseX}px`;
       dot.style.top = `${mouseY}px`;
+      label.style.left = `${mouseX}px`;
+      label.style.top = `${mouseY}px`;
       raf = requestAnimationFrame(tick);
     };
 
@@ -38,9 +42,13 @@ const CursorSystem = () => {
       mouseY = event.clientY;
       const target = event.target as HTMLElement | null;
       const isCrosshair = !!target?.closest('[data-cursor="3d"]');
-      const isHover = !isCrosshair && !!target?.closest(INTERACTIVE);
+      const card = target?.closest("[data-cursor-label]") as HTMLElement | null;
+      const isHover = !isCrosshair && !card && !!target?.closest(INTERACTIVE);
       block.classList.toggle("is-crosshair", isCrosshair);
       block.classList.toggle("is-hover", isHover);
+      block.classList.toggle("is-card", !!card);
+      label.textContent = card?.dataset.cursorLabel ?? "";
+      label.classList.toggle("is-on", !!card);
     };
     const handleDown = () => block.classList.add("is-press");
     const handleUp = () => block.classList.remove("is-press");
@@ -57,6 +65,7 @@ const CursorSystem = () => {
       document.removeEventListener("mouseup", handleUp);
       block.remove();
       dot.remove();
+      label.remove();
     };
   }, []);
 
