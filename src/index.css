@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geomini:wght@400;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -71,9 +71,9 @@
     --ease-mech: steps(6, end);
 
     /* Typography: mistura por papel (Secao 2.2 do brief de design).
-       Display: Geomini (stand-in atual: Syne; trocar quando o arquivo chegar).
-       Pixel/mono: Departure Mono. DOS bitmap: IBM VGA. Serifa: Averia Serif Libre. */
-    --font-display: 'Syne', sans-serif;
+       Display: Geomini. Pixel/mono: Departure Mono. DOS bitmap: IBM VGA.
+       Serifa: Averia Serif Libre. Corpo: Inter (decisao do Mateus). */
+    --font-display: 'Geomini', sans-serif;
     --font-mono: 'Departure Mono', ui-monospace, 'Cascadia Mono', monospace;
     --font-bitmap: 'IBM VGA', 'Departure Mono', monospace;
     --font-serif: 'Averia Serif Libre', Georgia, serif;
