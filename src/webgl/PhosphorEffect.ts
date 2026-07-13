@@ -16,6 +16,7 @@ const fragmentShader = /* glsl */ `
   uniform float uPixelSize;
   uniform float uColorCount;
   uniform float uBayer8;
+  uniform float uDither;
   uniform float uDitherStrength;
   uniform float uCrt;
 
@@ -49,7 +50,9 @@ const fragmentShader = /* glsl */ `
     float driver = max(max(col.r, col.g), col.b);
     vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
     float threshold = uBayer8 > 0.5 ? bayer8(cell) : bayer4(cell);
-    float dithered = driver + (threshold - 0.5) * uDitherStrength;
+    // Bitmap fixo: pixel-6 quantizado em bloco. O dither (ruido ordenado)
+    // so entra quando uDither = 1 (imagens estaticas pontuais).
+    float dithered = driver + (uDither > 0.5 ? (threshold - 0.5) * uDitherStrength : 0.0);
 
     // 5. quantizacao + paleta
     float q = clamp(floor(dithered * (uColorCount - 1.0) + 0.5) / (uColorCount - 1.0), 0.0, 1.0);
@@ -88,6 +91,7 @@ const buildPaletteTexture = (ink: string, phosphor: string, paper: string) => {
 
 export interface PhosphorEffectOptions {
   pixelSize?: number;
+  useDither?: boolean;
   ditherStrength?: number;
   useBayer8?: boolean;
   crt?: number;
@@ -95,7 +99,8 @@ export interface PhosphorEffectOptions {
 
 export class PhosphorEffect extends Effect {
   constructor({
-    pixelSize = 3,
+    pixelSize = 6,
+    useDither = false,
     ditherStrength = 0.34,
     useBayer8 = false,
     crt = 0.3,
@@ -106,14 +111,16 @@ export class PhosphorEffect extends Effect {
         ["uPixelSize", new Uniform(pixelSize)],
         ["uColorCount", new Uniform(3)],
         ["uBayer8", new Uniform(useBayer8 ? 1 : 0)],
+        ["uDither", new Uniform(useDither ? 1 : 0)],
         ["uDitherStrength", new Uniform(ditherStrength)],
         ["uCrt", new Uniform(crt)],
       ]),
     });
   }
 
-  set(values: Required<PhosphorEffectOptions>) {
+  set(values: Required<Omit<PhosphorEffectOptions, "useDither">> & { useDither?: boolean }) {
     this.uniforms.get("uPixelSize")!.value = values.pixelSize;
+    this.uniforms.get("uDither")!.value = values.useDither ? 1 : 0;
     this.uniforms.get("uDitherStrength")!.value = values.ditherStrength;
     this.uniforms.get("uBayer8")!.value = values.useBayer8 ? 1 : 0;
     this.uniforms.get("uCrt")!.value = values.crt;

@@ -2,33 +2,44 @@ import { Head } from "vite-react-ssg";
 import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import SignalText from "@/motion/SignalText";
-import SignatureCanvas from "@/webgl/SignatureCanvas";
-import DioramaScene from "@/webgl/DioramaScene";
 import SystemDivider from "@/system/SystemDivider";
+import Window from "@/system/Window";
 import ContactForm from "@/system/ContactForm";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
 
-const PROGRAMAS = [
-  { num: "01", file: "sites-e-plataformas", desc: "Presença digital com clareza, acessibilidade e confiança, do institucional ao produto." },
-  { num: "02", file: "experiencias-e-microsites", desc: "WebGL, 3D e motion para marcas, lançamentos, festivais e exposições. A experiência é a mensagem." },
-  { num: "03", file: "direcao-de-arte", desc: "Identidade digital com o visual como diferencial, não como enfeite." },
-  { num: "04", file: "acervo-e-patrimonio", desc: "Para cultura e instituições: coleções e memória que as pessoas querem explorar." },
-  { num: "05", file: "white-label", desc: "Construímos o front e as interações que outros estúdios e designers desenham." },
+const SERVICOS = [
+  { n: "01", nome: "Sites e plataformas", desc: "Presença digital com clareza, acessibilidade e confiança, do institucional ao produto." },
+  { n: "02", nome: "Experiências e microsites", desc: "WebGL, 3D e motion para marcas, lançamentos, festivais e exposições. A experiência é a mensagem." },
+  { n: "03", nome: "Direção de arte digital", desc: "O visual como diferencial, não como enfeite. Identidade que se move." },
+  { n: "04", nome: "Cultura e instituições", desc: "Acervo, memória e patrimônio apresentados de um jeito que as pessoas querem explorar." },
+  { n: "05", nome: "Parceria white-label", desc: "Construímos o front e as interações que outros estúdios e designers desenham." },
 ];
 
-const toHex = (index: number) => `0x${(index * 74 + 74).toString(16).toUpperCase().padStart(4, "0")}`;
+const SETORES = ["Marcas", "Cultura e instituições", "Eventos e lançamentos", "Produto digital", "Educação"];
+
+const FAQ = [
+  { q: "Quanto custa um projeto?", a: "Trabalhamos por faixas, de R$ 10 mil a acima de R$ 60 mil, conforme escopo e ambição. A gente alinha isso na primeira conversa." },
+  { q: "Quanto tempo leva?", a: "Depende do escopo. Um site institucional roda em semanas; uma experiência 3D pede mais fôlego. Combinamos o cronograma no começo." },
+  { q: "Atendem fora de Belo Horizonte?", a: "Sim, o Brasil todo, de forma remota. O estúdio fica em BH, o trabalho vai onde precisa." },
+  { q: "O que é uma experiência 3D ou WebGL?", a: "É web que roda gráfico 3D e motion no navegador, sem plugin. É a nossa assinatura técnica, o que faz o projeto durar na memória." },
+];
+
+const PREVIEW = [
+  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=60&auto=format",
+  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=60&auto=format",
+  "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=900&q=60&auto=format",
+  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=60&auto=format",
+];
 
 const Home = () => {
   const { projects } = usePortfolioProjects();
+  const cases = projects.slice(0, 4);
 
   return (
     <>
       <Head>
         <title>botellho | Estúdio de web e experiências digitais</title>
-        <meta
-          name="description"
-          content="Web que se move: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições. Estúdio brasileiro de web e experiências digitais."
-        />
+        <meta name="description" content="Web que se move: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições. Estúdio brasileiro de web e experiências digitais." />
         <link rel="canonical" href="https://botellho.com/" />
         <meta property="og:title" content="botellho | Estúdio de web e experiências digitais" />
         <meta property="og:description" content="Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições." />
@@ -39,135 +50,137 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== A · Hero: o estudio-diorama do Ban (cena cheia) ===== */}
-      <section className="relative min-h-[calc(100svh-var(--bar-h))] overflow-hidden" data-cursor="3d">
-        <SignatureCanvas
-          className="absolute inset-0"
-          crt={0.5}
-          camera={{ fov: 42, position: [-3.2, 1.4, 7.5] }}
-          fallback={<img src="/hero-fallback.png" alt="" loading="lazy" className="h-full w-full object-cover" />}
-        >
-          <DioramaScene />
-        </SignatureCanvas>
-        <div className="hero-glass" />
-
-        <div className="relative z-10 flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-end px-4 pb-16 md:px-6 md:pb-20">
-          <span className="type-label text-phosphor">&gt; estúdio de web e experiências digitais</span>
-          <h1 className="type-tese mt-6 max-w-4xl text-paper">
-            <LineReveal as="span" className="block">Web que se move.</LineReveal>
-            <span className="block text-phosphor"><SignalText text="Experiências digitais" delay={500} /></span>
-            <LineReveal as="span" className="block" delay={0.16}>feitas para durar na memória.</LineReveal>
-          </h1>
-          <p className="mt-8 max-w-md font-sans text-sm leading-relaxed text-paper/70 md:text-base">
-            Estúdio de web e WebGL com craft de nível de prêmio, para marcas,
-            cultura e instituições que tratam o digital como experiência, não como folheto.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/contato" className="cmd-button">Começar um projeto</Link>
-            <Link to="/trabalhos" className="cmd-button-ghost !text-paper !border-paper/40">Ver trabalhos</Link>
+      {/* ===== Hero (editorial split; texto fora da tela) ===== */}
+      <section className="px-4 pt-10 md:px-6 md:pt-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          <div>
+            <span className="type-label text-muted-foreground">Estúdio de web e experiências digitais</span>
+            <h1 className="type-tese mt-5 max-w-2xl">
+              <LineReveal as="span" className="block">Web que se move.</LineReveal>
+              <span className="block text-phosphor"><SignalText text="Experiências digitais" delay={400} /></span>
+              <LineReveal as="span" className="block" delay={0.14}>feitas para durar na memória.</LineReveal>
+            </h1>
+            <p className="mt-7 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
+              Craft de nível de prêmio em web e WebGL, para marcas, cultura e
+              instituições que tratam o digital como experiência, não como folheto.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
+            </div>
           </div>
+
+          {/* A tela CRT como janela; placeholder bitmap estatico (3D vem depois) */}
+          <Window title="ban.exe" phosphor bodyClassName="!p-0">
+            <div className="crt-frame aspect-[4/3] w-full !rounded-none border-0" data-cursor="3d">
+              <img src="/hero-fallback.png" alt="O estúdio do Ban, em bitmap" className="h-full w-full object-cover" style={{ imageRendering: "pixelated" }} />
+              <div className="crt-frame__glass !rounded-none" />
+            </div>
+          </Window>
         </div>
       </section>
 
-      <SystemDivider text="o que fazemos" />
+      <SystemDivider label="O que fazemos" />
 
-      {/* ===== B · O que fazemos: grid denso, secao ink (preta) ===== */}
-      <section className="dark bg-background px-4 py-24 text-foreground md:px-6 md:py-32">
-        <div className="flex items-baseline justify-between">
-          <span className="type-label text-muted-foreground">&gt; dir /o-que-fazemos</span>
-          <span className="type-label hidden text-muted-foreground md:block">5 programas</span>
-        </div>
-        <LineReveal as="h2" className="type-title mt-8 max-w-3xl">O que este estúdio executa.</LineReveal>
-
-        <ul className="mt-14 border-t border-foreground/15">
-          {PROGRAMAS.map((p) => (
-            <li key={p.file} className="dir-row grid grid-cols-[2.5rem_1fr] gap-4 border-b border-foreground/15 px-2 py-6 md:grid-cols-[3rem_minmax(0,1.1fr)_minmax(0,1fr)] md:items-baseline md:px-4">
-              <span className="font-mono text-xs text-phosphor">{p.num}</span>
-              <h3 className="font-display text-xl md:text-3xl">{p.file}<span className="text-phosphor">.exe</span></h3>
-              <p className="col-start-2 max-w-md font-sans text-sm leading-relaxed opacity-70 md:col-start-3">{p.desc}</p>
-            </li>
-          ))}
-        </ul>
+      {/* ===== O que fazemos (index/list denso numa janela) ===== */}
+      <section className="px-4 py-16 md:px-6 md:py-24">
+        <Window title="serviços" bodyClassName="!p-0">
+          <ul>
+            {SERVICOS.map((s) => (
+              <li key={s.n} className="dir-row grid grid-cols-[2.5rem_1fr] items-baseline gap-4 border-b border-foreground/12 px-4 py-6 last:border-0 md:grid-cols-[3rem_16rem_1fr] md:px-6">
+                <span className="font-mono text-xs text-phosphor">{s.n}</span>
+                <h2 className="font-display text-xl md:text-2xl">{s.nome}</h2>
+                <p className="col-start-2 max-w-lg font-sans text-sm leading-relaxed opacity-70 md:col-start-3">{s.desc}</p>
+              </li>
+            ))}
+          </ul>
+        </Window>
       </section>
 
-      <SystemDivider text="memória / trabalhos" ban />
+      <SystemDivider label="Trabalhos" ban />
 
-      {/* ===== A/B · Seleção de trabalhos: faixa horizontal, secao paper ===== */}
-      <section className="px-4 py-24 md:px-6 md:py-32">
-        <div className="flex items-baseline justify-between">
-          <span className="type-label text-muted-foreground">&gt; memória / trabalhos</span>
-          <Link to="/trabalhos" className="type-label text-phosphor hover:underline">ver arquivo completo →</Link>
+      {/* ===== Seleção de trabalhos (media grid, seção dark premium) ===== */}
+      <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
+        <div className="flex items-end justify-between">
+          <LineReveal as="h2" className="type-title max-w-2xl">Trabalhos selecionados.</LineReveal>
+          <Link to="/trabalhos" className="hidden font-mono text-sm text-phosphor hover:underline md:inline">ver todos ►</Link>
         </div>
-        <LineReveal as="h2" className="type-title mt-8 max-w-3xl">Blocos de memória.</LineReveal>
-
-        {projects.length === 0 ? (
-          <p className="type-dos mt-12 text-sm text-muted-foreground">[memória vazia] os primeiros blocos chegam em breve.</p>
-        ) : (
-          <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
-            {projects.map((project, index) => (
-              <Link
-                key={project.id}
-                to={`/trabalhos/${project.slug}`}
-                data-cursor-label="[ ver ]"
-                className="group w-[78vw] flex-none snap-start border border-foreground/15 sm:w-[380px]"
-              >
-                <div className="flex items-center justify-between border-b border-foreground/15 px-3 py-2">
-                  <span className="font-mono text-[11px] text-muted-foreground">{toHex(index)}</span>
-                  <span className="type-label text-muted-foreground">{project.category || "projeto"}</span>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2">
+          {(cases.length > 0 ? cases : SERVICOS.slice(0, 4)).map((item, i) => {
+            const p = cases[i];
+            const to = p ? `/trabalhos/${p.slug}` : "/trabalhos";
+            const titulo = p ? p.title : "Conceito";
+            const setor = p ? p.category || "projeto" : "conceito";
+            const img = p?.cover_media_url || PREVIEW[i];
+            return (
+              <Link key={i} to={to} data-cursor-label="[ ver ]" className="group block border border-foreground/20">
+                <div className="aspect-[16/10] overflow-hidden bg-ink">
+                  <img src={img} alt={`Prévia de ${titulo}`} loading="lazy" className="h-full w-full object-cover grayscale contrast-[1.4] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100" />
                 </div>
-                {project.cover_media_url ? (
-                  <div className="aspect-[4/3] overflow-hidden bg-muted">
-                    <img
-                      src={project.cover_media_url}
-                      alt={`Capa do projeto ${project.title}`}
-                      loading="lazy"
-                      className="h-full w-full object-cover grayscale contrast-[1.35] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100"
-                    />
+                <div className="flex items-baseline justify-between px-4 py-4">
+                  <div>
+                    <span className="type-label text-phosphor">{setor}</span>
+                    <h3 className="mt-1 font-display text-2xl transition-colors group-hover:text-phosphor">{titulo}</h3>
                   </div>
-                ) : (
-                  <div className="type-dos flex aspect-[4/3] items-center justify-center bg-muted text-phosphor">[sem visual]</div>
-                )}
-                <div className="flex items-center justify-between px-3 py-3">
-                  <h3 className="font-display text-lg transition-colors group-hover:text-phosphor">{project.title}</h3>
-                  <span className="font-mono text-xs text-muted-foreground">abrir →</span>
+                  <span className="font-mono text-xs text-muted-foreground">abrir ►</span>
                 </div>
               </Link>
-            ))}
-          </div>
-        )}
+            );
+          })}
+        </div>
       </section>
 
-      <SystemDivider text="manifesto" />
+      <SystemDivider label="Prova" />
 
-      {/* ===== C · Manifesto teaser: editorial, secao ink ===== */}
-      <section className="dark bg-background px-4 py-28 text-foreground md:px-6 md:py-40">
-        <span className="type-label text-muted-foreground">&gt; manifesto</span>
-        <LineReveal as="p" className="type-tese mt-8 max-w-5xl">
-          A maior parte do digital é esquecível. A gente faz o <span className="text-phosphor">contrário</span>.
-        </LineReveal>
-        <p className="mt-10 max-w-2xl font-serif text-xl leading-relaxed text-foreground/80 md:text-2xl">
-          Juntamos engenharia de verdade com direção de arte, do site institucional
-          ao imersivo em 3D, sempre com a mesma régua de craft.
-        </p>
-        <Link to="/estudio" className="mt-10 inline-block font-mono text-sm text-phosphor hover:underline">
-          conheça o estúdio →
-        </Link>
-      </section>
-
-      <SystemDivider text="contato" ban />
-
-      {/* ===== D · Contato embutido: janela de terminal, secao paper ===== */}
-      <section className="px-4 py-24 md:px-6 md:py-32">
-        <div className="mx-auto max-w-3xl border border-foreground/20">
-          <div className="flex items-center justify-between border-b border-foreground/20 px-4 py-2">
-            <span className="type-dos text-xs text-phosphor">contato.exe</span>
-            <span className="type-label text-muted-foreground">botellho</span>
+      {/* ===== Prova (split-screen sticky) ===== */}
+      <section className="px-4 py-20 md:px-6 md:py-28">
+        <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+          <div className="md:sticky md:top-24 md:self-start">
+            <span className="type-label text-muted-foreground">Por que confiar</span>
+            <LineReveal as="h2" className="type-title mt-5">Entendemos o setor cultural por dentro.</LineReveal>
+            <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
+              Leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.
+            </p>
           </div>
-          <div className="p-5 md:p-8">
-            <p className="type-dos mb-8 text-sm text-phosphor">&gt; pronto para começar um projeto?</p>
-            <ContactForm />
+          <div>
+            <span className="type-label text-muted-foreground">Setores que atendemos</span>
+            <ul className="mt-5 border-t border-foreground/15">
+              {SETORES.map((setor, i) => (
+                <li key={setor} className="dir-row flex items-baseline gap-4 border-b border-foreground/15 px-2 py-5 md:px-4">
+                  <span className="font-mono text-xs text-phosphor">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-2xl md:text-3xl">{setor}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
+      </section>
+
+      <SystemDivider label="Perguntas" ban />
+
+      {/* ===== Processo / FAQ (stacking em janelas) ===== */}
+      <section className="px-4 py-20 md:px-6 md:py-28">
+        <LineReveal as="h2" className="type-title max-w-2xl">Perguntas frequentes.</LineReveal>
+        <div className="mt-12 grid gap-5 md:grid-cols-2">
+          {FAQ.map((item, i) => (
+            <Window key={i} title={`0${i + 1} · dúvida`}>
+              <h3 className="font-display text-xl">{item.q}</h3>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground">{item.a}</p>
+            </Window>
+          ))}
+        </div>
+      </section>
+
+      <SystemDivider label="Contato" />
+
+      {/* ===== Contato embutido (janela) ===== */}
+      <section className="px-4 py-20 md:px-6 md:py-28">
+        <Window title="começar um projeto" phosphor className="mx-auto max-w-3xl">
+          <p className="mb-8 font-sans text-base text-muted-foreground">
+            Conte o que você quer construir. Quanto mais específico, melhor a nossa resposta.
+          </p>
+          <ContactForm />
+        </Window>
       </section>
     </>
   );

@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-// Barra de status: metadados vivos do terminal (rota, progresso de leitura).
+const NOMES: Record<string, string> = {
+  "/": "início",
+  "/estudio": "estúdio",
+  "/trabalhos": "trabalhos",
+  "/laboratorio": "laboratório",
+  "/contato": "contato",
+};
+
+// Barra de status (HUD): rotulos claros em PT, sem jargao. Progresso de
+// leitura a direita.
 const StatusBar = () => {
   const { pathname } = useLocation();
   const [progress, setProgress] = useState(0);
@@ -24,19 +33,13 @@ const StatusBar = () => {
     };
   }, [pathname]);
 
+  const nome = NOMES[pathname] ?? pathname.replace(/^\//, "").split("/")[0];
+
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-40 hidden h-7 items-center justify-between border-t border-foreground/10 bg-background px-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex"
-      aria-hidden
-    >
-      <span>
-        &gt; {pathname === "/" ? "/home" : pathname}
-      </span>
-      <span className="hidden lg:block">botellho · estúdio</span>
-      <span>
-        <span className="text-phosphor">{String(progress).padStart(3, "0")}</span> / 100 ·
-        disponível para projetos
-      </span>
+    <div className="fixed inset-x-0 bottom-0 z-40 hidden h-7 items-center justify-between border-t border-foreground/15 bg-background px-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex" aria-hidden>
+      <span>seção · {nome}</span>
+      <span className="hidden lg:block">botellho · estúdio de web</span>
+      <span>leitura <span className="text-phosphor">{String(progress).padStart(2, "0")}%</span></span>
     </div>
   );
 };

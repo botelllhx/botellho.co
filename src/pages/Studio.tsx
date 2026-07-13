@@ -58,7 +58,7 @@ const Studio = () => {
         </p>
       </section>
 
-      <SystemDivider text="manifesto" />
+      <SystemDivider label="manifesto" />
 
       {/* ===== C · Manifesto (ink, editorial com numeros de linha) ===== */}
       <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
@@ -75,7 +75,7 @@ const Studio = () => {
         </div>
       </section>
 
-      <SystemDivider text="como trabalhamos" ban />
+      <SystemDivider label="como trabalhamos" ban />
 
       {/* ===== B · Como trabalhamos (paper, split-scroll) ===== */}
       <section className="px-4 py-20 md:px-6 md:py-28">
@@ -101,7 +101,7 @@ const Studio = () => {
         </div>
       </section>
 
-      <SystemDivider text="com quem" />
+      <SystemDivider label="com quem" />
 
       {/* ===== D · Com quem / prova (ink, bloco de terminal) ===== */}
       <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">

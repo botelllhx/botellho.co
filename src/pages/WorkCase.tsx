@@ -81,7 +81,7 @@ const WorkCase = () => {
         ) : null}
       </section>
 
-      <SystemDivider text="contexto" />
+      <SystemDivider label="contexto" />
 
       {/* ===== C · Contexto (paper, editorial serif) ===== */}
       <section className="px-4 py-20 md:px-6 md:py-28">
@@ -91,7 +91,7 @@ const WorkCase = () => {
         </p>
       </section>
 
-      <SystemDivider text="abordagem" ban />
+      <SystemDivider label="abordagem" ban />
 
       {/* ===== B · Abordagem (ink, leitura longa) ===== */}
       <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
@@ -114,7 +114,7 @@ const WorkCase = () => {
         </div>
       </section>
 
-      <SystemDivider text="fechar" />
+      <SystemDivider label="fechar" />
 
       {/* ===== D · Fecho (paper) ===== */}
       <section className="px-4 py-16 md:px-6">

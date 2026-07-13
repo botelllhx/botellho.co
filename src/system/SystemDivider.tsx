@@ -1,32 +1,23 @@
 interface SystemDividerProps {
-  /** texto repetido na fita (voz de terminal) */
-  text?: string;
-  /** mostra o selo do Ban dithered no centro */
+  /** rotulo em portugues claro no centro do divisor */
+  label?: string;
+  /** mostra o selo do Ban dithered */
   ban?: boolean;
 }
 
-// Divisor de sistema: uma fita de bitmap em fosforo que corre entre secoes,
-// com selo do Ban opcional. Coesao "basement" nos detalhes.
-const FILLER = "▚ ▞ ░ ▒ ▓ █ ";
-
-const SystemDivider = ({ text = "botellho.sys", ban = false }: SystemDividerProps) => {
-  const unit = `${FILLER}${text} `;
+// Divisor estatico (sem carrossel): uma regua com glifos de bloco e um
+// rotulo claro em PT ao centro. Coesao nos detalhes, sem movimento.
+const SystemDivider = ({ label, ban = false }: SystemDividerProps) => {
   return (
-    <div className="relative border-y border-foreground/15 bg-background py-2" aria-hidden>
-      <div className="tape">
-        <div className="tape-track">
-          {Array.from({ length: 6 }, (_, i) => (
-            <span key={i} className="type-dos mx-2 text-xs text-phosphor/70">
-              {unit}
-            </span>
-          ))}
-        </div>
-      </div>
+    <div className="flex items-center gap-3 px-4 py-3 md:px-6" aria-hidden>
+      <span className="type-dos text-xs text-phosphor/60">{"▀▀▀"}</span>
+      <span className="h-px flex-1 bg-foreground/15" />
       {ban ? (
-        <span className="absolute left-1/2 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-background">
-          <img src="/ban/ban-1.png" alt="" className="h-7 w-7 object-contain" style={{ imageRendering: "pixelated" }} />
-        </span>
+        <img src="/ban/ban-1.png" alt="" className="h-6 w-6 object-contain" style={{ imageRendering: "pixelated" }} />
       ) : null}
+      {label ? <span className="type-label text-muted-foreground">{label}</span> : null}
+      <span className="h-px flex-1 bg-foreground/15" />
+      <span className="type-dos text-xs text-phosphor/60">{"►"}</span>
     </div>
   );
 };

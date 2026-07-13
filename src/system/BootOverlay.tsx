@@ -7,10 +7,11 @@ import { prefersReducedMotion } from "@/motion/prefs";
 let booted = false;
 
 const LINES = [
-  "> botellho.sys",
-  "> vídeo: fósforo azul .......... ok",
-  "> montando ban ................. ok",
-  "> interface .................... ok",
+  "botellho BIOS v2.6",
+  "memória ...................... 640K ok",
+  "vídeo: fósforo azul .......... ok",
+  "carregando ban ............... ok",
+  "interface .................... ok",
 ];
 
 const CELLS = 20;
