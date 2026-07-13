@@ -1,10 +1,15 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import DitherComposer from "./DitherComposer";
+import AsciiComposer from "./AsciiComposer";
 
 interface SignatureCanvasProps {
   children: ReactNode;
   className?: string;
+  /** os dois modos da mesma pele; nunca os dois na mesma tela */
+  post?: "dither" | "ascii";
+  /** camera da cena (fov/posicao variam por secao) */
+  camera?: { fov: number; position: [number, number, number] };
   /** fallback estatico para reduced-motion e aparelhos fracos */
   fallback?: ReactNode;
 }
@@ -21,7 +26,13 @@ const prefersStatic = () => {
   return coarse && memory !== undefined && memory <= 4;
 };
 
-const SignatureCanvas = ({ children, className, fallback }: SignatureCanvasProps) => {
+const SignatureCanvas = ({
+  children,
+  className,
+  post = "dither",
+  camera = { fov: 38, position: [0, 0, 21] },
+  fallback,
+}: SignatureCanvasProps) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<"idle" | "live" | "static">("idle");
   const [inView, setInView] = useState(true);
@@ -55,11 +66,11 @@ const SignatureCanvas = ({ children, className, fallback }: SignatureCanvasProps
           dpr={[1, 1.5]}
           frameloop={inView ? "always" : "never"}
           gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-          camera={{ fov: 38, near: 0.1, far: 220, position: [0, 0, 21] }}
+          camera={{ fov: camera.fov, near: 0.1, far: 220, position: camera.position }}
           onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
         >
           {children}
-          <DitherComposer />
+          {post === "ascii" ? <AsciiComposer /> : <DitherComposer />}
         </Canvas>
       ) : null}
     </div>
