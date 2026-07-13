@@ -18,4 +18,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  ssgOptions: {
+    // Pre-renderiza apenas as rotas publicas seguras. A area /studio (admin)
+    // e as rotas legadas dinamicas ficam fora do SSG por ora.
+    includedRoutes: () => ["/"],
+  },
 }));

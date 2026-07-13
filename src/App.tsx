@@ -1,57 +1,32 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import type { RouteRecord } from "vite-react-ssg";
+import Layout from "./Layout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Studio from "./pages/Studio";
-// @ts-ignore
+// @ts-expect-error legacy .jsx sem tipos
 import BlogPage from "./pages/legacy/BlogPage";
-// @ts-ignore
+// @ts-expect-error legacy .jsx sem tipos
 import BlogPostPage from "./pages/legacy/BlogPostPage";
-// @ts-ignore
+// @ts-expect-error legacy .jsx sem tipos
 import ServicePage from "./pages/legacy/ServicePage";
 
-import { useCustomCursor } from "@/hooks/useCustomCursor";
-import ExitIntentModal from "@/components/ExitIntentModal";
+export const routes: RouteRecord[] = [
+  {
+    path: "/",
+    element: <Layout />,
+    entry: "src/Layout.tsx",
+    children: [
+      { index: true, Component: Index },
+      { path: "studio", Component: Studio },
 
-const queryClient = new QueryClient();
+      // Rotas legadas (serao migradas em itens seguintes do backlog)
+      { path: "blog", Component: BlogPage },
+      { path: "blog/:slug", Component: BlogPostPage },
+      { path: "services/:slug", Component: ServicePage },
 
-const App = () => {
-  useCustomCursor();
+      { path: "*", Component: NotFound },
+    ],
+  },
+];
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <ExitIntentModal />
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/studio" element={<Studio />} />
-
-            {/* Legacy Routes */}
-            {/* @ts-ignore */}
-            <Route path="/blog" element={<BlogPage />} />
-            {/* @ts-ignore */}
-            <Route path="/blog/:slug" element={<BlogPostPage />} />
-            {/* @ts-ignore */}
-            <Route path="/services/:slug" element={<ServicePage />} />
-
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-};
-
-export default App;
+export default routes;
