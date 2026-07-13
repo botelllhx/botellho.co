@@ -1,23 +1,26 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Head } from "vite-react-ssg";
+import { Link } from "react-router-dom";
 
+// 404 na voz DOS: humor seco e saida clara. O Ban entra aqui no P3.
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
-      </div>
-    </div>
+    <>
+      <Head>
+        <title>Erro 404 | botellho</title>
+        <meta name="robots" content="noindex" />
+      </Head>
+      <section className="flex min-h-[60vh] flex-col justify-center px-4 md:px-6">
+        <p className="type-dos text-phosphor">&gt; erro 404 · rota não encontrada</p>
+        <h1 className="type-tese mt-6 max-w-3xl">Esse comando não existe.</h1>
+        <p className="mt-6 max-w-md font-sans text-base text-muted-foreground">
+          A rota digitada não roda neste terminal. Verifique o endereço ou volte
+          pro início.
+        </p>
+        <Link to="/" className="cmd-button mt-10 self-start">
+          Voltar pra home
+        </Link>
+      </section>
+    </>
   );
 };
 

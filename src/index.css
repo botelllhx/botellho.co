@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geomini:wght@400;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geomini:wght@400;700;800&family=Inter:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,8 +13,7 @@
   font-display: swap;
 }
 
-/* DOS bitmap: IBM VGA 8x16 do int10h Oldschool PC Fonts (CC BY-SA 4.0,
-   vendorizada em public/fonts/int10h). Charset Plus: cobre acentos do pt-BR. */
+/* DOS bitmap: IBM VGA 8x16 do int10h (CC BY-SA 4.0, charset Plus com acentos) */
 @font-face {
   font-family: 'IBM VGA';
   src: url('/fonts/int10h/WebPlus_IBM_VGA_8x16.woff') format('woff');
@@ -25,42 +24,34 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
-
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 5%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-
-    --primary: 227 87% 34%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 5%;
-
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 40%;
-
-    --accent: 227 87% 34%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
-    --ring: 227 87% 34%;
-
-    --radius: 0px;
-
     /* Identidade 1-bit: ink (apagado) / paper (campo) / phosphor (aceso) */
     --ink: 0 0% 5%;
     --paper: 0 0% 100%;
     --phosphor: 227 87% 34%;
 
-    /* Motion (base de tudo; nada de valor solto) */
+    /* Mapeamento shadcn (Admin e primitivas de UI) */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 0 0% 98%;
+    --card-foreground: var(--ink);
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+    --primary: var(--phosphor);
+    --primary-foreground: var(--paper);
+    --secondary: 0 0% 96%;
+    --secondary-foreground: var(--ink);
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 40%;
+    --accent: var(--phosphor);
+    --accent-foreground: var(--paper);
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 88%;
+    --input: 0 0% 96%;
+    --ring: var(--phosphor);
+    --radius: 0px;
+
+    /* Motion (Secao 5.1: nada de valor solto) */
     --dur-instant: 80ms;
     --dur-fast: 180ms;
     --dur-base: 320ms;
@@ -68,52 +59,34 @@
     --dur-cine: 1000ms;
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-inout: cubic-bezier(0.65, 0.05, 0.36, 1);
-    --ease-mech: steps(6, end);
 
-    /* Typography: mistura por papel (Secao 2.2 do brief de design).
-       Display: Geomini. Pixel/mono: Departure Mono. DOS bitmap: IBM VGA.
-       Serifa: Averia Serif Libre. Corpo: Inter (decisao do Mateus). */
+    /* Tipografia por papel (Secao 2.2) */
     --font-display: 'Geomini', sans-serif;
-    --font-mono: 'Departure Mono', ui-monospace, 'Cascadia Mono', monospace;
+    --font-mono: 'Departure Mono', ui-monospace, monospace;
     --font-bitmap: 'IBM VGA', 'Departure Mono', monospace;
     --font-serif: 'Averia Serif Libre', Georgia, serif;
     --font-sans: 'Inter', sans-serif;
 
-    /* Legacy Compatibility Layer */
-    --color-surface: hsl(var(--background));
-    --color-text-inverse: hsl(var(--foreground));
-    --color-text-inverse-secondary: hsl(var(--muted-foreground));
-    --color-text-primary: hsl(var(--primary));
-    --color-text-muted: hsl(var(--muted-foreground));
-    --color-bg: hsl(var(--background));
-
-    /* Spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
-    --spacing-2xl: 4rem;
-    --spacing-3xl: 6rem;
-    --spacing-4xl: 8rem;
-    --font-size-small: 0.875rem;
-    --font-size-body: 1rem;
-    --font-size-body-large: 1.125rem;
-    --font-weight-medium: 500;
-    --font-weight-bold: 700;
-    --font-weight-black: 900;
-    --font-body: var(--font-sans);
-    --header-height: 80px;
-    --transition-base: 0.3s ease;
+    /* Estrutura do terminal */
+    --bar-h: 44px;
   }
 
+  /* Modo escuro e a inversao literal ink/paper; o phosphor nao muda */
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
+    --background: var(--ink);
+    --foreground: var(--paper);
+    --card: 0 0% 8%;
+    --card-foreground: var(--paper);
+    --popover: var(--ink);
+    --popover-foreground: var(--paper);
+    --secondary: 0 0% 12%;
+    --secondary-foreground: var(--paper);
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 62%;
+    --border: 0 0% 18%;
+    --input: 0 0% 12%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -133,7 +106,6 @@
     color: hsl(var(--paper));
   }
 
-  /* Foco visivel no idioma do terminal (phosphor) */
   :focus-visible {
     outline: 2px solid hsl(var(--phosphor));
     outline-offset: 2px;
@@ -167,21 +139,43 @@
 }
 
 @layer components {
-  .font-display {
+
+  /* ===== Tipos do sistema ===== */
+
+  /* A tese: Geomini gigante, peso alto, tracking apertado */
+  .type-tese {
     font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 7.5vw, 7.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
   }
 
-  .font-mono {
+  .type-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  /* Rotulo tecnico: Departure Mono, caixa alta, tracking largo */
+  .type-label {
     font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
   }
 
-  .font-sans {
-    font-family: var(--font-sans);
+  /* Momento DOS de verdade: bitmap sem suavizacao */
+  .type-dos {
+    font-family: var(--font-bitmap);
+    -webkit-font-smoothing: none;
+    font-smooth: never;
   }
 
   .font-bitmap {
     font-family: var(--font-bitmap);
-    /* Bitmap 8x16: sem antialias e sem suavizacao pra manter o pixel duro */
     -webkit-font-smoothing: none;
     font-smooth: never;
   }
@@ -190,243 +184,91 @@
     font-family: var(--font-serif);
   }
 
-  /* Neo-brutalist button - minimal, bold */
-  .neo-button {
-    @apply relative inline-flex items-center justify-center px-8 py-4;
-    @apply font-mono text-sm font-semibold uppercase tracking-wider;
-    @apply bg-primary text-primary-foreground;
-    @apply transition-all duration-300 ease-out;
+  /* Regua fina do grid exposto */
+  .rule {
+    border-top: 1px solid hsl(var(--foreground) / 0.12);
   }
 
-  .neo-button:hover {
-    @apply bg-foreground;
+  .rule-phosphor {
+    border-top: 1px solid hsl(var(--phosphor) / 0.45);
   }
 
-  .neo-button-outline {
-    @apply neo-button bg-transparent text-foreground;
-    @apply border-2 border-foreground;
+  /* ===== Controles do terminal ===== */
+
+  .cmd-button {
+    @apply inline-flex items-center gap-3 px-6 py-3;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: hsl(var(--paper));
+    background: hsl(var(--phosphor));
+    border: 1px solid hsl(var(--phosphor));
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
   }
 
-  .neo-button-outline:hover {
-    @apply bg-foreground text-background;
+  .cmd-button:hover {
+    background: hsl(var(--foreground));
+    border-color: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  /* Text reveal animation */
-  .text-reveal {
-    @apply overflow-hidden;
+  /* Press de tecla fisica: desloca 1px */
+  .cmd-button:active {
+    transform: translate(1px, 1px);
   }
 
-  .text-reveal span {
-    @apply inline-block;
-    animation: reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  .cmd-button-ghost {
+    @apply cmd-button;
+    background: transparent;
+    border-color: hsl(var(--foreground) / 0.4);
+    color: hsl(var(--foreground));
   }
 
-  /* Massive typography */
-  .text-massive {
-    font-size: clamp(3rem, 15vw, 18rem);
-    line-height: 0.85;
-    letter-spacing: -0.04em;
+  .cmd-button-ghost:hover {
+    background: hsl(var(--foreground));
+    border-color: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  .text-huge {
-    font-size: clamp(2.5rem, 10vw, 10rem);
-    line-height: 0.9;
-    letter-spacing: -0.03em;
+  /* Linha de diretorio (indice de programas, tabelas do arquivo) */
+  .dir-row {
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
   }
 
-  .text-large {
-    font-size: clamp(2rem, 6vw, 6rem);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+  .dir-row:hover {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  /* Stroke text */
-  .text-stroke {
-    -webkit-text-stroke: 2px hsl(var(--foreground));
-    color: transparent;
-  }
+  /* ===== Fita (marquee) ===== */
 
-  .text-stroke-primary {
-    -webkit-text-stroke: 2px hsl(var(--primary));
-    color: transparent;
-  }
-
-  /* Marquee */
-  .marquee-container {
+  .tape {
     @apply overflow-hidden whitespace-nowrap;
   }
 
-  .marquee-content {
+  .tape-track {
     @apply inline-flex;
-    animation: marquee 30s linear infinite;
+    animation: tape-scroll 36s linear infinite;
   }
 
-  .marquee-content-reverse {
-    @apply inline-flex;
-    animation: marquee-reverse 25s linear infinite;
-  }
-
-  /* Pausa no hover; em reduced-motion o marquee fica parado */
-  .marquee-container:hover .marquee-content,
-  .marquee-container:hover .marquee-content-reverse {
+  .tape:hover .tape-track {
     animation-play-state: paused;
   }
 
   @media (prefers-reduced-motion: reduce) {
-
-    .marquee-content,
-    .marquee-content-reverse {
+    .tape-track {
       animation: none;
     }
   }
-
-  /* Scroll indicator */
-  .scroll-indicator {
-    animation: scroll-bounce 2s ease-in-out infinite;
-  }
-
-
-  .logo-char {
-    display: inline-block;
-    animation: logoFontShuffle 12s ease-in-out infinite;
-    animation-delay: calc(var(--char-index, 0) * 0.18s);
-    will-change: font-family, font-weight, font-style;
-    animation-fill-mode: both;
-    width: 0.7em;
-    text-align: center;
-  }
-
-  .creative-card {
-    transform-style: preserve-3d;
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-  }
-
-  .creative-card:hover {
-    transform: perspective(1400px) rotateX(1.8deg) rotateY(-2.2deg) translateY(-4px);
-  }
-
 }
 
-@layer utilities {
-
-  /* Fade up animation for scroll */
-  .animate-fade-up {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .animate-fade-up-delay-1 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-2 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-3 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-4 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-5 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
-    opacity: 0;
-  }
-
-  /* Slide animations */
-  .animate-slide-left {
-    animation: slideLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .animate-slide-right {
-    animation: slideRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Scale animation */
-  .animate-scale-in {
-    animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Rotate animation */
-  .animate-rotate {
-    animation: rotate 20s linear infinite;
-  }
-
-  /* Pulse animation */
-  .animate-pulse-slow {
-    animation: pulseSlow 3s ease-in-out infinite;
-  }
-}
-
-/* Keyframes */
-@keyframes reveal {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(60px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideRight {
-  0% {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes marquee {
+@keyframes tape-scroll {
   0% {
     transform: translateX(0);
   }
@@ -436,166 +278,7 @@
   }
 }
 
-@keyframes marquee-reverse {
-  0% {
-    transform: translateX(-50%);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes logoFontShuffle {
-
-  0%,
-  100% {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  8% {
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  10% {
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  20% {
-    font-family: 'Georgia', serif;
-    font-weight: 800;
-    font-style: normal;
-  }
-
-  30% {
-    font-family: 'Georgia', serif;
-    font-weight: 700;
-    font-style: italic;
-  }
-
-  38% {
-    font-family: monospace;
-    font-weight: 800;
-    font-style: normal;
-  }
-
-  40% {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-style: italic;
-  }
-
-  50% {
-    font-family: 'Times New Roman', serif;
-    font-weight: 900;
-    font-style: normal;
-  }
-
-  60% {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  68% {
-    font-family: monospace;
-    font-weight: 900;
-    font-style: normal;
-  }
-
-  70% {
-    font-family: 'Verdana', sans-serif;
-    font-weight: 800;
-    font-style: normal;
-  }
-
-  80% {
-    font-family: 'Arial', sans-serif;
-    font-weight: 900;
-    font-style: normal;
-  }
-
-  90% {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
-  }
-}
-
-@keyframes pulseSlow {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes scroll-bounce {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(10px);
-  }
-}
-
-
-@keyframes loader-progress {
-  0% {
-    width: 0%;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-/* Custom scrollbar - minimal */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--foreground));
-}
-
-/* Loader specific */
-.loader-bar {
-  animation: loader-progress 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Cursor custom: bloco/caret de terminal em phosphor (Secao 5.6) */
+/* ===== Cursor custom: bloco/caret de terminal (Secao 5.6) ===== */
 @media (pointer: fine) {
 
   html,
@@ -622,30 +305,56 @@
   animation: cursor-blink 1.06s steps(1, end) infinite;
 }
 
-/* O pixel: um quadrado phosphor que lidera o movimento */
 .cursor-dot {
   position: fixed;
   width: 4px;
   height: 4px;
   background: hsl(var(--phosphor));
-  border-radius: 0;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
 }
 
-/* Sobre link/controle: vira moldura [ ] e para de piscar */
-.cursor.hover {
+/* Sobre link/controle: moldura [ ] sem blink */
+.cursor.is-hover {
   width: 30px;
   height: 30px;
   background: transparent;
   border-width: 2px;
   animation: none;
-  opacity: 1;
 }
 
-/* Press: desloca 1px, cara de tecla fisica */
-.cursor.click {
+/* Sobre area 3D: crosshair/mira */
+.cursor.is-crosshair {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border-width: 0;
+  animation: none;
+}
+
+.cursor.is-crosshair::before,
+.cursor.is-crosshair::after {
+  content: "";
+  position: absolute;
+  background: hsl(var(--phosphor));
+}
+
+.cursor.is-crosshair::before {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+
+.cursor.is-crosshair::after {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.cursor.is-press {
   transform: translate(calc(-50% + 1px), calc(-50% + 1px));
 }
 
@@ -662,8 +371,17 @@
   }
 }
 
+/* Caret piscante em rotulos/typing */
+.caret::after {
+  content: "▌";
+  color: hsl(var(--phosphor));
+  animation: cursor-blink 1.06s steps(1, end) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .cursor {
+
+  .cursor,
+  .caret::after {
     animation: none;
   }
 }

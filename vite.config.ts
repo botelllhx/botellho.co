@@ -11,6 +11,7 @@ const STATIC_ROUTES: { path: string; changefreq: string; priority: string }[] = 
   { path: "/studio", changefreq: "monthly", priority: "0.8" },
   { path: "/work", changefreq: "weekly", priority: "0.9" },
   { path: "/lab", changefreq: "weekly", priority: "0.7" },
+  { path: "/contact", changefreq: "monthly", priority: "0.6" },
 ];
 
 // Le os slugs de cases publicados no Supabase no momento do build.

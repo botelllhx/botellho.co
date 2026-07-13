@@ -1,9 +1,11 @@
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import LineReveal from "@/motion/LineReveal";
+import Typing from "@/motion/Typing";
 import type { WorkCaseLoaderData } from "@/pages/workLoaders";
 
+// O case como heroi: abertura cinematografica, imagem full-bleed e a
+// anatomia do trabalho em leitura longa.
 const WorkCase = () => {
   const { project } = useLoaderData() as WorkCaseLoaderData;
 
@@ -14,19 +16,13 @@ const WorkCase = () => {
           <title>Case não encontrado | botellho</title>
           <meta name="robots" content="noindex" />
         </Head>
-        <div className="relative min-h-screen bg-background text-foreground">
-          <Navbar />
-          <main className="container px-6 pt-40 pb-32">
-            <h1 className="font-display text-4xl font-bold">Case não encontrado</h1>
-            <p className="mt-4 max-w-xl text-muted-foreground">
-              Esse trabalho não está publicado ou o endereço mudou.
-            </p>
-            <Link to="/work" className="neo-button mt-8 inline-flex">
-              Ver todos os trabalhos
-            </Link>
-          </main>
-          <Footer />
-        </div>
+        <section className="px-4 py-24 md:px-6">
+          <p className="type-dos text-phosphor">&gt; erro · bloco não encontrado</p>
+          <h1 className="type-title mt-6">Esse case não está publicado.</h1>
+          <Link to="/work" className="cmd-button mt-10">
+            Voltar ao arquivo
+          </Link>
+        </section>
       </>
     );
   }
@@ -36,6 +32,9 @@ const WorkCase = () => {
       ? project.cover_media_url
       : "https://botellho.com/og-image.jpg";
   const externalLink = project.project_url || project.repo_url || null;
+  const paragraphs = (project.full_description ?? project.short_description)
+    .split("\n")
+    .filter(Boolean);
 
   return (
     <>
@@ -62,118 +61,86 @@ const WorkCase = () => {
         </script>
       </Head>
 
-      <div className="relative min-h-screen bg-background text-foreground">
-        <Navbar />
+      <article>
+        <section className="px-4 pt-16 md:px-6 md:pt-24">
+          <Typing
+            text={`> abrindo /work/${project.slug}`}
+            className="type-label text-muted-foreground"
+          />
+          <LineReveal as="h1" className="type-tese mt-8 max-w-5xl">
+            {project.title}
+          </LineReveal>
 
-        <main>
-          <section className="container px-6 pt-40 pb-16 md:pt-48">
-            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              {project.category || "Projeto"}
-            </span>
-            <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.2rem,5.5vw,5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
-              {project.title}
-            </h1>
-            <p className="mt-8 max-w-2xl font-sans text-xl leading-relaxed text-muted-foreground">
-              {project.short_description}
-            </p>
-          </section>
+          <div className="mt-10 grid gap-6 border-y border-foreground/10 py-4 font-mono text-xs uppercase tracking-widest text-muted-foreground md:grid-cols-3">
+            <span>categoria · {project.category || "projeto"}</span>
+            <span>status · publicado</span>
+            {project.tags.length > 0 ? <span>craft · {project.tags.join(", ")}</span> : <span />}
+          </div>
+        </section>
 
-          {project.cover_media_url ? (
-            <section className="container px-6">
-              <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
-                {project.media_type === "video" ? (
-                  <video
-                    src={project.cover_media_url}
-                    className="h-full w-full object-cover"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                ) : (
-                  <img
-                    src={project.cover_media_url}
-                    alt={`Capa do projeto ${project.title}`}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
-            </section>
-          ) : null}
-
-          <section className="border-t border-foreground/10 mt-20 py-20 md:py-28">
-            <div className="container grid gap-12 px-6 lg:grid-cols-[1fr_1.6fr] lg:gap-24">
-              <div className="space-y-8">
-                {project.tags.length > 0 ? (
-                  <div>
-                    <span className="mb-3 block font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                      Craft
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="border border-foreground/20 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-foreground"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {externalLink ? (
-                  <div>
-                    <span className="mb-3 block font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                      Link
-                    </span>
-                    <a
-                      href={externalLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-mono text-sm text-primary underline underline-offset-4"
-                    >
-                      Visitar projeto
-                    </a>
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="max-w-2xl">
-                {project.full_description ? (
-                  <div className="space-y-6">
-                    {project.full_description.split("\n").filter(Boolean).map((paragraph, index) => (
-                      <p
-                        key={index}
-                        className="font-sans text-lg leading-relaxed text-muted-foreground"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-                    {project.short_description}
-                  </p>
-                )}
-              </div>
+        {project.cover_media_url ? (
+          <section className="mt-14 px-0 md:px-6">
+            <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
+              {project.media_type === "video" ? (
+                <video
+                  src={project.cover_media_url}
+                  className="h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={project.cover_media_url}
+                  alt={`Capa do projeto ${project.title}`}
+                  className="h-full w-full object-cover"
+                />
+              )}
             </div>
           </section>
+        ) : null}
 
-          <section className="border-t border-foreground/10 py-16">
-            <div className="container px-6">
-              <Link
-                to="/work"
-                className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-              >
-                ← Todos os trabalhos
-              </Link>
+        <section className="px-4 py-20 md:px-6 md:py-28">
+          <div className="grid gap-12 md:grid-cols-[16rem_1fr] md:gap-20">
+            <div className="space-y-8">
+              <div>
+                <span className="type-label text-muted-foreground">&gt; resumo</span>
+                <p className="mt-3 font-serif text-lg leading-relaxed text-foreground">
+                  {project.short_description}
+                </p>
+              </div>
+              {externalLink ? (
+                <a
+                  href={externalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cmd-button-ghost"
+                >
+                  Visitar projeto
+                </a>
+              ) : null}
             </div>
-          </section>
-        </main>
 
-        <Footer />
-      </div>
+            <div className="max-w-2xl space-y-6">
+              {paragraphs.map((paragraph, index) => (
+                <p key={index} className="font-sans text-lg leading-relaxed text-muted-foreground">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-foreground/10 px-4 py-10 md:px-6">
+          <Link
+            to="/work"
+            className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor"
+          >
+            &lt; voltar ao arquivo
+          </Link>
+        </section>
+      </article>
     </>
   );
 };

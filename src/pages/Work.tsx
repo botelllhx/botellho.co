@@ -1,8 +1,11 @@
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import LineReveal from "@/motion/LineReveal";
+import Typing from "@/motion/Typing";
 import type { WorksLoaderData } from "@/pages/workLoaders";
+
+// O arquivo: indice de cases como tabela densa de terminal.
+const toHex = (index: number) => `0x${(index * 74 + 74).toString(16).toUpperCase().padStart(4, "0")}`;
 
 const Work = () => {
   const { projects, configured } = useLoaderData() as WorksLoaderData;
@@ -13,76 +16,65 @@ const Work = () => {
         <title>Trabalhos | botellho</title>
         <meta
           name="description"
-          content="Seleção de trabalhos do botellho: sites institucionais, experiências 3D, acervo e patrimônio digital para instituições culturais e marcas."
+          content="Arquivo de trabalhos do botellho: sites institucionais, experiências 3D e WebGL, direção de arte e acervo digital para marcas, cultura e instituições."
         />
         <link rel="canonical" href="https://botellho.com/work" />
         <meta property="og:title" content="Trabalhos | botellho" />
         <meta
           property="og:description"
-          content="Seleção de trabalhos do botellho: do institucional ao imersivo, com a mesma régua de craft."
+          content="Arquivo de trabalhos do botellho: do institucional ao imersivo, com a mesma régua de craft."
         />
         <meta property="og:url" content="https://botellho.com/work" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      <div className="relative min-h-screen bg-background text-foreground">
-        <Navbar />
+      <section className="px-4 pt-16 md:px-6 md:pt-24">
+        <Typing text="> ls /work" className="type-label text-muted-foreground" />
+        <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">
+          O arquivo do estúdio.
+        </LineReveal>
+        <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
+          Do institucional ao imersivo, a mesma régua de craft. Cada bloco é um
+          case com contexto, conceito, abordagem e resultado.
+        </p>
+      </section>
 
-        <main>
-          <section className="container px-6 pt-40 pb-20 md:pt-48 md:pb-24">
-            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              &gt; trabalhos
+      <section className="mt-16 border-t border-foreground/10 pb-24 md:pb-32">
+        <div
+          className="hidden grid-cols-[6rem_10rem_1fr_8rem] gap-4 border-b border-foreground/10 px-4 py-3 md:grid md:px-6"
+          aria-hidden
+        >
+          {["endereço", "categoria", "projeto", "status"].map((coluna) => (
+            <span key={coluna} className="type-label text-muted-foreground">
+              {coluna}
             </span>
-            <h1 className="mt-8 max-w-4xl font-display text-[clamp(2.2rem,5.5vw,5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
-              Do institucional ao imersivo, a mesma régua de{" "}
-              <span className="text-primary">craft</span>.
-            </h1>
-          </section>
+          ))}
+        </div>
 
-          <section className="border-t border-foreground/10">
-            {projects.length === 0 ? (
-              <div className="container px-6 py-24 md:py-32">
-                <p className="max-w-xl font-sans text-lg leading-relaxed text-muted-foreground">
-                  {configured
-                    ? "Os primeiros cases estão a caminho. Enquanto isso, veja como o estúdio trabalha."
-                    : "Portfólio em configuração. Os cases aparecem aqui assim que forem publicados."}
-                </p>
-                <a href="/studio" className="neo-button mt-8 inline-flex">
-                  Conhecer o estúdio
-                </a>
-              </div>
-            ) : (
-              <ul className="container px-6">
-                {projects.map((project) => (
-                  <li key={project.id} className="border-b border-foreground/10">
-                    <Link
-                      to={`/work/${project.slug}`}
-                      className="group flex flex-col gap-4 py-10 md:flex-row md:items-baseline md:gap-12 md:py-14"
-                    >
-                      <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground md:w-48 md:flex-none">
-                        {project.category || "Projeto"}
-                      </span>
-                      <div className="flex-1">
-                        <h2 className="font-display text-3xl font-bold text-foreground transition-colors group-hover:text-primary md:text-5xl">
-                          {project.title}
-                        </h2>
-                        <p className="mt-3 max-w-2xl font-sans text-base leading-relaxed text-muted-foreground">
-                          {project.short_description}
-                        </p>
-                      </div>
-                      <span className="font-display text-3xl text-foreground transition-transform group-hover:translate-x-2 md:self-center">
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </main>
-
-        <Footer />
-      </div>
+        {projects.length === 0 ? (
+          <p className="type-dos mt-12 px-4 text-sm text-muted-foreground md:px-6">
+            {configured
+              ? "[arquivo vazio] os primeiros cases chegam em breve."
+              : "[arquivo offline] configure a fonte de dados para listar os cases."}
+          </p>
+        ) : (
+          <ul>
+            {projects.map((project, index) => (
+              <li key={project.id}>
+                <Link
+                  to={`/work/${project.slug}`}
+                  className="dir-row grid grid-cols-1 gap-1 border-b border-foreground/10 px-4 py-5 md:grid-cols-[6rem_10rem_1fr_8rem] md:items-baseline md:gap-4 md:px-6"
+                >
+                  <span className="font-mono text-xs opacity-60">{toHex(index)}</span>
+                  <span className="type-label opacity-60">{project.category || "projeto"}</span>
+                  <h2 className="font-display text-2xl font-bold md:text-4xl">{project.title}</h2>
+                  <span className="font-mono text-xs opacity-60">publicado</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </>
   );
 };
