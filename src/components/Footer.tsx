@@ -31,8 +31,8 @@ const Footer = () => {
           >
             {[
               { name: "Estúdio", href: "/studio" },
-              { name: "Serviços", href: "/#servicos" },
-              { name: "Trabalhos", href: "/#portfolio" },
+              { name: "Trabalhos", href: "/work" },
+              { name: "Lab", href: "/lab" },
               { name: "Contato", href: "/#contato" },
             ].map((link) => (
               <a
