@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
           {/* Logo */}
           <motion.a
-            href="#"
+            href="/"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -29,13 +29,18 @@ const Footer = () => {
             viewport={{ once: true }}
             className="flex flex-wrap justify-center gap-8"
           >
-            {["Serviços", "Portfolio", "Sobre", "Contato"].map((link) => (
+            {[
+              { name: "Estúdio", href: "/studio" },
+              { name: "Serviços", href: "/#servicos" },
+              { name: "Trabalhos", href: "/#portfolio" },
+              { name: "Contato", href: "/#contato" },
+            ].map((link) => (
               <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
+                key={link.name}
+                href={link.href}
                 className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
               >
-                {link}
+                {link.name}
               </a>
             ))}
           </motion.div>
@@ -60,7 +65,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="font-mono text-xs text-muted-foreground">
-            © 2024 botellho.co — Todos os direitos reservados
+            © 2026 botellho. Todos os direitos reservados.
           </p>
           <p className="font-mono text-xs text-muted-foreground">
             Feito com dedicação em{" "}

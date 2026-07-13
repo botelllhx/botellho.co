@@ -3,32 +3,31 @@ import { useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import SectionWireScene from "@/components/SectionWireScene";
 
-import { Link } from "react-router-dom";
-
 const services = [
   {
     number: "01",
-    title: "WordPress",
-    description: "Temas customizados, plugins sob medida e otimização de performance. WooCommerce, Elementor e muito mais.",
-    slug: "wordpress"
+    title: "Sites e plataformas institucionais",
+    description: "Presença digital para instituições culturais, fundações e organizações, com clareza, acessibilidade e confiança.",
   },
   {
     number: "02",
-    title: "Sistemas Web",
-    description: "Aplicações robustas e escaláveis. React, Node.js, APIs REST e integrações complexas.",
-    slug: "desenvolvimento-web"
+    title: "Experiências e microsites",
+    description: "WebGL, 3D e motion para marcas, lançamentos, festivais e exposições. A experiência é a mensagem.",
   },
   {
     number: "03",
-    title: "E-commerce",
-    description: "Lojas virtuais completas com integração de pagamentos, gestão de estoque e logística.",
-    slug: "wordpress"
+    title: "Acervo e patrimônio digital",
+    description: "Coleções, memória e patrimônio apresentados de um jeito que as pessoas querem explorar.",
   },
   {
     number: "04",
-    title: "UI/UX Design",
-    description: "Interfaces centradas no usuário. Prototipagem, design systems e experiências memoráveis.",
-    slug: "ux-ui-design"
+    title: "Direção de arte e identidade digital",
+    description: "O visual como diferencial, não como enfeite.",
+  },
+  {
+    number: "05",
+    title: "Parceria de desenvolvimento (white-label)",
+    description: "Construímos o front e as interações que outros estúdios e designers desenham.",
   },
 ];
 
@@ -67,7 +66,7 @@ const ServicesSection = () => {
       {/* Large Moving Text */}
       <motion.div style={{ x }} className="mb-24 overflow-hidden">
         <h2 className="text-huge font-display font-bold text-foreground whitespace-nowrap">
-          SERVIÇOS — SERVIÇOS — SERVIÇOS —
+          O QUE FAZEMOS · O QUE FAZEMOS · O QUE FAZEMOS ·
         </h2>
       </motion.div>
 
@@ -99,7 +98,6 @@ interface ServiceCardProps {
     number: string;
     title: string;
     description: string;
-    slug: string;
   };
   index: number;
 }
@@ -115,33 +113,22 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative border-t border-foreground/10 py-12 md:py-16"
     >
-      <Link to={`/services/${service.slug}`} className="block">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-12">
-          {/* Number */}
-          <span className="font-mono text-sm text-muted-foreground">
-            {service.number}
-          </span>
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-12">
+        {/* Number */}
+        <span className="font-mono text-sm text-muted-foreground">
+          {service.number}
+        </span>
 
-          {/* Content */}
-          <div className="flex-1">
-            <h3 className="text-large font-display font-bold text-foreground mb-4 transition-colors group-hover:text-primary">
-              {service.title}
-            </h3>
-            <p className="max-w-md font-sans text-base leading-relaxed text-muted-foreground">
-              {service.description}
-            </p>
-          </div>
-
-          {/* Arrow */}
-          <motion.span
-            initial={{ x: 0, opacity: 0.3 }}
-            whileHover={{ x: 10, opacity: 1 }}
-            className="font-display text-4xl text-foreground hidden md:block"
-          >
-            →
-          </motion.span>
+        {/* Content */}
+        <div className="flex-1">
+          <h3 className="text-large font-display font-bold text-foreground mb-4 transition-colors group-hover:text-primary">
+            {service.title}
+          </h3>
+          <p className="max-w-md font-sans text-base leading-relaxed text-muted-foreground">
+            {service.description}
+          </p>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 };

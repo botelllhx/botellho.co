@@ -44,7 +44,7 @@ const ContactSection = () => {
     if (recaptchaRef.current) {
       try {
         console.log("Executing reCAPTCHA (Async)...");
-        // @ts-ignore - executeAsync exists in the component but types might be outdated
+        // @ts-expect-error executeAsync existe no componente, mas os tipos podem estar desatualizados
         const token = await recaptchaRef.current.executeAsync();
         console.log("Token received:", token);
 
@@ -123,9 +123,9 @@ const ContactSection = () => {
             className="space-y-8"
           >
             <p className="font-sans text-xl leading-relaxed text-background/70">
-              Pronto para transformar sua ideia em realidade? Entre em contato e
-              vamos conversar sobre como podemos ajudar seu negócio a crescer no
-              digital.
+              Conte o que você quer construir. Institucional, experiência 3D,
+              acervo ou uma parceria de desenvolvimento: quanto mais específico,
+              melhor a nossa resposta.
             </p>
 
             {/* Contact Links */}
@@ -231,10 +231,10 @@ const ContactSection = () => {
                 className="w-full bg-transparent border-b-2 border-background/20 px-0 py-4 font-sans text-background focus:border-primary focus:outline-none transition-colors"
               >
                 <option value="" className="bg-foreground">Selecione uma opção</option>
-                <option value="wordpress" className="bg-foreground">Site WordPress</option>
-                <option value="ecommerce" className="bg-foreground">E-commerce</option>
-                <option value="sistema" className="bg-foreground">Sistema Web</option>
-                <option value="redesign" className="bg-foreground">Redesign</option>
+                <option value="institucional" className="bg-foreground">Site institucional</option>
+                <option value="experiencia-3d" className="bg-foreground">Experiência 3D</option>
+                <option value="acervo" className="bg-foreground">Acervo e patrimônio</option>
+                <option value="white-label" className="bg-foreground">Parceria white-label</option>
                 <option value="outro" className="bg-foreground">Outro</option>
               </select>
             </div>
@@ -259,7 +259,7 @@ const ContactSection = () => {
               disabled={loading}
               className="group mt-8 inline-flex items-center gap-3 bg-primary px-8 py-4 font-mono text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-background hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Enviando..." : "Enviar Mensagem"}
+              {loading ? "Enviando..." : "Enviar projeto"}
               <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </button>
 

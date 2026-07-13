@@ -16,11 +16,10 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "Serviços", href: "#servicos" },
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Blog", href: "/blog" },
-    { name: "Sobre", href: "#sobre" },
-    { name: "Contato", href: "#contato" },
+    { name: "Estúdio", href: "/studio" },
+    { name: "Serviços", href: "/#servicos" },
+    { name: "Trabalhos", href: "/#portfolio" },
+    { name: "Contato", href: "/#contato" },
   ];
 
   return (
@@ -34,7 +33,7 @@ const Navbar = () => {
       >
         <div className="container flex items-center justify-between px-6 py-6">
           {/* Logo */}
-          <a href="#" className="group flex items-baseline gap-1" ref={(el) => {
+          <a href="/" className="group flex items-baseline gap-1" ref={(el) => {
             if (!el) return;
             // Simple logic to add chars if empty, to avoid re-adding
             if (el.querySelector('.logo-char')) return;
@@ -76,8 +75,8 @@ const Navbar = () => {
           </div>
 
           {/* CTA Button - Desktop */}
-          <a href="#contato" className="hidden neo-button py-3 text-xs md:inline-flex">
-            Orçamento
+          <a href="/#contato" className="hidden neo-button py-3 text-xs md:inline-flex">
+            Começar um projeto
           </a>
 
           {/* Mobile Menu Button */}
@@ -121,7 +120,7 @@ const Navbar = () => {
                 </motion.a>
               ))}
               <motion.a
-                href="#contato"
+                href="/#contato"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
@@ -129,7 +128,7 @@ const Navbar = () => {
                 className="neo-button mt-8"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Orçamento
+                Começar um projeto
               </motion.a>
             </div>
           </motion.div>

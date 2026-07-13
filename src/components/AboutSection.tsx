@@ -3,10 +3,10 @@ import { useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const stats = [
-  { value: "150+", label: "Projetos Entregues" },
-  { value: "8+", label: "Anos de Experiência" },
-  { value: "98%", label: "Clientes Satisfeitos" },
-  { value: "24/7", label: "Suporte Dedicado" },
+  { value: "Craft", label: "Engenharia e direção de arte" },
+  { value: "Cultura", label: "Domínio do setor por dentro" },
+  { value: "WebGL", label: "Assinatura técnica" },
+  { value: "Acesso", label: "Clareza e acessibilidade" },
 ];
 
 const AboutSection = () => {
@@ -34,7 +34,7 @@ const AboutSection = () => {
         className="container px-6 mb-16"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          (Sobre nós)
+          (O estúdio)
         </span>
       </motion.div>
 
@@ -50,10 +50,9 @@ const AboutSection = () => {
               transition={{ duration: 0.5 }}
               className="text-large font-display font-bold text-foreground mb-8"
             >
-              Somos uma agência{" "}
-              <span className="text-primary">mineira</span> focada em criar
-              experiências digitais que{" "}
-              <span className="text-stroke-primary">transformam</span>.
+              Uma instituição merece um site tão bem construído quanto o{" "}
+              <span className="text-primary">acervo</span> que ela{" "}
+              <span className="text-stroke-primary">guarda</span>.
             </motion.h2>
 
             <motion.div
@@ -64,15 +63,15 @@ const AboutSection = () => {
               className="space-y-6"
             >
               <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-                De Belo Horizonte para o mundo. Assim como as montanhas que nos
-                cercam, construímos projetos sólidos e duradouros. Nossa paixão
-                por projetos criativos e diferentes de desenvolvimento web se traduz em soluções que
-                realmente funcionam.
+                botellho é um estúdio de web e experiências digitais. Juntamos
+                três coisas que raramente andam juntas: engenharia de verdade,
+                direção de arte, e entendimento de como o setor cultural funciona
+                por dentro.
               </p>
               <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-                Cada projeto é tratado como único, com dedicação e atenção aos
-                detalhes que fazem a diferença. Porque acreditamos que o digital
-                pode ser tão acolhedor quanto um pão de queijo quentinho.
+                Fazemos do site institucional ao imersivo em 3D, sempre com a
+                mesma régua de craft. Trabalhamos com quem trata o digital como
+                parte da obra, não como obrigação.
               </p>
             </motion.div>
 
@@ -84,7 +83,7 @@ const AboutSection = () => {
               className="mt-12"
             >
               <a href="#contato" className="neo-button">
-                Vamos Conversar
+                Começar um projeto
               </a>
             </motion.div>
 
@@ -124,7 +123,7 @@ const AboutSection = () => {
                   key={i}
                   className="mx-12 font-display text-5xl font-bold text-foreground/5 md:text-7xl"
                 >
-                  Inovação • Criatividade • Tecnologia • Resultados •{" "}
+                  Craft • Cultura • WebGL • Patrimônio • Acervo • Experiências •{" "}
                 </span>
               ))}
           </div>

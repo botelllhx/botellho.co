@@ -52,57 +52,45 @@ const HeroSection = () => {
         className="container relative z-10 flex min-h-screen flex-col justify-center px-6 py-24 md:py-20"
       >
         <div className="absolute left-6 top-24 right-6 flex items-center justify-between md:top-28">
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Botellho.co</span>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Issue 01</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">botellho</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Estúdio de web e experiências</span>
         </div>
 
-        {/* Main Typography - Asymmetric Layout */}
-        <div className="mt-20 md:mt-12 xl:mt-0">
-          {/* Line 1 */}
-          <motion.div
-            style={{ y: y1 }}
-            className="overflow-hidden"
-          >
-            <motion.h1
+        {/* Main Typography - a tese em um unico h1 */}
+        <h1 className="mt-20 font-display text-[clamp(2.3rem,6vw,6.5rem)] font-bold leading-[0.95] tracking-[-0.03em] md:mt-12 xl:mt-0">
+          <motion.span style={{ y: y1 }} className="block overflow-hidden">
+            <motion.span
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-foreground"
+              className="block text-foreground"
             >
-              CRIAMOS
-            </motion.h1>
-          </motion.div>
+              Sites e experiências digitais
+            </motion.span>
+          </motion.span>
 
-          {/* Line 2 - Offset */}
-          <motion.div
-            style={{ y: y2 }}
-            className="overflow-hidden md:ml-[11vw] xl:ml-[14vw]"
-          >
-            <motion.h1
+          <motion.span style={{ y: y2 }} className="block overflow-hidden">
+            <motion.span
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-primary"
+              className="block text-primary"
             >
-              DIGITAL
-            </motion.h1>
-          </motion.div>
+              para instituições
+            </motion.span>
+          </motion.span>
 
-          {/* Line 3 - Different offset */}
-          <motion.div
-            style={{ y: y3 }}
-            className="overflow-hidden md:ml-[4vw] xl:ml-[6vw]"
-          >
-            <motion.h1
+          <motion.span style={{ y: y3 }} className="block overflow-hidden">
+            <motion.span
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-[clamp(3.6rem,12vw,14rem)] font-bold leading-[0.88] tracking-[-0.045em] text-stroke"
+              className="block text-foreground"
             >
-              ÚNICO
-            </motion.h1>
-          </motion.div>
-        </div>
+              que querem ser lembradas.
+            </motion.span>
+          </motion.span>
+        </h1>
 
         {/* Description & CTA - Positioned asymmetrically */}
         <motion.div
@@ -113,18 +101,18 @@ const HeroSection = () => {
           className="mt-10 max-w-xl self-start border-2 border-foreground/20 bg-background p-5 md:mt-12 md:p-6 xl:absolute xl:bottom-24 xl:right-12 xl:mt-0 xl:max-w-md 2xl:right-24"
         >
           <p className="font-sans text-sm leading-relaxed text-muted-foreground md:text-base">
-            Agência de desenvolvimento de sites e sistemas em{" "}
-            <span className="font-semibold text-foreground">Belo Horizonte</span>.
-            Especialistas em WordPress e experiências web que{" "}
-            <span className="font-semibold text-primary">transformam</span>.
+            Estúdio de web com craft de nível de prêmio e{" "}
+            <span className="font-semibold text-foreground">domínio real do setor cultural</span>.
+            Da marca ao acervo, do institucional ao{" "}
+            <span className="font-semibold text-primary">imersivo</span>.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3 md:gap-4">
-            <a href="#portfolio" className="neo-button px-6 py-3 text-xs">
-              Ver Projetos
+            <a href="#contato" className="neo-button px-6 py-3 text-xs">
+              Começar um projeto
             </a>
-            <a href="#contato" className="neo-button-outline px-6 py-3 text-xs">
-              Contato
+            <a href="#portfolio" className="neo-button-outline px-6 py-3 text-xs">
+              Ver trabalhos
             </a>
           </div>
         </motion.div>
@@ -175,8 +163,8 @@ const HeroSection = () => {
                   key={i}
                   className="mx-8 font-mono text-sm font-medium uppercase tracking-widest text-primary-foreground"
                 >
-                  WordPress • Sistemas Web • E-commerce • Landing Pages • UI/UX
-                  Design • SEO •{" "}
+                  Instituições culturais • WebGL • Acervo e patrimônio •
+                  Experiências 3D • Direção de arte • Sites institucionais •{" "}
                 </span>
               ))}
           </div>

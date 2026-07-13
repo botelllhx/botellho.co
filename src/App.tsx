@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Studio from "./pages/Studio";
+import Admin from "./pages/Admin";
 // @ts-expect-error legacy .jsx sem tipos
 import BlogPage from "./pages/legacy/BlogPage";
 // @ts-expect-error legacy .jsx sem tipos
@@ -18,6 +19,7 @@ export const routes: RouteRecord[] = [
     children: [
       { index: true, Component: Index },
       { path: "studio", Component: Studio },
+      { path: "admin", Component: Admin },
 
       // Rotas legadas (serao migradas em itens seguintes do backlog)
       { path: "blog", Component: BlogPage },

@@ -58,7 +58,7 @@ const PortfolioSection = () => {
       {/* Large Moving Text */}
       <motion.div style={{ x }} className="mb-24 overflow-hidden">
         <h2 className="text-huge font-display font-bold text-primary-foreground whitespace-nowrap">
-          PORTFOLIO — PORTFOLIO — PORTFOLIO —
+          TRABALHOS · TRABALHOS · TRABALHOS ·
         </h2>
       </motion.div>
 
@@ -93,7 +93,7 @@ const PortfolioSection = () => {
           className="mt-24 text-center"
         >
           <span className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-primary-foreground/70">
-            Projetos curados e gerenciados no studio privado
+            Seleção curada de trabalhos do estúdio
           </span>
         </motion.div>
       </div>
