@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Fotos-fonte do Ban (grandes; os dithered gerados ficam em public/ban)
+assets/ban-source
 .env
 .env.*
 !.env.example
