@@ -2,6 +2,8 @@ import { Head } from "vite-react-ssg";
 import { Link } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import Decode from "@/motion/Decode";
+import SignatureCanvas from "@/webgl/SignatureCanvas";
+import SignalScene from "@/webgl/SignalScene";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
 
 // Programas da home: indice de servicos no formato de diretorio DOS.
@@ -67,8 +69,20 @@ const Home = () => {
         className="relative flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-end overflow-hidden"
         data-cursor="3d"
       >
-        {/* Slot da cena SINAL (3D -> dither); entra por cima do texto, lazy */}
-        <div id="signal-scene" className="pointer-events-none absolute inset-0 z-0" aria-hidden />
+        {/* A cena SINAL (3D -> dither): lazy, pausa fora de tela, fallback estatico */}
+        <SignatureCanvas
+          className="pointer-events-none absolute inset-0 z-0"
+          fallback={
+            <img
+              src="/hero-fallback.png"
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover opacity-80"
+            />
+          }
+        >
+          <SignalScene />
+        </SignatureCanvas>
 
         <div className="relative z-10 flex items-center justify-between px-4 pt-6 md:px-6">
           <span className="type-label text-muted-foreground">&gt; sinal: vivo</span>
