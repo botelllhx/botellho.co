@@ -15,12 +15,13 @@ const CommandBar = () => {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 h-[var(--bar-h)] border-b border-foreground/15 bg-background/95 backdrop-blur-sm">
-        <div className="flex h-full items-center justify-between px-4 md:px-6">
+        <div className="relative flex h-full items-center justify-between px-4 md:px-6">
           <Link to="/" className="flex items-center gap-2 font-mono text-sm font-bold tracking-tight text-foreground" aria-label="botellho, início">
+            <img src="/ban/ban-mark.png" alt="" className="h-5 w-auto object-contain" style={{ imageRendering: "pixelated" }} />
             botellho<span className="text-phosphor">▪</span>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="principal">
+          <nav className="absolute left-1/2 top-0 hidden h-full -translate-x-1/2 items-center gap-1 md:flex" aria-label="principal">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}

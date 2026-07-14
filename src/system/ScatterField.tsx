@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
-import Scramble from "@/motion/Scramble";
+import Scramble, { type ScrambleHandle } from "@/motion/Scramble";
 import { prefersReducedMotion } from "@/motion/prefs";
 
 // "Como a gente trabalha": funde duas coisas do Locomotive/DVD.
-// (1) Replicacao: cada frase aparece empilhada varias vezes, e cada copia se
-//     re-embaralha em tempo/modo diferente -> aquele eco animado e diverso.
+// (1) Replicacao: cada frase aparece empilhada varias vezes (eco), cada copia
+//     com modo/duracao propria; elas embaralham SO quando os stacks se tocam.
 // (2) Fisica de DVD: cada stack (a frase e seus ecos) deriva pelo palco, bate
-//     nas bordas trocando de cor (azul <-> preto) e colide com os outros.
+//     nas bordas trocando de cor (azul <-> preto) e colide com os outros,
+//     disparando o embaralhamento no contato.
 // Afirmativo: o METODO. As recusas ficam em "regras da casa".
 const FRASES = [
   "a gente escreve o próprio código",
@@ -25,6 +26,7 @@ const BLUE = "hsl(var(--phosphor))";
 const ScatterField = () => {
   const stage = useRef<HTMLDivElement>(null);
   const itens = useRef<HTMLDivElement[]>([]);
+  const handles = useRef<ScrambleHandle[][]>([]);
 
   useEffect(() => {
     const st = stage.current;
@@ -65,6 +67,9 @@ const ScatterField = () => {
       c.el.style.color = c.azul ? BLUE : INK;
     };
 
+    const colidindo = new Set<string>();
+    const embaralha = (i: number) => (handles.current[i] || []).forEach((h) => h?.scramble());
+
     let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
@@ -84,6 +89,7 @@ const ScatterField = () => {
         for (let b = a + 1; b < corpos.length; b += 1) {
           const A = corpos[a];
           const B = corpos[b];
+          const chave = `${a}-${b}`;
           if (A.x < B.x + B.w && A.x + A.w > B.x && A.y < B.y + B.h && A.y + A.h > B.y) {
             const ox = Math.min(A.x + A.w - B.x, B.x + B.w - A.x);
             const oy = Math.min(A.y + A.h - B.y, B.y + B.h - A.y);
@@ -96,6 +102,14 @@ const ScatterField = () => {
               if (A.y < B.y) { A.y -= push; B.y += push; } else { A.y += push; B.y -= push; }
               const t = A.vy; A.vy = B.vy; B.vy = t;
             }
+            // embaralha so na entrada do contato (quando se tocam)
+            if (!colidindo.has(chave)) {
+              colidindo.add(chave);
+              embaralha(a);
+              embaralha(b);
+            }
+          } else {
+            colidindo.delete(chave);
           }
         }
       }
@@ -138,10 +152,10 @@ const ScatterField = () => {
                 key={k}
                 as="span"
                 text={f}
-                loop
+                manual
                 mode={MODES[k]}
                 duration={760 + k * 120}
-                loopDelay={1700 + k * 650 + i * 260}
+                ref={(h) => { if (h) { (handles.current[i] ||= [])[k] = h; } }}
                 className="block whitespace-nowrap font-sans text-lg font-medium leading-[1.08] md:text-2xl"
               />
             ))}
