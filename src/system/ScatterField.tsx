@@ -1,91 +1,149 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Scramble from "@/motion/Scramble";
 import { prefersReducedMotion } from "@/motion/prefs";
 
-// Campo de textos a la Locomotive (rodape de carreiras): frases curtas em Inter
-// espalhadas por uma area alta, cada uma se re-embaralhando o tempo todo, com
-// modos e cadencias diferentes, e com parallax de velocidade propria no scroll.
-// Fundo branco, azul so como cor de alguns textos (nunca bloco azul).
-type Mode = "ltr" | "random" | "center";
-interface Bloco {
-  texto: string;
-  left: string;
-  top: string;
-  size: string;
-  azul?: boolean;
-  mode: Mode;
-  loopDelay: number;
-  speed: number;
-}
-
-const BLOCOS: Bloco[] = [
-  { texto: "a gente escreve o próprio código", left: "3%", top: "6%", size: "text-2xl md:text-3xl", mode: "ltr", loopDelay: 2600, speed: -110 },
-  { texto: "3d que roda em qualquer máquina", left: "57%", top: "3%", size: "text-xl md:text-2xl", azul: true, mode: "random", loopDelay: 3300, speed: 150 },
-  { texto: "design que passa no acessível", left: "28%", top: "22%", size: "text-2xl md:text-4xl", mode: "center", loopDelay: 2000, speed: -180 },
-  { texto: "performance é parte do craft", left: "66%", top: "28%", size: "text-lg md:text-2xl", mode: "ltr", loopDelay: 3700, speed: 90 },
-  { texto: "arte e engenharia na mesma mesa", left: "5%", top: "44%", size: "text-2xl md:text-3xl", azul: true, mode: "random", loopDelay: 2400, speed: 170 },
-  { texto: "entrega no prazo combinado", left: "55%", top: "52%", size: "text-xl md:text-3xl", mode: "ltr", loopDelay: 3000, speed: -130 },
-  { texto: "detalhe que ninguém pediu", left: "22%", top: "68%", size: "text-2xl md:text-4xl", mode: "center", loopDelay: 2900, speed: 120 },
-  { texto: "sem tema pronto, sem atalho", left: "60%", top: "78%", size: "text-lg md:text-2xl", azul: true, mode: "ltr", loopDelay: 3500, speed: -80 },
+// "Como a gente trabalha": os paragrafos ganham fisica tipo a tela de descanso
+// de DVD antigo. Cada frase deriva pelo palco, bate nas bordas trocando de cor
+// (azul <-> preto) e colide com as outras se empurrando. Fundo branco, entao as
+// duas cores aparecem. Mobile e reduced-motion: lista estatica, legivel.
+const FRASES = [
+  "a gente escreve o próprio código",
+  "3d que roda em qualquer máquina",
+  "design acessível de verdade",
+  "performance é parte do craft",
+  "arte e engenharia na mesma mesa",
+  "entrega no prazo combinado",
+  "detalhe que ninguém pediu",
+  "sem tema pronto, sem atalho",
 ];
 
+const INK = "hsl(var(--foreground))";
+const BLUE = "hsl(var(--phosphor))";
+
 const ScatterField = () => {
-  const root = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const itens = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
-    if (prefersReducedMotion()) return;
-    const el = root.current;
-    if (!el) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      el.querySelectorAll<HTMLElement>("[data-speed]").forEach((node) => {
-        const speed = Number(node.dataset.speed);
-        gsap.fromTo(
-          node,
-          { y: -speed },
-          { y: speed, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.6 } },
-        );
-      });
-    }, el);
-    return () => ctx.revert();
+    const st = stage.current;
+    if (!st) return;
+
+    let W = st.clientWidth;
+    let H = st.clientHeight;
+
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const corpos = itens.current.filter(Boolean).map((el, i) => {
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const azul = i % 2 === 0;
+      el.style.color = azul ? BLUE : INK;
+      el.style.opacity = "1";
+      return {
+        el,
+        w,
+        h,
+        x: rand(0, Math.max(1, W - w)),
+        y: rand(0, Math.max(1, H - h)),
+        vx: (Math.random() < 0.5 ? -1 : 1) * rand(38, 72),
+        vy: (Math.random() < 0.5 ? -1 : 1) * rand(38, 72),
+        azul,
+      };
+    });
+
+    // reduced-motion: sem fisica, dispoe em coluna legivel
+    if (prefersReducedMotion()) {
+      let y = 0;
+      for (const c of corpos) {
+        c.el.style.transform = `translate(0px, ${y}px)`;
+        y += c.h + 24;
+      }
+      return;
+    }
+
+    const flip = (c: (typeof corpos)[number]) => {
+      c.azul = !c.azul;
+      c.el.style.color = c.azul ? BLUE : INK;
+    };
+
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+
+      for (const c of corpos) {
+        c.x += c.vx * dt;
+        c.y += c.vy * dt;
+        if (c.x <= 0) { c.x = 0; c.vx = Math.abs(c.vx); flip(c); }
+        else if (c.x + c.w >= W) { c.x = W - c.w; c.vx = -Math.abs(c.vx); flip(c); }
+        if (c.y <= 0) { c.y = 0; c.vy = Math.abs(c.vy); flip(c); }
+        else if (c.y + c.h >= H) { c.y = H - c.h; c.vy = -Math.abs(c.vy); flip(c); }
+      }
+
+      // colisao AABB: separa e troca a velocidade no eixo de menor sobreposicao
+      for (let a = 0; a < corpos.length; a += 1) {
+        for (let b = a + 1; b < corpos.length; b += 1) {
+          const A = corpos[a];
+          const B = corpos[b];
+          if (A.x < B.x + B.w && A.x + A.w > B.x && A.y < B.y + B.h && A.y + A.h > B.y) {
+            const ox = Math.min(A.x + A.w - B.x, B.x + B.w - A.x);
+            const oy = Math.min(A.y + A.h - B.y, B.y + B.h - A.y);
+            if (ox < oy) {
+              const push = ox / 2;
+              if (A.x < B.x) { A.x -= push; B.x += push; } else { A.x += push; B.x -= push; }
+              const t = A.vx; A.vx = B.vx; B.vx = t;
+            } else {
+              const push = oy / 2;
+              if (A.y < B.y) { A.y -= push; B.y += push; } else { A.y += push; B.y -= push; }
+              const t = A.vy; A.vy = B.vy; B.vy = t;
+            }
+          }
+        }
+      }
+
+      for (const c of corpos) c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const onResize = () => {
+      W = st.clientWidth;
+      H = st.clientHeight;
+      for (const c of corpos) {
+        c.x = Math.min(c.x, Math.max(0, W - c.w));
+        c.y = Math.min(c.y, Math.max(0, H - c.h));
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (
     <section className="overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
       <span className="type-label text-muted-foreground">como a gente trabalha</span>
 
-      {/* desktop: campo espalhado com parallax, tudo animando o tempo todo */}
-      <div ref={root} className="relative mt-8 hidden h-[130vh] md:block">
-        {BLOCOS.map((b) => (
-          <div key={b.texto} data-speed={b.speed} className="absolute max-w-[38ch]" style={{ left: b.left, top: b.top }}>
-            <Scramble
-              as="span"
-              text={b.texto}
-              loop
-              loopDelay={b.loopDelay}
-              mode={b.mode}
-              className={`font-sans font-medium leading-tight ${b.size} ${b.azul ? "text-phosphor" : "text-foreground"}`}
-            />
-          </div>
+      {/* desktop: palco com fisica de DVD */}
+      <div ref={stage} className="relative mt-8 hidden h-[80vh] overflow-hidden border border-foreground/15 md:block">
+        {FRASES.map((f, i) => (
+          <span
+            key={f}
+            ref={(el) => { if (el) itens.current[i] = el; }}
+            style={{ opacity: 0, willChange: "transform" }}
+            className="absolute left-0 top-0 whitespace-nowrap font-sans text-xl font-medium leading-none md:text-2xl"
+          >
+            {f}
+          </span>
         ))}
       </div>
 
-      {/* mobile: empilhado, ainda re-embaralhando */}
-      <div className="mt-8 flex flex-col items-start gap-6 md:hidden">
-        {BLOCOS.map((b) => (
-          <Scramble
-            key={b.texto}
-            as="span"
-            text={b.texto}
-            loop
-            loopDelay={b.loopDelay}
-            mode={b.mode}
-            className={`font-sans text-2xl font-medium leading-tight ${b.azul ? "text-phosphor" : "text-foreground"}`}
-          />
+      {/* mobile / reduced-motion: lista estatica legivel */}
+      <ul className="mt-8 flex flex-col gap-4 md:hidden">
+        {FRASES.map((f, i) => (
+          <li key={f} className={`font-sans text-2xl font-medium leading-tight ${i % 2 === 0 ? "text-phosphor" : "text-foreground"}`}>{f}</li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 };

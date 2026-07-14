@@ -5,6 +5,24 @@ import { useEffect } from "react";
 // sobre areas 3D (data-cursor="3d") e press de 1px. Touch: desativado.
 const INTERACTIVE = 'a, button, input, textarea, select, [role="button"], label';
 
+// Descobre se o fundo sob o cursor e escuro (azul/preto) pra inverter a cor do
+// cursor, senao ele some em cima do phosphor.
+const isDarkUnder = (target: HTMLElement | null) => {
+  let node: HTMLElement | null = target;
+  let depth = 0;
+  while (node && depth < 8) {
+    const c = getComputedStyle(node).backgroundColor;
+    const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+    if (m && (m[4] === undefined || Number(m[4]) > 0.1)) {
+      const lum = 0.299 * Number(m[1]) + 0.587 * Number(m[2]) + 0.114 * Number(m[3]);
+      return lum < 140;
+    }
+    node = node.parentElement;
+    depth += 1;
+  }
+  return false;
+};
+
 const CursorSystem = () => {
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) {
@@ -47,6 +65,10 @@ const CursorSystem = () => {
       block.classList.toggle("is-crosshair", isCrosshair);
       block.classList.toggle("is-hover", isHover);
       block.classList.toggle("is-card", !!card);
+      const dark = isDarkUnder(target);
+      block.classList.toggle("is-on-dark", dark);
+      dot.classList.toggle("is-on-dark", dark);
+      label.classList.toggle("is-on-dark", dark);
       label.textContent = card?.dataset.cursorLabel ?? "";
       label.classList.toggle("is-on", !!card);
     };

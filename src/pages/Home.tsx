@@ -209,7 +209,7 @@ craft = engenharia
             <span className="normal-case tracking-normal">08 / 08</span>
           </div>
           <RetroDesktop>
-            <Window title="começar_um_projeto.exe" phosphor draggable bounded className="w-full max-w-xl text-foreground">
+            <Window title="começar_um_projeto.exe" phosphor draggable bounded className="w-full max-w-2xl text-foreground">
               <p className="mb-8 font-sans text-base text-muted-foreground">
                 Conte o que você quer construir. Quanto mais específico, melhor a
                 nossa resposta. Arraste a janela pela barra se quiser.

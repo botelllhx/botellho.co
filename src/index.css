@@ -429,6 +429,31 @@
   opacity: 1;
 }
 
+/* Em fundo escuro/azul o cursor phosphor some: inverte pra paper */
+.cursor.is-on-dark {
+  background: hsl(var(--paper));
+  border-color: hsl(var(--paper));
+}
+
+.cursor.is-on-dark.is-hover,
+.cursor.is-on-dark.is-crosshair {
+  background: transparent;
+}
+
+.cursor.is-on-dark.is-crosshair::before,
+.cursor.is-on-dark.is-crosshair::after {
+  background: hsl(var(--paper));
+}
+
+.cursor-dot.is-on-dark {
+  background: hsl(var(--paper));
+}
+
+.cursor-label.is-on-dark {
+  background: hsl(var(--paper));
+  color: hsl(var(--ink));
+}
+
 @keyframes cursor-blink {
 
   0%,
