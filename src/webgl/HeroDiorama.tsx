@@ -44,6 +44,11 @@ const Diorama = () => {
           side: THREE.DoubleSide,
           toneMapped: false,
         });
+        // as fotos vinham ~1cm ATRAS da superficie da parede (o mesh "Floor" e o
+        // box do comodo) -> a parede as ocluia. empurra pra frente (a cena usa
+        // +z como lado da camera) pra a arte aparecer.
+        m.position.z += 0.06;
+        m.updateMatrixWorld(true);
       }
     });
   }, [scene]);
