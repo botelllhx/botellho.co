@@ -1,78 +1,63 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Scramble from "@/motion/Scramble";
-import { prefersReducedMotion } from "@/motion/prefs";
 
-// Campo de blocos a la Locomotive (pagina de carreiras): frases em blocos azuis
-// espalhados por uma area alta (>100vh), cada um com parallax de velocidade
-// propria no scroll e o texto se organizando (scramble). Fundo branco.
-const BLOCOS = [
-  { texto: "web que se move", left: "4%", top: "6%", size: "text-4xl md:text-6xl", speed: -90 },
-  { texto: "craft primeiro", left: "58%", top: "2%", size: "text-3xl md:text-5xl", speed: 120 },
-  { texto: "3d de verdade", left: "30%", top: "26%", size: "text-5xl md:text-7xl", speed: -160 },
-  { texto: "sem firula", left: "70%", top: "34%", size: "text-3xl md:text-5xl", speed: 70 },
-  { texto: "direção de arte", left: "6%", top: "48%", size: "text-4xl md:text-6xl", speed: 150 },
-  { texto: "engenharia real", left: "52%", top: "58%", size: "text-4xl md:text-6xl", speed: -110 },
-  { texto: "feito à mão", left: "22%", top: "72%", size: "text-3xl md:text-5xl", speed: 90 },
-  { texto: "no prazo", left: "68%", top: "80%", size: "text-5xl md:text-7xl", speed: -70 },
+// Campo de textos a la Locomotive (rodape de carreiras): frases curtas em Inter
+// espalhadas por uma area alta, cada uma se re-embaralhando o tempo todo, com
+// modos e cadencias diferentes. Fundo branco, azul so como cor de alguns textos
+// (nunca bloco azul). O movimento e a propria animacao continua.
+type Mode = "ltr" | "random" | "center";
+interface Bloco {
+  texto: string;
+  left: string;
+  top: string;
+  size: string;
+  azul?: boolean;
+  mode: Mode;
+  loopDelay: number;
+}
+
+const BLOCOS: Bloco[] = [
+  { texto: "a gente escreve o próprio código", left: "3%", top: "6%", size: "text-2xl md:text-3xl", mode: "ltr", loopDelay: 2600 },
+  { texto: "3d que roda em qualquer máquina", left: "57%", top: "3%", size: "text-xl md:text-2xl", azul: true, mode: "random", loopDelay: 3300 },
+  { texto: "design que passa no acessível", left: "28%", top: "22%", size: "text-2xl md:text-4xl", mode: "center", loopDelay: 2000 },
+  { texto: "performance é parte do craft", left: "66%", top: "28%", size: "text-lg md:text-2xl", mode: "ltr", loopDelay: 3700 },
+  { texto: "arte e engenharia na mesma mesa", left: "5%", top: "44%", size: "text-2xl md:text-3xl", azul: true, mode: "random", loopDelay: 2400 },
+  { texto: "entrega no prazo combinado", left: "55%", top: "52%", size: "text-xl md:text-3xl", mode: "ltr", loopDelay: 3000 },
+  { texto: "detalhe que ninguém pediu", left: "22%", top: "68%", size: "text-2xl md:text-4xl", mode: "center", loopDelay: 2900 },
+  { texto: "sem tema pronto, sem atalho", left: "60%", top: "78%", size: "text-lg md:text-2xl", azul: true, mode: "ltr", loopDelay: 3500 },
 ];
 
 const ScatterField = () => {
-  const root = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-    const el = root.current;
-    if (!el) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      el.querySelectorAll<HTMLElement>("[data-speed]").forEach((node) => {
-        const speed = Number(node.dataset.speed);
-        gsap.fromTo(
-          node,
-          { y: -speed },
-          {
-            y: speed,
-            ease: "none",
-            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.6 },
-          },
-        );
-      });
-    }, el);
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section className="overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
       <span className="type-label text-muted-foreground">como a gente trabalha</span>
 
-      {/* desktop: campo espalhado com parallax */}
-      <div ref={root} className="relative mt-8 hidden h-[130vh] md:block">
+      {/* desktop: campo espalhado, tudo animando o tempo todo */}
+      <div className="relative mt-8 hidden h-[130vh] md:block">
         {BLOCOS.map((b) => (
-          <div
-            key={b.texto}
-            data-speed={b.speed}
-            className="absolute"
-            style={{ left: b.left, top: b.top }}
-          >
+          <div key={b.texto} className="absolute max-w-[38ch]" style={{ left: b.left, top: b.top }}>
             <Scramble
               as="span"
               text={b.texto}
-              className={`inline-block bg-phosphor px-5 py-3 font-display leading-none text-paper ${b.size}`}
+              loop
+              loopDelay={b.loopDelay}
+              mode={b.mode}
+              className={`font-sans font-medium leading-tight ${b.size} ${b.azul ? "text-phosphor" : "text-foreground"}`}
             />
           </div>
         ))}
       </div>
 
-      {/* mobile: blocos empilhados, ainda com scramble */}
-      <div className="mt-8 flex flex-col items-start gap-4 md:hidden">
+      {/* mobile: empilhado, ainda re-embaralhando */}
+      <div className="mt-8 flex flex-col items-start gap-6 md:hidden">
         {BLOCOS.map((b) => (
           <Scramble
             key={b.texto}
             as="span"
             text={b.texto}
-            className="inline-block bg-phosphor px-4 py-2 font-display text-3xl leading-none text-paper"
+            loop
+            loopDelay={b.loopDelay}
+            mode={b.mode}
+            className={`font-sans text-2xl font-medium leading-tight ${b.azul ? "text-phosphor" : "text-foreground"}`}
           />
         ))}
       </div>

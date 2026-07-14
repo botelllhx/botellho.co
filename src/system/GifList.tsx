@@ -1,62 +1,58 @@
 import { useState } from "react";
 
-// Lista gigante centralizada (a la Locomotive): cada linha e enorme e, no hover,
-// um gif engracado aparece no meio dos textos. Os gifs sao anexados depois pelo
-// Mateus em /public/gifs (ver README). Antes disso o hover so nao mostra nada.
+// Lista gigante centralizada a la Locomotive (carreiras): numeracao e linhas
+// divisorias na estetica DOS, e no hover um gif engracado abre INLINE no meio da
+// frase (tipo "Project [gif] Manager"). Gifs sao pesados, entao so carregam
+// depois do primeiro hover (lazy).
 const ITENS = [
-  { texto: "sem lorem ipsum", gif: "/gifs/lorem.gif" },
-  { texto: "sem tema pronto", gif: "/gifs/tema.gif" },
-  { texto: "sem powerpoint", gif: "/gifs/powerpoint.gif" },
-  { texto: "sem reunião que era e-mail", gif: "/gifs/reuniao.gif" },
-  { texto: "sem site travado", gif: "/gifs/travado.gif" },
-  { texto: "sem preguiça", gif: "/gifs/preguica.gif" },
+  { esq: "sem lorem", dir: "ipsum", gif: "/gifs/lorem.gif" },
+  { esq: "sem tema", dir: "de prateleira", gif: "/gifs/tema.gif" },
+  { esq: "sem powerpoint", dir: "infinito", gif: "/gifs/powerpoint.gif" },
+  { esq: "reunião que", dir: "era e-mail", gif: "/gifs/reuniao.gif" },
+  { esq: "sem site", dir: "travado", gif: "/gifs/travado.gif" },
+  { esq: "sem preguiça", dir: "de detalhe", gif: "/gifs/preguica.gif" },
 ];
 
 const GifList = () => {
   const [hover, setHover] = useState<number | null>(null);
-  const [broken, setBroken] = useState<Record<number, boolean>>({});
+  const [ativos, setAtivos] = useState<Set<number>>(new Set());
+
+  const entrar = (i: number) => {
+    setHover(i);
+    setAtivos((s) => (s.has(i) ? s : new Set(s).add(i)));
+  };
 
   return (
-    <section className="relative overflow-hidden bg-phosphor px-4 py-24 text-paper md:px-6 md:py-32">
-      <span className="type-label text-paper/60">regras da casa</span>
-
-      <div className="relative mt-10">
-        <ul className="flex flex-col items-center text-center">
-          {ITENS.map((item, i) => (
-            <li key={item.texto}>
-              <button
-                type="button"
-                onMouseEnter={() => setHover(i)}
-                onMouseLeave={() => setHover(null)}
-                onFocus={() => setHover(i)}
-                onBlur={() => setHover(null)}
-                className={`block py-2 font-display uppercase leading-[0.95] tracking-[-0.02em] text-[clamp(2.25rem,7vw,7rem)] transition-opacity duration-300 ${
-                  hover !== null && hover !== i ? "opacity-25" : "opacity-100"
-                }`}
-              >
-                {item.texto}
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {/* gif no meio dos textos (aparece no hover) */}
-        <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-56 w-56 -translate-x-1/2 -translate-y-1/2 md:h-72 md:w-72">
-          {ITENS.map((item, i) =>
-            broken[i] ? null : (
-              <img
-                key={item.texto}
-                src={item.gif}
-                alt=""
-                onError={() => setBroken((b) => ({ ...b, [i]: true }))}
-                className={`absolute inset-0 h-full w-full border-2 border-paper object-cover shadow-[6px_6px_0_0_hsl(var(--ink))] transition-opacity duration-200 ${
-                  hover === i ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ),
-          )}
-        </div>
+    <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
+      <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+        <span>regras da casa</span>
+        <span className="normal-case tracking-normal">({ITENS.length})</span>
       </div>
+
+      <ul>
+        {ITENS.map((item, i) => (
+          <li
+            key={item.esq}
+            onMouseEnter={() => entrar(i)}
+            onMouseLeave={() => setHover(null)}
+            className={`group border-b border-paper/25 transition-opacity duration-300 ${hover !== null && hover !== i ? "opacity-30" : "opacity-100"}`}
+          >
+            <div className="flex items-center gap-4 py-5 md:py-7">
+              <span className="w-8 shrink-0 font-mono text-xs text-paper/60 md:w-12 md:text-sm">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="flex flex-1 flex-wrap items-center justify-center text-center font-display uppercase leading-[0.95] tracking-[-0.02em] text-[clamp(1.75rem,6vw,6rem)]">
+                <span>{item.esq}</span>
+                <span className="mx-2 inline-flex h-[1em] w-0 items-center justify-center overflow-hidden transition-[width] duration-300 ease-out group-hover:w-[1.6em] md:mx-3">
+                  {ativos.has(i) ? (
+                    <img src={item.gif} alt="" className="h-full w-full border-2 border-paper object-cover" />
+                  ) : null}
+                </span>
+                <span>{item.dir}</span>
+              </h3>
+              <span className="w-8 shrink-0 text-right text-xl text-paper opacity-0 transition-opacity group-hover:opacity-100 md:w-12 md:text-2xl">↘</span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };
