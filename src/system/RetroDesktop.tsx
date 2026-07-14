@@ -5,23 +5,27 @@ import { Link } from "react-router-dom";
 // menu, relogio, icones da area de trabalho e a janela do formulario por cima,
 // arrastavel e presa a esta area (data-window-bounds).
 
-// Icones pixel retro (silhuetas preenchidas, buracos por evenodd), invertem
-// limpo no hover porque sao monocromaticos (currentColor).
-const svgProps = { viewBox: "0 0 24 24", className: "h-7 w-7", fill: "currentColor", fillRule: "evenodd" as const, clipRule: "evenodd" as const, style: { shapeRendering: "crispEdges" as const } };
-const IconeMonitor = () => (
-  <svg {...svgProps}><path d="M2 4h20v12H2zM4 6h16v8H4zM9 16h6v3H9zM6 19h12v2H6z" /></svg>
-);
+// Icones da biblioteca pixelarticons (pixelarticons.com, MIT). Monocromaticos
+// (currentColor), entao invertem limpo no hover. Path data inline pra nao
+// depender de loader de svg no build SSG.
+const svgProps = { viewBox: "0 0 24 24", className: "h-7 w-7", fill: "currentColor" };
 const IconeFolder = () => (
-  <svg {...svgProps}><path d="M2 6h6l2 2h12v11H2zM4 11h16v1H4z" /></svg>
+  <svg {...svgProps}><path d="M4 4h6v2H4zm0 14h16v2H4zM20 8h2v10h-2zM2 6h2v12H2zm8 0h10v2H10z" /></svg>
+);
+const IconeMonitor = () => (
+  <svg {...svgProps}><path d="M6 1h12v2H6zm0 8h12v2H6zM4 3h2v6H4zm14 0h2v6h-2zM4 13h16v2H4zm0 8h16v2H4zm-2-6h2v6H2zm18 0h2v6h-2zM6 17h2v2H6zm4 0h8v2h-8zm-2-6h2v2H8zm6 0h2v2h-2z" /></svg>
 );
 const IconeFloppy = () => (
-  <svg {...svgProps}><path d="M3 3h15l3 3v15H3zM13 4h2v5h-2zM7 13h10v6H7zM9 15h6v1H9z" /></svg>
+  <svg {...svgProps}><path d="M20 22H4V20H6V14H8V20H16V14H18V20H20V22ZM4 20H2V4H4V20ZM22 20H20V6H22V20ZM16 14H8V12H16V14ZM12 10H6V6H12V10ZM20 6H18V4H20V6ZM18 4H4V2H18V4Z" /></svg>
 );
 const IconeDoc = () => (
-  <svg {...svgProps}><path d="M5 2h8l6 6v14H5zM8 12h8v1H8zM8 15h8v1H8zM8 18h5v1H8z" /></svg>
+  <svg {...svgProps}>
+    <path d="M6 4H4v16h2zm10-2H6v2h10zm4 4h-2v14h2zm-2 14H6v2h12zM16 4h2v2h-2zm-4 0h2v6h-2z" />
+    <path d="M12 8h6v2h-6zm-4 8h8v2H8zm0-4h8v2H8zm0-4h2v2H8z" />
+  </svg>
 );
 const IconeLixeira = () => (
-  <svg {...svgProps}><path d="M4 5h16v2H4zM9 3h6v2H9zM6 8h12l-1 13H7zM10 11h1v7h-1zM13 11h1v7h-1z" /></svg>
+  <svg {...svgProps}><path d="M6 7h2v2H6zm14 0h2v10h-2zM8 5h12v2H8zM4 9h2v2H4zm-2 2h2v2H2zm2 2h2v2H4zm2 2h2v2H6zm2 2h12v2H8zm6-6h2v2h-2zm2 2h2v2h-2zm0-4h2v2h-2zm-4 4h2v2h-2zm0-4h2v2h-2z" /></svg>
 );
 
 interface IconeProps {

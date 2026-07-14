@@ -43,7 +43,7 @@ const GifList = () => {
                 <span>{item.esq}</span>
                 <span className="mx-2 inline-flex h-[1em] w-0 items-center justify-center overflow-hidden transition-[width] duration-300 ease-out group-hover:w-[1.6em] md:mx-3">
                   {ativos.has(i) ? (
-                    <img src={item.gif} alt="" className="h-full w-full border-2 border-paper object-cover" />
+                    <img src={item.gif} alt="" className="h-full w-full object-cover" />
                   ) : null}
                 </span>
                 <span>{item.dir}</span>
