@@ -1,7 +1,9 @@
 import { Head } from "vite-react-ssg";
 import { Link } from "react-router-dom";
 
-// 404: perda de sinal. Ruido/scanline dithered + o Ban confuso, voz DOS.
+// 404 como tela de erro DOS (na linguagem do loader): fundo azul, IBM VGA,
+// "404" gigante em bitmap, o Ban perdido e uma caixa de erro amigavel. Sem
+// jargao que assuste; prompts de flavor, nunca comandos.
 const NotFound = () => {
   return (
     <>
@@ -9,27 +11,45 @@ const NotFound = () => {
         <title>Erro 404 | botellho</title>
         <meta name="robots" content="noindex" />
       </Head>
-      <section className="dark bg-background px-4 py-16 text-foreground md:px-6 md:py-20">
-        <p className="type-dos text-phosphor">&gt; erro 404 · rota não encontrada</p>
 
-        <div className="mt-8 crt-frame flex aspect-[16/9] items-center justify-center" data-cursor="3d">
-          <div className="static-noise" />
-          <img
-            src="/ban/ban-1.png"
-            alt="Ban, confuso"
-            className="relative z-10 h-40 w-40 object-contain md:h-56 md:w-56"
-            style={{ imageRendering: "pixelated" }}
-          />
-          <div className="crt-frame__glass" />
-          <span className="crt-frame__tag type-label">sem sinal</span>
+      <section className="relative flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-center overflow-hidden bg-phosphor px-4 py-14 text-paper md:px-6">
+        <div className="boot__scanlines" />
+
+        <div className="relative flex items-center justify-between border-b border-paper/25 pb-3 font-bitmap text-xs uppercase tracking-[0.18em] text-paper/60">
+          <span>botellho microsystems</span>
+          <span>erro fatal</span>
         </div>
 
-        <h1 className="type-tese mt-10 max-w-3xl">Esse comando não existe.</h1>
-        <p className="mt-6 max-w-md font-sans text-base text-muted-foreground">
-          A rota digitada não roda neste terminal. Verifique o endereço ou volte
-          pro início.
-        </p>
-        <Link to="/" className="cmd-button mt-10 inline-flex">Voltar pra home</Link>
+        <div className="relative flex flex-1 flex-col justify-center gap-8 py-12">
+          <div className="flex flex-wrap items-center gap-6 md:gap-12">
+            <span className="font-bitmap leading-none text-[clamp(4.5rem,18vw,15rem)]">404</span>
+            <img
+              src="/ban/ban-1.png"
+              alt="Ban, perdido"
+              className="h-24 w-24 object-contain invert md:h-40 md:w-40"
+              style={{ imageRendering: "pixelated" }}
+              data-cursor="3d"
+            />
+          </div>
+
+          <h1 className="font-display leading-[0.95] tracking-[-0.02em] text-[clamp(2rem,6vw,5rem)]">rota não encontrada.</h1>
+
+          <div className="max-w-xl border border-paper/30 p-5 font-mono text-sm leading-relaxed text-paper/85">
+            <p>&gt; o endereço que você digitou não roda neste terminal.</p>
+            <p>&gt; nenhum arquivo foi perdido.</p>
+            <p>&gt; o ban também não sabe onde isso foi parar.</p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link to="/" className="cmd-button !border-paper !bg-paper !text-phosphor">Voltar pra home</Link>
+            <Link to="/trabalhos" className="cmd-button-ghost !border-paper/60 !text-paper">Ver trabalhos</Link>
+          </div>
+        </div>
+
+        <div className="relative flex items-center justify-between border-t border-paper/25 pt-3 font-bitmap text-[11px] uppercase tracking-[0.18em] text-paper/55">
+          <span>seção · 404</span>
+          <span className="caret">pressione voltar_</span>
+        </div>
       </section>
     </>
   );

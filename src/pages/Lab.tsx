@@ -1,6 +1,7 @@
 import { Head } from "vite-react-ssg";
-import LineReveal from "@/motion/LineReveal";
+import Scramble from "@/motion/Scramble";
 import Typing from "@/motion/Typing";
+import Window from "@/system/Window";
 
 const LOGS = [
   { data: "em breve", tipo: "experimento", titulo: "dither em tempo real com bayer 4x4" },
@@ -8,7 +9,7 @@ const LOGS = [
   { data: "em breve", tipo: "escrito", titulo: "quantização de paleta em webgl" },
 ];
 
-// /laboratorio (arquetipo B/terminal): a saida continua do estudio.
+// /laboratorio: a saida continua do estudio, enquadrada como um log.
 const Lab = () => {
   return (
     <>
@@ -25,21 +26,20 @@ const Lab = () => {
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      <section className="px-4 pt-16 md:px-6 md:pt-24">
-        <Typing text="> tail -f lab.log" className="type-label text-muted-foreground" />
-        <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">O log público do estúdio.</LineReveal>
+      <section className="bg-background px-4 pt-16 md:px-6 md:pt-24">
+        <Typing text="> laboratório" className="type-label text-muted-foreground" />
+        <Scramble as="h1" text="O log público do estúdio." className="type-tese mt-8 max-w-4xl" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Experimentos de shader e dither, teardowns de sites institucionais e
           notas técnicas. É aqui que a assinatura pensa em voz alta.
         </p>
       </section>
 
-      {/* Índice em log (ink), hover com scanline */}
-      <section className="dark bg-background mt-14 px-4 py-16 text-foreground md:px-6 md:py-24">
-        <div className="mx-auto max-w-4xl border border-foreground/20">
-          <div className="flex items-center justify-between border-b border-foreground/20 px-4 py-2">
-            <span className="type-dos text-xs text-phosphor">lab.log</span>
+      <section className="bg-phosphor px-4 py-16 text-paper md:px-6 md:py-24">
+        <Window title="lab.log" draggable={false} className="mx-auto max-w-4xl text-foreground" bodyClassName="!p-0">
+          <div className="metastrip border-b border-foreground/15 px-4 py-2" aria-hidden>
             <span className="type-label text-muted-foreground">aguardando primeira peça</span>
+            <span className="type-label text-phosphor">em construção</span>
           </div>
           <ul>
             {LOGS.map((log, i) => (
@@ -50,8 +50,8 @@ const Lab = () => {
               </li>
             ))}
           </ul>
-        </div>
-        <p className="type-dos mt-8 text-center text-phosphor">&gt; volte em breve_</p>
+        </Window>
+        <p className="caret mt-8 text-center font-mono text-sm text-paper/70">&gt; volte em breve_</p>
       </section>
     </>
   );

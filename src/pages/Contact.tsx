@@ -1,9 +1,10 @@
 import { Head } from "vite-react-ssg";
 import Typing from "@/motion/Typing";
-import LineReveal from "@/motion/LineReveal";
+import Scramble from "@/motion/Scramble";
+import Window from "@/system/Window";
 import ContactForm from "@/system/ContactForm";
 
-// /contato (arquetipo D): um programa de contato enquadrado como terminal.
+// /contato: um programa de contato enquadrado como janela retro.
 const Contact = () => {
   return (
     <>
@@ -20,25 +21,19 @@ const Contact = () => {
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      <section className="px-4 pt-16 md:px-6 md:pt-24">
+      <section className="bg-background px-4 pt-16 md:px-6 md:pt-24">
         <Typing text="> vamos conversar sobre seu projeto" className="type-label text-muted-foreground" />
-        <LineReveal as="h1" className="type-tese mt-8 max-w-4xl">Conte o que você quer construir.</LineReveal>
+        <Scramble as="h1" text="Conte o que você quer construir." className="type-tese mt-8 max-w-4xl" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Institucional, experiência 3D, marca, evento ou parceria de
           desenvolvimento: quanto mais específico, melhor a nossa resposta.
         </p>
       </section>
 
-      <section className="px-4 py-16 md:px-6 md:py-24">
-        <div className="max-w-3xl border border-foreground/20">
-          <div className="flex items-center justify-between border-b border-foreground/20 px-4 py-2">
-            <span className="type-dos text-xs text-phosphor">contato.exe</span>
-            <span className="type-label text-muted-foreground">sessão · botellho</span>
-          </div>
-          <div className="p-5 md:p-8">
-            <ContactForm />
-          </div>
-        </div>
+      <section className="bg-phosphor px-4 py-16 text-paper md:px-6 md:py-24">
+        <Window title="contato.exe" phosphor draggable={false} className="mx-auto max-w-3xl text-foreground">
+          <ContactForm />
+        </Window>
       </section>
     </>
   );
