@@ -35,7 +35,7 @@ const Layout = () => {
             <RouteTransition />
             <CommandPalette />
             <CommandBar />
-            <main className="pt-[var(--bar-h)]">
+            <main className="relative z-10 bg-background pt-[var(--bar-h)]">
               <Outlet />
             </main>
             <SiteFooter />

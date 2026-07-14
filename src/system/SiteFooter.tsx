@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // wordmark gigante que resolve o pixel no hover.
 const SiteFooter = () => {
   return (
-    <footer className="dark border-t border-foreground/15 bg-background pb-10 text-foreground">
+    <footer className="dark sticky bottom-0 z-0 border-t border-foreground/15 bg-background pb-10 text-foreground">
       <div className="metastrip border-b border-foreground/15 px-4 py-3 md:px-6" aria-hidden>
         <span className="type-label text-foreground/55">botellho</span>
         <span className="type-label text-phosphor">disponível para projetos</span>

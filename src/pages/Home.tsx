@@ -1,53 +1,28 @@
+import { useState } from "react";
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
+import Scramble from "@/motion/Scramble";
 import Reveal from "@/motion/Reveal";
-import Parallax from "@/motion/Parallax";
-import CountUp from "@/motion/CountUp";
-import PinnedRow from "@/motion/PinnedRow";
-import SignatureCanvas from "@/webgl/SignatureCanvas";
-import DioramaScene from "@/webgl/DioramaScene";
-import SystemDivider from "@/system/SystemDivider";
 import Window from "@/system/Window";
 import ContactForm from "@/system/ContactForm";
 import ProjectMedia from "@/system/ProjectMedia";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
 const SERVICOS = [
-  { n: "01", nome: "Sites e plataformas", desc: "Presença digital com clareza, acessibilidade e confiança, do institucional ao produto." },
-  { n: "02", nome: "Experiências e microsites", desc: "WebGL, 3D e motion para marcas, lançamentos, festivais e exposições. A experiência é a mensagem." },
-  { n: "03", nome: "Direção de arte digital", desc: "O visual como diferencial, não como enfeite. Identidade que se move." },
-  { n: "04", nome: "Cultura e instituições", desc: "Acervo, memória e patrimônio apresentados de um jeito que as pessoas querem explorar." },
-  { n: "05", nome: "Parceria white-label", desc: "Construímos o front e as interações que outros estúdios e designers desenham." },
-];
-
-const SPECS = [
-  { to: 60, suffix: "", label: "fps alvo, mesmo no android mediano" },
-  { to: 6, suffix: "px", label: "bloco do bitmap, pixel fixo" },
-  { to: 3, suffix: "", label: "tons: ink · paper · phosphor" },
-  { to: 100, suffix: "%", label: "conteúdo em dom real, ótimo pra seo" },
+  { n: "01", nome: "Sites e plataformas", img: "/ban/ban-2.png", desc: "Presença digital com clareza, acessibilidade e confiança, do institucional ao produto." },
+  { n: "02", nome: "Experiências 3D e WebGL", img: "/ban/ban-3.png", desc: "3D, motion e experiência para marcas, lançamentos e exposições. A experiência é a mensagem." },
+  { n: "03", nome: "Direção de arte digital", img: "/ban/ban-4.png", desc: "O visual como diferencial, não como enfeite. Identidade que se move." },
+  { n: "04", nome: "Cultura e instituições", img: "/ban/ban-5.png", desc: "Acervo, memória e patrimônio de um jeito que as pessoas querem explorar." },
+  { n: "05", nome: "Parceria white-label", img: "/ban/ban-1.png", desc: "Construímos o front e as interações que outros estúdios desenham." },
 ];
 
 const SETORES = ["Marcas", "Cultura e instituições", "Eventos e lançamentos", "Produto digital", "Educação"];
 
-const PROCESSO = [
-  { n: "01", nome: "Imersão", desc: "Entender o setor, o público e a obra antes de desenhar qualquer tela." },
-  { n: "02", nome: "Conceito", desc: "A ideia que organiza tudo, a tese que o projeto vai defender." },
-  { n: "03", nome: "Arte e engenharia", desc: "Direção de arte e construção andando juntas, nunca em sequência." },
-  { n: "04", nome: "Craft", desc: "O detalhe do qual a gente se orgulha: o shader, a transição, o sistema." },
-  { n: "05", nome: "No ar", desc: "Entrega medindo o que importa: performance, acessibilidade, memória." },
-];
-
-const FAQ = [
-  { q: "Quanto custa um projeto?", a: "Trabalhamos por faixas, de R$ 10 mil a acima de R$ 60 mil, conforme escopo e ambição. A gente alinha isso na primeira conversa." },
-  { q: "Quanto tempo leva?", a: "Depende do escopo. Um site institucional roda em semanas; uma experiência 3D pede mais fôlego. Combinamos o cronograma no começo." },
-  { q: "Atendem fora de Belo Horizonte?", a: "Sim, o Brasil todo, de forma remota. O estúdio fica em BH, o trabalho vai onde precisa." },
-  { q: "O que é uma experiência 3D ou WebGL?", a: "É web que roda gráfico 3D e motion no navegador, sem plugin. É a nossa assinatura técnica, o que faz o projeto durar na memória." },
-];
-
 const Home = () => {
   const { projects } = useLoaderData() as WorksLoaderData;
   const cases = projects.slice(0, 6);
+  const [hover, setHover] = useState<number | null>(null);
 
   return (
     <>
@@ -64,220 +39,151 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== Hero full-width, fundo preto, texto fora da tela ===== */}
-      <section className="dark bg-background text-foreground">
-        <div className="flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-between px-4 py-8 md:px-6 md:py-10">
-          <div className="flex items-center justify-between">
-            <span className="type-label flex items-center gap-2 text-foreground/60">
+      {/* ===== 1 · Hero placeholder (branco; o diorama 3D entra por ultimo) ===== */}
+      <section className="sticky top-[var(--bar-h)] z-0 bg-background">
+        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 px-4 py-10 md:px-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <span className="type-label flex items-center gap-2 text-muted-foreground">
               <span className="text-phosphor">▪</span> estúdio de web e experiências digitais
             </span>
-            <span className="type-label hidden text-foreground/40 md:block">belo horizonte, br</span>
-          </div>
-
-          <div className="grid items-center gap-8 py-8 lg:grid-cols-[1fr_0.92fr] lg:gap-12">
-            <div>
-              <h1 className="type-tese">
-                <LineReveal as="span" className="block">Web que se move.</LineReveal>
-                <LineReveal as="span" className="block" delay={0.1}>
-                  Experiências <span className="font-serif italic font-normal">digitais</span>
-                </LineReveal>
-                <LineReveal as="span" className="block" delay={0.2}>feitas para durar.</LineReveal>
-              </h1>
-              <p className="mt-8 max-w-md font-sans text-base leading-relaxed text-foreground/70">
-                Craft de nível de prêmio em web e WebGL, para marcas, cultura e
-                instituições que tratam o digital como experiência.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/contato" className="cmd-button">Começar um projeto</Link>
-                <Link to="/trabalhos" className="cmd-button-ghost !border-paper/40 !text-paper">Ver trabalhos</Link>
-              </div>
+            <h1 className="type-tese mt-5">
+              <LineReveal as="span" className="block">Web que</LineReveal>
+              <LineReveal as="span" className="block font-serif font-normal italic" delay={0.08}>se move.</LineReveal>
+              <Scramble as="span" text="Experiências digitais." className="block" onMount />
+            </h1>
+            <p className="mt-8 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
+              Craft de nível de prêmio em web e WebGL, para marcas, cultura e
+              instituições que tratam o digital como experiência.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
             </div>
-
-            <Parallax amount={5}>
-              <div className="crt-frame aspect-[4/3] w-full" data-cursor="3d">
-                <SignatureCanvas
-                  className="absolute inset-0"
-                  crt={0.55}
-                  camera={{ fov: 42, position: [-3, 3.4, 7.5] }}
-                  fallback={<img src="/hero-fallback.png" alt="O estúdio do Ban, em bitmap" className="h-full w-full object-cover" style={{ imageRendering: "pixelated" }} />}
-                >
-                  <DioramaScene />
-                </SignatureCanvas>
-                <div className="crt-frame__glass" />
-                <span className="crt-frame__tag type-label">estúdio // ao vivo</span>
-              </div>
-            </Parallax>
           </div>
 
-          <div className="flex items-center justify-between">
-            <img src="/ban/ban-mark.png" alt="Ban" className="h-7 w-12 object-contain invert md:h-9 md:w-16" style={{ imageRendering: "pixelated" }} />
-            <span className="type-label text-foreground/40">role para explorar ↓</span>
-          </div>
+          <Window title="ban.bmp" phosphor bodyClassName="!p-0">
+            <div className="crt-frame flex aspect-[4/3] items-center justify-center !rounded-none border-0 bg-ink" data-cursor="3d">
+              <img src="/ban/ban-1.png" alt="Ban, em bitmap" className="h-4/5 w-4/5 object-contain invert" style={{ imageRendering: "pixelated" }} />
+              <div className="crt-frame__glass !rounded-none" />
+              <span className="crt-frame__tag type-label">ban // bitmap</span>
+            </div>
+          </Window>
         </div>
       </section>
 
-      {/* ===== Especificações (spec sheet, count-up, faixa dark) ===== */}
-      <section className="dark mt-16 bg-background text-foreground md:mt-24">
-        <div className="grid grid-cols-2 border-y border-foreground/15 md:grid-cols-4">
-          {SPECS.map((spec, i) => (
-            <div key={i} className="border-foreground/15 px-4 py-8 [&:not(:nth-child(2n))]:border-r md:border-r md:[&:last-child]:border-r-0 md:px-6">
-              <span className="font-display text-4xl text-phosphor md:text-6xl">
-                <CountUp to={spec.to} suffix={spec.suffix} />
-              </span>
-              <p className="mt-2 max-w-[16rem] font-mono text-[11px] uppercase leading-relaxed tracking-widest text-muted-foreground">{spec.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Manifesto teaser (editorial) ===== */}
-      <section className="px-4 py-24 md:px-6 md:py-36">
-        <Parallax amount={8}>
-          <LineReveal as="p" className="type-tese max-w-5xl">
-            A maior parte do digital é esquecível. A gente faz o <span className="text-phosphor">contrário</span>.
+      {/* O resto empilha sobre o hero (stacking) */}
+      <div className="relative z-10">
+        {/* ===== 2 · Manifesto (azul; editorial full-bleed) ===== */}
+        <section className="bg-phosphor px-4 py-24 text-paper md:px-6 md:py-36">
+          <span className="type-label text-paper/60">manifesto</span>
+          <LineReveal as="p" className="type-tese mt-8 max-w-6xl">
+            A maior parte do digital é <span className="font-serif font-normal italic">esquecível</span>. A gente faz o contrário.
           </LineReveal>
-        </Parallax>
-        <p className="mt-10 max-w-2xl font-serif text-xl leading-relaxed text-muted-foreground md:text-2xl">
-          Juntamos engenharia de verdade com direção de arte, do site
-          institucional ao imersivo em 3D, sempre com a mesma régua de craft.
-        </p>
-        <Link to="/estudio" className="mt-8 inline-flex items-center gap-2 font-mono text-sm text-phosphor hover:underline">conheça o estúdio ►</Link>
-      </section>
+          <p className="mt-10 max-w-2xl font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
+            Juntamos engenharia de verdade com direção de arte, do site
+            institucional ao imersivo em 3D, sempre com a mesma régua de craft.
+          </p>
+          <Link to="/estudio" className="mt-8 inline-flex items-center gap-2 font-mono text-sm text-paper underline-offset-4 hover:underline">conheça o estúdio ►</Link>
+        </section>
 
-      <SystemDivider label="O que fazemos" />
+        {/* ===== 3 · O que fazemos (branco; lista gigante com hover, AREA17) ===== */}
+        <section className="relative overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
+          <span className="type-label text-muted-foreground">o que fazemos</span>
+          <ul className="mt-8 border-t border-foreground/15">
+            {SERVICOS.map((s, i) => (
+              <li
+                key={s.n}
+                onMouseEnter={() => setHover(i)}
+                onMouseLeave={() => setHover(null)}
+                className="group relative border-b border-foreground/15"
+              >
+                <div className="flex items-baseline gap-4 py-6 transition-transform duration-300 md:group-hover:translate-x-4">
+                  <span className="font-mono text-xs text-phosphor">{s.n}</span>
+                  <h2 className="font-display text-4xl leading-none transition-colors group-hover:text-phosphor md:text-7xl">{s.nome}</h2>
+                  <span className="ml-auto hidden text-3xl text-phosphor opacity-0 transition-opacity group-hover:opacity-100 md:block">►</span>
+                </div>
+                <p className="max-w-md pb-6 pl-8 font-sans text-sm leading-relaxed text-muted-foreground md:hidden">{s.desc}</p>
+              </li>
+            ))}
+          </ul>
+          {/* imagem bitmap revelada no hover (desktop) */}
+          <div className="pointer-events-none absolute right-6 top-1/2 hidden h-72 w-72 -translate-y-1/2 md:block">
+            {SERVICOS.map((s, i) => (
+              <img
+                key={s.n}
+                src={s.img}
+                alt=""
+                className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${hover === i ? "opacity-100" : "opacity-0"}`}
+                style={{ imageRendering: "pixelated" }}
+              />
+            ))}
+          </div>
+        </section>
 
-      {/* ===== O que fazemos (lista densa, glifos) ===== */}
-      <section className="px-4 py-16 md:px-6 md:py-24">
-        <ul className="border-t border-foreground/15">
-          {SERVICOS.map((s) => (
-            <Reveal as="li" key={s.n} className="dir-row grid grid-cols-[2.5rem_1fr] items-baseline gap-4 border-b border-foreground/15 px-2 py-7 md:grid-cols-[3rem_18rem_1fr] md:px-4">
-              <span className="font-mono text-xs text-phosphor">{s.n}</span>
-              <h2 className="flex items-baseline gap-3 font-display text-2xl md:text-3xl">{s.nome}</h2>
-              <p className="col-start-2 max-w-lg font-sans text-sm leading-relaxed opacity-70 md:col-start-3">{s.desc}</p>
-            </Reveal>
-          ))}
-        </ul>
-      </section>
-
-      <SystemDivider label="Trabalhos" ban />
-
-      {/* ===== Trabalhos (galeria horizontal pinada, dark, previews em vídeo) ===== */}
-      <section className="dark bg-background py-16 text-foreground md:py-24">
-        <div className="flex items-end justify-between px-4 md:px-6">
-          <LineReveal as="h2" className="type-title max-w-2xl">Trabalhos selecionados.</LineReveal>
-          <Link to="/trabalhos" className="hidden font-mono text-sm text-phosphor hover:underline md:inline">ver todos ►</Link>
-        </div>
-        <div className="mt-12">
-          <PinnedRow>
-            {(cases.length > 0 ? cases : SERVICOS.slice(0, 4)).map((item, i) => {
-              const p = cases[i];
+        {/* ===== 4 · Trabalhos (azul; media grid com previews gigantes) ===== */}
+        <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
+          <div className="flex items-end justify-between">
+            <LineReveal as="h2" className="type-title max-w-2xl">Trabalhos selecionados.</LineReveal>
+            <Link to="/trabalhos" className="hidden font-mono text-sm text-paper underline-offset-4 hover:underline md:inline">ver todos ►</Link>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {(cases.length > 0 ? cases : [null, null]).map((p, i) => {
               const to = p ? `/trabalhos/${p.slug}` : "/trabalhos";
               const titulo = p ? p.title : "Conceito";
               const setor = p ? p.category || "projeto" : "conceito";
               return (
-                <Link key={i} to={to} data-cursor-label="[ ver ]" className="group block w-[82vw] flex-none border border-foreground/20 sm:w-[520px]">
-                  <div className="crt-frame aspect-[16/10] w-full !rounded-none border-0" data-cursor="3d">
-                    <ProjectMedia project={p} index={i} className="h-full w-full object-cover grayscale contrast-[1.4] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100" />
-                    <div className="crt-frame__glass !rounded-none" />
-                  </div>
-                  <div className="flex items-baseline justify-between px-4 py-4">
-                    <div>
-                      <span className="type-label text-phosphor">{setor}</span>
-                      <h3 className="mt-1 font-display text-2xl transition-colors group-hover:text-phosphor">{titulo}</h3>
+                <Reveal as="div" key={i}>
+                  <Link to={to} data-cursor-label="[ ver ]" className="group block border border-paper/25">
+                    <div className="aspect-[16/10] overflow-hidden bg-ink">
+                      <ProjectMedia project={p} index={i} className="h-full w-full object-cover grayscale contrast-[1.4] transition-[filter] duration-300 group-hover:grayscale-0" />
                     </div>
-                    <span className="font-mono text-xs text-muted-foreground">abrir ►</span>
-                  </div>
-                </Link>
+                    <div className="flex items-baseline justify-between px-4 py-4">
+                      <div>
+                        <span className="type-label text-paper/60">{setor}</span>
+                        <h3 className="mt-1 font-display text-2xl md:text-3xl">{titulo}</h3>
+                      </div>
+                      <span className="font-mono text-xs text-paper/70">abrir ►</span>
+                    </div>
+                  </Link>
+                </Reveal>
               );
             })}
-          </PinnedRow>
-        </div>
-      </section>
-
-      <SystemDivider label="Prova" />
-
-      {/* ===== Prova / setores (split sticky) ===== */}
-      <section className="px-4 py-20 md:px-6 md:py-28">
-        <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
-          <div className="md:sticky md:top-24 md:self-start">
-            <span className="type-label text-muted-foreground">Por que confiar</span>
-            <LineReveal as="h2" className="type-title mt-5">Entendemos o setor cultural por dentro.</LineReveal>
-            <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
-              Leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.
-            </p>
           </div>
-          <div>
-            <span className="type-label text-muted-foreground">Setores que atendemos</span>
-            <ul className="mt-5 border-t border-foreground/15">
+        </section>
+
+        {/* ===== 5 · Prova / setores (branco; split sticky) ===== */}
+        <section className="bg-background px-4 py-20 md:px-6 md:py-28">
+          <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+            <div className="md:sticky md:top-24 md:self-start">
+              <span className="type-label text-muted-foreground">por que confiar</span>
+              <LineReveal as="h2" className="type-title mt-5">Entendemos o setor cultural por dentro.</LineReveal>
+              <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
+                Leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.
+              </p>
+            </div>
+            <ul className="border-t border-foreground/15">
               {SETORES.map((setor, i) => (
-                <Reveal as="li" key={setor} className="dir-row flex items-baseline gap-4 border-b border-foreground/15 px-2 py-5 md:px-4">
+                <Reveal as="li" key={setor} className="dir-row flex items-baseline gap-4 border-b border-foreground/15 px-2 py-6 md:px-4">
                   <span className="font-mono text-xs text-phosphor">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-2xl md:text-3xl">{setor}</span>
-                  <span className="ml-auto text-phosphor opacity-0 transition-opacity group-hover:opacity-100">►</span>
+                  <span className="font-display text-3xl md:text-4xl">{setor}</span>
                 </Reveal>
               ))}
             </ul>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <SystemDivider label="Como trabalhamos" />
-
-      {/* ===== Processo (sticky + passos) ===== */}
-      <section className="px-4 py-20 md:px-6 md:py-28">
-        <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
-          <div className="md:sticky md:top-24 md:self-start">
-            <span className="type-label text-muted-foreground">Processo</span>
-            <LineReveal as="h2" className="type-title mt-5">Como trabalhamos.</LineReveal>
-            <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
-              Cinco passos, do entendimento do setor à medição no ar.
-            </p>
+        {/* ===== 6 · Contato embutido (azul; janela arrastavel) ===== */}
+        <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
+          <div className="mx-auto max-w-3xl">
+            <Window title="começar um projeto" draggable className="text-foreground">
+              <p className="mb-8 font-sans text-base text-muted-foreground">
+                Conte o que você quer construir. Quanto mais específico, melhor a nossa resposta. Arraste a janela se quiser.
+              </p>
+              <ContactForm />
+            </Window>
           </div>
-          <ol className="border-t border-foreground/15">
-            {PROCESSO.map((passo) => (
-              <Reveal as="li" key={passo.n} className="grid grid-cols-[3rem_1fr] gap-4 border-b border-foreground/15 px-2 py-8 md:px-4">
-                <span className="font-display text-2xl text-phosphor">{passo.n}</span>
-                <div>
-                  <h3 className="font-display text-2xl md:text-3xl">{passo.nome}</h3>
-                  <p className="mt-2 max-w-md font-sans text-sm leading-relaxed opacity-70">{passo.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <SystemDivider label="Perguntas" />
-
-      {/* ===== FAQ (lista, sem janelas) ===== */}
-      <section className="px-4 py-20 md:px-6 md:py-28">
-        <LineReveal as="h2" className="type-title max-w-2xl">Perguntas frequentes.</LineReveal>
-        <div className="mt-12 grid gap-x-16 gap-y-10 md:grid-cols-2">
-          {FAQ.map((item, i) => (
-            <Reveal key={i} className="border-t border-foreground/15 pt-5">
-              <h3 className="flex gap-3 font-display text-xl md:text-2xl">
-                <span className="text-phosphor">►</span>
-                {item.q}
-              </h3>
-              <p className="mt-3 pl-7 font-sans text-sm leading-relaxed text-muted-foreground">{item.a}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <SystemDivider label="Contato" ban />
-
-      {/* ===== Contato embutido (janela, acento) ===== */}
-      <section className="px-4 py-20 md:px-6 md:py-28">
-        <Reveal>
-          <Window title="começar um projeto" phosphor className="mx-auto max-w-3xl">
-            <p className="mb-8 font-sans text-base text-muted-foreground">
-              Conte o que você quer construir. Quanto mais específico, melhor a nossa resposta.
-            </p>
-            <ContactForm />
-          </Window>
-        </Reveal>
-      </section>
+        </section>
+      </div>
     </>
   );
 };

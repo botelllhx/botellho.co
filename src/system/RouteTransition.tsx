@@ -2,28 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { prefersReducedMotion } from "@/motion/prefs";
 
-// Transicao de rota (Secao 5.7): a tela nova revela saindo de um padrao de
-// dither que se dissolve em degraus (uma linguagem so, dither wipe).
-// O conteudo novo ja existe no HTML; o efeito e overlay progressivo.
+// Transicao de rota: um painel limpo (paper) com uma linha de fosforo que
+// cobre e sobe revelando a nova rota. Elegante, sem dither. Reseta o scroll.
 const RouteTransition = () => {
   const { pathname } = useLocation();
-  const isFirst = useRef(true);
+  const first = useRef(true);
   const [wiping, setWiping] = useState(false);
 
   useEffect(() => {
-    if (isFirst.current) {
-      isFirst.current = false;
+    if (first.current) {
+      first.current = false;
       return;
     }
     window.scrollTo(0, 0);
     if (prefersReducedMotion()) return;
     setWiping(true);
-    const timer = setTimeout(() => setWiping(false), 500);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setWiping(false), 520);
+    return () => clearTimeout(t);
   }, [pathname]);
 
   if (!wiping) return null;
-  return <div className="route-wipe" aria-hidden />;
+  return <div className="page-wipe" aria-hidden />;
 };
 
 export default RouteTransition;

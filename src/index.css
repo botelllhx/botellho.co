@@ -644,42 +644,20 @@
   letter-spacing: 0.05em;
 }
 
-/* ===== Dither wipe (transicao de rota, Secao 5.7) ===== */
-.route-wipe {
+/* ===== Transicao de rota: painel limpo que sobe revelando (sem dither) ===== */
+.page-wipe {
   position: fixed;
   inset: 0;
   z-index: 90;
   pointer-events: none;
-  background-repeat: repeat;
-  animation: wipe-dissolve 500ms steps(1, end) forwards;
+  background: hsl(var(--background));
+  border-bottom: 3px solid hsl(var(--phosphor));
+  animation: page-lift 520ms var(--ease-inout) forwards;
 }
 
-@keyframes wipe-dissolve {
-  0% {
-    background-color: hsl(var(--phosphor));
-    background-image: none;
-  }
-
-  30% {
-    background-color: transparent;
-    /* 75%: 12 de 16 blocos */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath fill='%230b2ca2' d='M0 0h2v2H0zM4 0h2v2H4zM6 0h2v2H6zM2 2h2v2H2zM4 2h2v2H4zM6 2h2v2H6zM0 4h2v2H0zM2 4h2v2H2zM6 4h2v2H6zM0 6h2v2H0zM2 6h2v2H2zM4 6h2v2H4z'/%3E%3C/svg%3E");
-  }
-
-  55% {
-    /* 50%: xadrez */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath fill='%230b2ca2' d='M0 0h2v2H0zM4 0h2v2H4zM2 2h2v2H2zM6 2h2v2H6zM0 4h2v2H0zM4 4h2v2H4zM2 6h2v2H2zM6 6h2v2H6z'/%3E%3C/svg%3E");
-  }
-
-  80% {
-    /* 25%: 4 de 16 blocos */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath fill='%230b2ca2' d='M0 0h2v2H0zM4 2h2v2H4zM2 4h2v2H2zM6 6h2v2H6z'/%3E%3C/svg%3E");
-  }
-
-  100% {
-    background-image: none;
-    background-color: transparent;
-  }
+@keyframes page-lift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-101%); }
 }
 
 /* Caret piscante em rotulos/typing */
