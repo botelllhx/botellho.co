@@ -7,13 +7,14 @@ import { prefersReducedMotion } from "@/motion/prefs";
 // memoria, sem browser storage). Sai subindo, revelando o site.
 let booted = false;
 
+// Log com cara de boot, mas puxando pro que a gente vende (desenvolvimento de
+// sites e experiencias), com sinais concretos de marketing nos valores.
 const LINHAS = [
-  { l: "processador", v: "craft ×2" },
-  { l: "memória", v: "640K ok" },
-  { l: "vídeo", v: "1-bit ok" },
-  { l: "entrada", v: "mouse · scroll" },
-  { l: "ban", v: "acordando ✓" },
-  { l: "módulos", v: "web · 3d · motion" },
+  { l: "sites e plataformas", v: "online" },
+  { l: "experiências 3d e webgl", v: "online" },
+  { l: "direção de arte", v: "carregada" },
+  { l: "performance e seo", v: "100/100" },
+  { l: "acessibilidade", v: "wcag aa" },
 ];
 
 const CELLS = 24;
@@ -64,45 +65,45 @@ const BootOverlay = () => {
     <div className={`boot ${off ? "boot--off" : ""}`} aria-hidden>
       <div className="boot__scanlines" />
 
-      <div className="relative mx-auto flex h-full max-w-xl flex-col justify-center gap-9 px-6">
-        <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-paper/60">
+      <div className="relative mx-auto flex h-full max-w-xl flex-col justify-center gap-6 px-6">
+        <div className="flex items-center justify-between border-b border-paper/25 pb-3 text-xs uppercase tracking-[0.18em] text-paper/60">
           <span>botellho microsystems</span>
           <span>bios v2.6</span>
         </div>
 
+        {/* identidade: Ban horizontal impresso da esquerda pra direita, wordmark abaixo */}
         <div>
-          {/* Ban horizontal (marca) sendo "impresso" da esquerda pra direita */}
-          <div className="h-24 w-full max-w-sm">
-            <img
-              src="/ban/ban-mark.png"
-              alt=""
-              className="boot__ban-img invert"
-              style={{ clipPath: `inset(0 ${Math.max(0, (1 - frac) * 100)}% 0 0)` }}
-            />
-          </div>
+          <img
+            src="/ban/ban-mark.png"
+            alt=""
+            className="boot__ban-img invert h-20 w-auto"
+            style={{ clipPath: `inset(0 ${Math.max(0, (1 - frac) * 100)}% 0 0)` }}
+          />
           <div className="mt-5 leading-none">
             <span className="text-4xl md:text-5xl">botellho<span className="text-paper/50">▪</span></span>
-            <p className="mt-3 text-xs uppercase tracking-[0.22em] text-paper/60">estúdio de web e experiências</p>
+            <p className="mt-3 text-xs uppercase tracking-[0.18em] text-paper/60">estúdio de web e experiências</p>
           </div>
         </div>
 
-        <div className="space-y-1.5 text-sm">
-          {LINHAS.slice(0, linhas).map((ln) => (
-            <div key={ln.l} className="boot__line flex items-baseline gap-2">
-              <span className="text-paper/85">{ln.l}</span>
-              <span className="mb-1 flex-1 border-b border-dotted border-paper/30" />
-              <span className="text-paper">{ln.v}</span>
+        <div className="space-y-5 border-t border-paper/25 pt-5 text-sm">
+          <div className="space-y-1.5">
+            {LINHAS.slice(0, linhas).map((ln) => (
+              <div key={ln.l} className="boot__line flex items-baseline gap-2">
+                <span className="text-paper/85">{ln.l}</span>
+                <span className="mb-1 flex-1 border-b border-dotted border-paper/30" />
+                <span className="text-paper">{ln.v}</span>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between text-paper">
+              <span className={pronto ? "boot__caret" : ""}>{pronto ? "pronto." : "carregando"}</span>
+              <span className="tabular-nums text-paper/70">{pct}%</span>
             </div>
-          ))}
-        </div>
-
-        <div className="text-sm">
-          <div className="flex items-center justify-between text-paper">
-            <span className={pronto ? "boot__caret" : ""}>{pronto ? "pronto." : "carregando"}</span>
-            <span className="tabular-nums text-paper/70">{pct}%</span>
-          </div>
-          <div className="mt-2 overflow-hidden tracking-[0.15em] text-paper" aria-hidden>
-            {"█".repeat(prog)}{"·".repeat(CELLS - prog)}
+            <div className="mt-2 overflow-hidden tracking-[0.15em] text-paper" aria-hidden>
+              {"█".repeat(prog)}{"·".repeat(CELLS - prog)}
+            </div>
           </div>
         </div>
       </div>

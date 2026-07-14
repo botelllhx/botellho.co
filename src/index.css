@@ -607,11 +607,10 @@
   );
 }
 
-/* Ban horizontal (marca) revelando da esquerda pra direita, tipo impressao */
+/* Ban horizontal (marca) revelando da esquerda pra direita, tipo impressao.
+   Tamanho vem do Tailwind (altura fixa, largura natural), sem estourar o layout. */
 .boot__ban-img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+  display: block;
   image-rendering: pixelated;
 }
 
