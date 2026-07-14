@@ -1,29 +1,30 @@
 import { useEffect, useRef } from "react";
+import Scramble from "@/motion/Scramble";
 import { prefersReducedMotion } from "@/motion/prefs";
 
-// "Como a gente trabalha": os paragrafos ganham fisica tipo a tela de descanso
-// de DVD antigo. Cada frase deriva pelo palco, bate nas bordas trocando de cor
-// (azul <-> preto) e colide com as outras se empurrando. Fundo branco, entao as
-// duas cores aparecem. Mobile e reduced-motion: lista estatica, legivel.
-// Afirmativo: o METODO, o que a gente faz e entrega. As recusas bem-humoradas
-// (o que a gente NAO faz) ficam na secao "regras da casa", pra nao repetir.
+// "Como a gente trabalha": funde duas coisas do Locomotive/DVD.
+// (1) Replicacao: cada frase aparece empilhada varias vezes, e cada copia se
+//     re-embaralha em tempo/modo diferente -> aquele eco animado e diverso.
+// (2) Fisica de DVD: cada stack (a frase e seus ecos) deriva pelo palco, bate
+//     nas bordas trocando de cor (azul <-> preto) e colide com os outros.
+// Afirmativo: o METODO. As recusas ficam em "regras da casa".
 const FRASES = [
   "a gente escreve o próprio código",
   "3d que roda em qualquer máquina",
   "design que passa no acessível",
   "performance faz parte do craft",
   "arte e engenharia na mesma mesa",
-  "protótipo navegável antes do código",
   "entrega no prazo combinado",
-  "acompanhamento depois do lançamento",
 ];
 
+const REPS = 4;
+const MODES = ["ltr", "random", "center", "random"] as const;
 const INK = "hsl(var(--foreground))";
 const BLUE = "hsl(var(--phosphor))";
 
 const ScatterField = () => {
   const stage = useRef<HTMLDivElement>(null);
-  const itens = useRef<HTMLSpanElement[]>([]);
+  const itens = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     const st = stage.current;
@@ -40,23 +41,21 @@ const ScatterField = () => {
       el.style.color = azul ? BLUE : INK;
       el.style.opacity = "1";
       return {
-        el,
-        w,
-        h,
+        el, w, h,
         x: rand(0, Math.max(1, W - w)),
         y: rand(0, Math.max(1, H - h)),
-        vx: (Math.random() < 0.5 ? -1 : 1) * rand(38, 72),
-        vy: (Math.random() < 0.5 ? -1 : 1) * rand(38, 72),
+        vx: (Math.random() < 0.5 ? -1 : 1) * rand(34, 64),
+        vy: (Math.random() < 0.5 ? -1 : 1) * rand(34, 64),
         azul,
       };
     });
 
-    // reduced-motion: sem fisica, dispoe em coluna legivel
+    // reduced-motion: coluna legivel, sem fisica
     if (prefersReducedMotion()) {
       let y = 0;
       for (const c of corpos) {
         c.el.style.transform = `translate(0px, ${y}px)`;
-        y += c.h + 24;
+        y += c.h + 28;
       }
       return;
     }
@@ -81,7 +80,6 @@ const ScatterField = () => {
         else if (c.y + c.h >= H) { c.y = H - c.h; c.vy = -Math.abs(c.vy); flip(c); }
       }
 
-      // colisao AABB: separa e troca a velocidade no eixo de menor sobreposicao
       for (let a = 0; a < corpos.length; a += 1) {
         for (let b = a + 1; b < corpos.length; b += 1) {
           const A = corpos[a];
@@ -126,21 +124,32 @@ const ScatterField = () => {
     <section className="overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
       <span className="type-label text-muted-foreground">como a gente trabalha</span>
 
-      {/* desktop: palco com fisica de DVD */}
+      {/* desktop: stacks replicados quicando pelo palco */}
       <div ref={stage} className="relative mt-8 hidden h-[80vh] overflow-hidden border border-foreground/15 md:block">
         {FRASES.map((f, i) => (
-          <span
+          <div
             key={f}
             ref={(el) => { if (el) itens.current[i] = el; }}
             style={{ opacity: 0, willChange: "transform" }}
-            className="absolute left-0 top-0 whitespace-nowrap font-sans text-xl font-medium leading-none md:text-2xl"
+            className="absolute left-0 top-0"
           >
-            {f}
-          </span>
+            {Array.from({ length: REPS }).map((_, k) => (
+              <Scramble
+                key={k}
+                as="span"
+                text={f}
+                loop
+                mode={MODES[k]}
+                duration={760 + k * 120}
+                loopDelay={1700 + k * 650 + i * 260}
+                className="block whitespace-nowrap font-sans text-lg font-medium leading-[1.08] md:text-2xl"
+              />
+            ))}
+          </div>
         ))}
       </div>
 
-      {/* mobile / reduced-motion: lista estatica legivel */}
+      {/* mobile / reduced-motion: lista estatica legivel (sem replica) */}
       <ul className="mt-8 flex flex-col gap-4 md:hidden">
         {FRASES.map((f, i) => (
           <li key={f} className={`font-sans text-2xl font-medium leading-tight ${i % 2 === 0 ? "text-phosphor" : "text-foreground"}`}>{f}</li>
