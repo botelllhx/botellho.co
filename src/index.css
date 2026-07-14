@@ -574,50 +574,25 @@
   }
 }
 
-/* ===== Boot / loader (peca de marca) ===== */
+/* ===== Boot / loader: boot DOS em tela azul (primeira impressao da marca) ===== */
 .boot {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: hsl(var(--ink));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: hsl(var(--phosphor));
+  color: hsl(var(--paper));
+  font-family: var(--font-mono);
+  overflow: hidden;
+  transform: translateY(0);
 }
 
-/* Power-on de CRT: a tela abre de uma linha fina, depois assenta */
-.boot--on .boot__crt {
-  transform: scaleY(0.004);
-  filter: brightness(3);
-}
-
-.boot--boot .boot__crt {
-  transform: scaleY(1);
-  filter: brightness(1);
-  transition: transform 240ms var(--ease-out), filter 320ms ease-out;
-}
-
-/* Power-off: colapsa e some */
+/* Saida elegante: a tela sobe revelando o site (coerente com a page-wipe) */
 .boot--off {
-  opacity: 0;
-  transition: opacity 360ms ease-out;
+  transform: translateY(-101%);
+  transition: transform 560ms var(--ease-inout);
 }
 
-.boot--off .boot__crt {
-  transform: scaleY(0.004);
-  filter: brightness(3);
-  transition: transform 300ms var(--ease-inout), filter 300ms ease-out;
-}
-
-.boot__crt {
-  position: relative;
-  width: min(90vw, 560px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
+/* Scanlines discretas em paper por cima do azul */
 .boot__scanlines {
   position: absolute;
   inset: 0;
@@ -626,14 +601,15 @@
     to bottom,
     transparent 0,
     transparent 2px,
-    hsl(var(--phosphor) / 0.05) 3px
+    hsl(var(--paper) / 0.05) 3px
   );
 }
 
 .boot__ban {
   position: relative;
-  width: 190px;
-  height: 190px;
+  width: 108px;
+  height: 108px;
+  flex: none;
 }
 
 .boot__ban-img {
@@ -643,30 +619,30 @@
   image-rendering: pixelated;
 }
 
-/* A scanline que "monta" o Ban */
+/* A scanline que "acorda" o Ban */
 .boot__scan {
   position: absolute;
   left: -6%;
   width: 112%;
   height: 2px;
-  background: hsl(var(--phosphor));
-  box-shadow: 0 0 8px hsl(var(--phosphor));
+  background: hsl(var(--paper));
+  box-shadow: 0 0 10px hsl(var(--paper));
 }
 
-.boot__log {
-  width: 100%;
+/* Cada linha do log entra com um reveal curto */
+.boot__line {
+  animation: boot-line-in 280ms var(--ease-out) both;
 }
 
-.boot__line,
-.boot__bar {
-  color: hsl(var(--phosphor));
-  font-size: 0.8rem;
-  line-height: 1.7;
+@keyframes boot-line-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
 }
 
-.boot__bar {
-  margin-top: 0.5rem;
-  letter-spacing: 0.05em;
+.boot__caret::after {
+  content: "█";
+  margin-left: 2px;
+  animation: cursor-blink 1s steps(1, end) infinite;
 }
 
 /* ===== Transicao de rota: painel limpo que sobe revelando (sem dither) ===== */
