@@ -74,10 +74,9 @@ const Home = () => {
       <div className="relative z-10">
         {/* ===== 2 · Manifesto (azul; declaracao gigante + codigo misturado, basement/dos) ===== */}
         <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
-          <div className="flex items-center gap-4 border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+          <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
             <span>manifesto</span>
-            <span className="hidden select-none md:inline" aria-hidden>▚▚▚▚▚▚▚▚▚▚▚▚</span>
-            <span className="ml-auto normal-case tracking-normal">02 / 06</span>
+            <span className="normal-case tracking-normal">02 / 06</span>
           </div>
 
           <div className="flex flex-1 items-center py-14">

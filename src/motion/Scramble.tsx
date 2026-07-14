@@ -1,11 +1,12 @@
 import { ElementType, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "./prefs";
 
-// Embaralhamento de letras a la Locomotive: cada caractere passa por glifos
-// aleatorios e resolve da esquerda pra direita. Layout estavel (uma copia
-// invisivel reserva o espaco final, o texto embaralhado fica por cima), entao
-// nada reflui. Sem flicker/glitch. Texto final sempre no DOM (sr-only) pra SEO.
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#%&/=+*<>";
+// Embaralhamento a la Locomotive: SO letras (nada de codigo/simbolos). A
+// palavra aparece desorganizada e cada letra trava no seu lugar num tempo
+// levemente aleatorio, dando a sensacao de se organizar. Layout estavel (uma
+// copia invisivel reserva o espaco final, o texto embaralhado fica por cima),
+// entao nada reflui. Texto final sempre no DOM (sr-only) pra SEO.
+const GLYPHS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 interface ScrambleProps {
   text: string;
@@ -32,6 +33,11 @@ const Scramble = ({ text, as: Tag = "span", className, delay = 0, duration = 900
     let interval: ReturnType<typeof setInterval> | undefined;
     const run = () => {
       const t0 = performance.now() + delay;
+      const len = text.length;
+      // cada letra trava num ponto proprio: leve vies esquerda-pra-direita com
+      // jitter, entao a palavra parece se organizar em vez de um wipe reto.
+      const lock: number[] = [];
+      for (let i = 0; i < len; i += 1) lock.push(Math.min(0.985, (i / len) * 0.55 + Math.random() * 0.5));
       interval = setInterval(() => {
         const p = (performance.now() - t0) / duration;
         if (p >= 1) {
@@ -40,12 +46,11 @@ const Scramble = ({ text, as: Tag = "span", className, delay = 0, duration = 900
           return;
         }
         if (p < 0) return;
-        const settled = p * text.length;
         let out = "";
-        for (let i = 0; i < text.length; i += 1) {
+        for (let i = 0; i < len; i += 1) {
           const ch = text[i];
           if (ch === " " || ch === "\n") out += ch;
-          else if (i < settled) out += ch;
+          else if (p >= lock[i]) out += ch;
           else out += GLYPHS[(Math.random() * GLYPHS.length) | 0];
         }
         setDisplay(out);
