@@ -18,16 +18,11 @@ const fragmentShader = /* glsl */ `
   uniform float uNormalScale;
   uniform float uThreshold;
 
-  float lind(float d) {
-    float z = d * 2.0 - 1.0;
-    return (2.0 * uCamNear * uCamFar) / (uCamFar + uCamNear - z * (uCamFar - uCamNear));
-  }
-
   void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth, out vec4 outputColor) {
     // ---- debug ----
     if (uDebug > 1.5) {
-      float dv = clamp((lind(depth) - uCamNear) / 8.0, 0.0, 1.0);
-      outputColor = vec4(vec3(1.0 - dv), 1.0);
+      float ld = texture2D(uNormalBuffer, uv).a;
+      outputColor = vec4(vec3(1.0 - clamp(ld / 8.0, 0.0, 1.0)), 1.0);
       return;
     }
     if (uDebug > 0.5) {
@@ -35,30 +30,21 @@ const fragmentShader = /* glsl */ `
       return;
     }
 
-    // ---- Sobel 3x3 ----
+    // ---- Sobel 3x3 no buffer float (rgb = normais, a = profundidade linear) ----
     vec2 o = uTexel * uOutlineThickness;
-    float d0 = lind(texture2D(depthBuffer, uv + o * vec2(-1.0, -1.0)).r);
-    float d1 = lind(texture2D(depthBuffer, uv + o * vec2( 0.0, -1.0)).r);
-    float d2 = lind(texture2D(depthBuffer, uv + o * vec2( 1.0, -1.0)).r);
-    float d3 = lind(texture2D(depthBuffer, uv + o * vec2(-1.0,  0.0)).r);
-    float d5 = lind(texture2D(depthBuffer, uv + o * vec2( 1.0,  0.0)).r);
-    float d6 = lind(texture2D(depthBuffer, uv + o * vec2(-1.0,  1.0)).r);
-    float d7 = lind(texture2D(depthBuffer, uv + o * vec2( 0.0,  1.0)).r);
-    float d8 = lind(texture2D(depthBuffer, uv + o * vec2( 1.0,  1.0)).r);
-    float gdx = (d2 + 2.0 * d5 + d8) - (d0 + 2.0 * d3 + d6);
-    float gdy = (d6 + 2.0 * d7 + d8) - (d0 + 2.0 * d1 + d2);
+    vec4 s0 = texture2D(uNormalBuffer, uv + o * vec2(-1.0, -1.0));
+    vec4 s1 = texture2D(uNormalBuffer, uv + o * vec2( 0.0, -1.0));
+    vec4 s2 = texture2D(uNormalBuffer, uv + o * vec2( 1.0, -1.0));
+    vec4 s3 = texture2D(uNormalBuffer, uv + o * vec2(-1.0,  0.0));
+    vec4 s5 = texture2D(uNormalBuffer, uv + o * vec2( 1.0,  0.0));
+    vec4 s6 = texture2D(uNormalBuffer, uv + o * vec2(-1.0,  1.0));
+    vec4 s7 = texture2D(uNormalBuffer, uv + o * vec2( 0.0,  1.0));
+    vec4 s8 = texture2D(uNormalBuffer, uv + o * vec2( 1.0,  1.0));
+    float gdx = (s2.a + 2.0 * s5.a + s8.a) - (s0.a + 2.0 * s3.a + s6.a);
+    float gdy = (s6.a + 2.0 * s7.a + s8.a) - (s0.a + 2.0 * s1.a + s2.a);
     float edgeDepth = length(vec2(gdx, gdy));
-
-    vec3 n0 = texture2D(uNormalBuffer, uv + o * vec2(-1.0, -1.0)).rgb;
-    vec3 n1 = texture2D(uNormalBuffer, uv + o * vec2( 0.0, -1.0)).rgb;
-    vec3 n2 = texture2D(uNormalBuffer, uv + o * vec2( 1.0, -1.0)).rgb;
-    vec3 n3 = texture2D(uNormalBuffer, uv + o * vec2(-1.0,  0.0)).rgb;
-    vec3 n5 = texture2D(uNormalBuffer, uv + o * vec2( 1.0,  0.0)).rgb;
-    vec3 n6 = texture2D(uNormalBuffer, uv + o * vec2(-1.0,  1.0)).rgb;
-    vec3 n7 = texture2D(uNormalBuffer, uv + o * vec2( 0.0,  1.0)).rgb;
-    vec3 n8 = texture2D(uNormalBuffer, uv + o * vec2( 1.0,  1.0)).rgb;
-    vec3 gnx = (n2 + 2.0 * n5 + n8) - (n0 + 2.0 * n3 + n6);
-    vec3 gny = (n6 + 2.0 * n7 + n8) - (n0 + 2.0 * n1 + n2);
+    vec3 gnx = (s2.rgb + 2.0 * s5.rgb + s8.rgb) - (s0.rgb + 2.0 * s3.rgb + s6.rgb);
+    vec3 gny = (s6.rgb + 2.0 * s7.rgb + s8.rgb) - (s0.rgb + 2.0 * s1.rgb + s2.rgb);
     float edgeNormal = length(gnx) + length(gny);
 
     float e = edgeDepth * uDepthScale + edgeNormal * uNormalScale;

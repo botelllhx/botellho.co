@@ -5,7 +5,8 @@ import * as THREE from "three";
 //   dá os contornos INTERNOS.
 // - Blinn-Phong embutido: onde o specular passa do limite, joga BRANCO, pra o
 //   Sobel contornar o brilho (specular moebius).
-// - Alfa = difuso (luminância), usado depois pra modular a densidade da hachura.
+// - Alfa = PROFUNDIDADE LINEAR (view-Z) em float -> o Sobel nela dá os contornos
+//   EXTERNOS sem o banding do depth buffer do composer.
 const vertexShader = /* glsl */ `
   varying vec3 vNormalView;
   varying vec3 vViewPos;
@@ -29,10 +30,10 @@ const fragmentShader = /* glsl */ `
     vec3 L = normalize((viewMatrix * vec4(uLightDirWorld, 0.0)).xyz);
     vec3 H = normalize(L + V);
     float spec = pow(max(dot(N, H), 0.0), uShininess);
-    float diff = max(dot(N, L), 0.0);
     vec3 col = N * 0.5 + 0.5;
     if (spec > uSpecThreshold) col = vec3(1.0);
-    gl_FragColor = vec4(col, diff);
+    // alfa = profundidade linear (distancia positiva ate a camera)
+    gl_FragColor = vec4(col, -vViewPos.z);
   }
 `;
 
