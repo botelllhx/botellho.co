@@ -581,7 +581,9 @@
   z-index: 100;
   background: hsl(var(--phosphor));
   color: hsl(var(--paper));
-  font-family: var(--font-mono);
+  font-family: var(--font-bitmap);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
   overflow: hidden;
   transform: translateY(0);
 }
@@ -605,28 +607,12 @@
   );
 }
 
-.boot__ban {
-  position: relative;
-  width: 108px;
-  height: 108px;
-  flex: none;
-}
-
+/* Ban horizontal (marca) revelando da esquerda pra direita, tipo impressao */
 .boot__ban-img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
   image-rendering: pixelated;
-}
-
-/* A scanline que "acorda" o Ban */
-.boot__scan {
-  position: absolute;
-  left: -6%;
-  width: 112%;
-  height: 2px;
-  background: hsl(var(--paper));
-  box-shadow: 0 0 10px hsl(var(--paper));
 }
 
 /* Cada linha do log entra com um reveal curto */

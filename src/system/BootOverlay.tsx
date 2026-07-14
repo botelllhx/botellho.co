@@ -17,7 +17,7 @@ const LINHAS = [
 ];
 
 const CELLS = 24;
-const BOOT_MS = 1900;
+const BOOT_MS = 3000;
 
 const BootOverlay = () => {
   const [visible, setVisible] = useState(false);
@@ -34,17 +34,17 @@ const BootOverlay = () => {
     booted = true;
     setVisible(true);
 
-    const lineTimer = setInterval(() => setLinhas((n) => Math.min(n + 1, LINHAS.length)), 230);
+    const lineTimer = setInterval(() => setLinhas((n) => Math.min(n + 1, LINHAS.length)), 420);
     const start = performance.now();
     const progTimer = setInterval(() => {
       const t = Math.min((performance.now() - start) / BOOT_MS, 1);
       setProg(Math.floor(t * CELLS));
       if (t >= 1) clearInterval(progTimer);
-    }, 55);
+    }, 60);
 
-    const done = setTimeout(() => setPronto(true), BOOT_MS + 120);
-    const sair = setTimeout(() => setOff(true), BOOT_MS + 520);
-    const remove = setTimeout(() => setVisible(false), BOOT_MS + 520 + 580);
+    const done = setTimeout(() => setPronto(true), BOOT_MS + 300);
+    const sair = setTimeout(() => setOff(true), BOOT_MS + 1050);
+    const remove = setTimeout(() => setVisible(false), BOOT_MS + 1050 + 600);
 
     return () => {
       clearInterval(lineTimer);
@@ -65,24 +65,24 @@ const BootOverlay = () => {
       <div className="boot__scanlines" />
 
       <div className="relative mx-auto flex h-full max-w-xl flex-col justify-center gap-9 px-6">
-        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.22em] text-paper/60">
+        <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-paper/60">
           <span>botellho microsystems</span>
           <span>bios v2.6</span>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="boot__ban">
+        <div>
+          {/* Ban horizontal (marca) sendo "impresso" da esquerda pra direita */}
+          <div className="h-24 w-full max-w-sm">
             <img
-              src="/ban/ban-1.png"
+              src="/ban/ban-mark.png"
               alt=""
               className="boot__ban-img invert"
-              style={{ clipPath: `inset(0 0 ${Math.max(0, (1 - frac) * 100)}% 0)` }}
+              style={{ clipPath: `inset(0 ${Math.max(0, (1 - frac) * 100)}% 0 0)` }}
             />
-            <span className="boot__scan" style={{ top: `${Math.min(100, frac * 100)}%` }} />
           </div>
-          <div className="leading-none">
-            <span className="font-display text-4xl">botellho<span className="text-paper/50">▪</span></span>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-paper/60">estúdio de web e experiências</p>
+          <div className="mt-5 leading-none">
+            <span className="text-4xl md:text-5xl">botellho<span className="text-paper/50">▪</span></span>
+            <p className="mt-3 text-xs uppercase tracking-[0.22em] text-paper/60">estúdio de web e experiências</p>
           </div>
         </div>
 
