@@ -73,17 +73,21 @@ const DioramaScene = () => {
 
   useFrame(() => {
     const p = scroll.current;
-    const target = new THREE.Vector3(-4 + p * 2.6 + pointer.current.x * 0.9, 2 - p * 0.9 + pointer.current.y * 0.6, 8 - p * 4);
+    // Enquadramento tipo casa de bonecas (olha de cima pra dentro do quarto),
+    // com dolly pra dentro no scroll e parallax de cursor.
+    const target = new THREE.Vector3(-3 + p * 1.8 + pointer.current.x * 1, 3.4 - p * 1.2 + pointer.current.y * 0.7, 7.5 - p * 2.6);
     camera.position.lerp(target, 0.06);
-    camera.lookAt(0.2 + pointer.current.x * 0.4, 0.2, -0.6);
+    camera.lookAt(0.3 + pointer.current.x * 0.4, 0.4, -0.4);
   });
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[-4, 6, 5]} intensity={3} />
-      <directionalLight position={[5, 2, -1]} intensity={1.6} />
-      <pointLight position={[-1, 1.4, 0]} intensity={16} distance={8} color="#4a6bd8" />
+      <ambientLight intensity={0.85} />
+      <directionalLight position={[-4, 7, 6]} intensity={4.2} />
+      <directionalLight position={[6, 3, 1]} intensity={2.4} />
+      <directionalLight position={[2, 4, 6]} intensity={1.8} />
+      {/* acento phosphor discreto vindo da tela do monitor */}
+      <pointLight position={[-1.1, 1.6, -1]} intensity={12} distance={6} color="#2a4bd8" />
 
       {/* Sala em corte: chao + parede de fundo + parede lateral */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
@@ -117,12 +121,12 @@ const DioramaScene = () => {
       <Chair />
       <Plant />
 
-      {/* Tapete + o Ban vivendo na cena */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.4, 0.02, 1.6]}>
-        <planeGeometry args={[4, 2.6]} />
-        <meshStandardMaterial color="#565656" roughness={0.98} />
+      {/* Tapete + o Ban vivendo na cena, maior e mais a frente */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.8, 0.03, 2.2]}>
+        <planeGeometry args={[4.6, 3] as [number, number]} />
+        <meshStandardMaterial color="#4a4a4a" roughness={0.98} />
       </mesh>
-      <BanModel position={[1.4, 0.5, 1.7]} scale={0.5} />
+      <BanModel position={[1.8, 0.7, 2.3]} scale={0.72} />
     </>
   );
 };

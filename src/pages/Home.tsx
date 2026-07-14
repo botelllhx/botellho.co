@@ -1,7 +1,6 @@
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
-import SignalText from "@/motion/SignalText";
 import Reveal from "@/motion/Reveal";
 import Parallax from "@/motion/Parallax";
 import CountUp from "@/motion/CountUp";
@@ -65,44 +64,55 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== Hero (split; texto fora da tela) ===== */}
-      <section className="px-4 pt-10 md:px-6 md:pt-14">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
-          <div>
-            <span className="type-label flex items-center gap-2 text-muted-foreground">
-              <span className="text-phosphor">▚</span> Estúdio de web e experiências digitais
+      {/* ===== Hero full-width, fundo preto, texto fora da tela ===== */}
+      <section className="dark bg-background text-foreground">
+        <div className="flex min-h-[calc(100svh-var(--bar-h))] flex-col justify-between px-4 py-8 md:px-6 md:py-10">
+          <div className="flex items-center justify-between">
+            <span className="type-label flex items-center gap-2 text-foreground/60">
+              <span className="text-phosphor">▪</span> estúdio de web e experiências digitais
             </span>
-            <h1 className="type-tese mt-5 max-w-2xl">
-              <LineReveal as="span" className="block">Web que se move.</LineReveal>
-              <span className="block text-phosphor"><SignalText text="Experiências digitais" delay={400} /></span>
-              <LineReveal as="span" className="block" delay={0.14}>feitas para durar na memória.</LineReveal>
-            </h1>
-            <p className="mt-7 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
-              Craft de nível de prêmio em web e WebGL, para marcas, cultura e
-              instituições que tratam o digital como experiência, não como folheto.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
-              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
-            </div>
+            <span className="type-label hidden text-foreground/40 md:block">belo horizonte, br</span>
           </div>
 
-          <Parallax amount={6}>
-            <Window title="ban.exe" phosphor bodyClassName="!p-0">
-              <div className="crt-frame aspect-[4/3] w-full !rounded-none border-0" data-cursor="3d">
+          <div className="grid items-center gap-8 py-8 lg:grid-cols-[1fr_0.92fr] lg:gap-12">
+            <div>
+              <h1 className="type-tese">
+                <LineReveal as="span" className="block">Web que se move.</LineReveal>
+                <LineReveal as="span" className="block" delay={0.1}>
+                  Experiências <span className="font-serif italic font-normal">digitais</span>
+                </LineReveal>
+                <LineReveal as="span" className="block" delay={0.2}>feitas para durar.</LineReveal>
+              </h1>
+              <p className="mt-8 max-w-md font-sans text-base leading-relaxed text-foreground/70">
+                Craft de nível de prêmio em web e WebGL, para marcas, cultura e
+                instituições que tratam o digital como experiência.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+                <Link to="/trabalhos" className="cmd-button-ghost !border-paper/40 !text-paper">Ver trabalhos</Link>
+              </div>
+            </div>
+
+            <Parallax amount={5}>
+              <div className="crt-frame aspect-[4/3] w-full" data-cursor="3d">
                 <SignatureCanvas
                   className="absolute inset-0"
-                  crt={0.5}
-                  camera={{ fov: 42, position: [-4, 2, 8] }}
+                  crt={0.55}
+                  camera={{ fov: 42, position: [-3, 3.4, 7.5] }}
                   fallback={<img src="/hero-fallback.png" alt="O estúdio do Ban, em bitmap" className="h-full w-full object-cover" style={{ imageRendering: "pixelated" }} />}
                 >
                   <DioramaScene />
                 </SignatureCanvas>
-                <div className="crt-frame__glass !rounded-none" />
+                <div className="crt-frame__glass" />
                 <span className="crt-frame__tag type-label">estúdio // ao vivo</span>
               </div>
-            </Window>
-          </Parallax>
+            </Parallax>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <img src="/ban/ban-mark.png" alt="Ban" className="h-7 w-12 object-contain invert md:h-9 md:w-16" style={{ imageRendering: "pixelated" }} />
+            <span className="type-label text-foreground/40">role para explorar ↓</span>
+          </div>
         </div>
       </section>
 
