@@ -22,10 +22,10 @@ const Contact = () => {
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== Titulo (branco) ===== */}
-      <section className="bg-background px-4 pt-16 md:px-6 md:pt-24">
+      {/* ===== Titulo (branco), full width ===== */}
+      <section className="bg-background px-4 pb-16 pt-16 md:px-6 md:pb-24 md:pt-24">
         <Typing text="> vamos conversar sobre seu projeto" className="type-label text-muted-foreground" />
-        <Scramble as="h1" text="Conte o que você quer construir." className="type-tese mt-8 max-w-4xl" />
+        <Scramble as="h1" text="Conte o que você quer construir." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Institucional, experiência 3D, marca, evento ou parceria de
           desenvolvimento: quanto mais específico, melhor a nossa resposta.

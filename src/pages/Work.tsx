@@ -35,9 +35,9 @@ const Work = () => {
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      <section className="px-4 pt-16 md:px-6 md:pt-24">
+      <section className="px-4 pb-8 pt-16 md:px-6 md:pt-24">
         <Typing text="> listando trabalhos" className="type-label text-muted-foreground" />
-        <Scramble as="h1" text="O arquivo do estúdio." className="type-tese mt-8 max-w-4xl" />
+        <Scramble as="h1" text="O arquivo do estúdio." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Do institucional ao imersivo, a mesma régua de craft. Cada bloco é um
           case com contexto, conceito, abordagem e resultado.

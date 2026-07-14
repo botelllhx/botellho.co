@@ -58,7 +58,7 @@ const WorkCase = () => {
       {/* ===== A · Abertura cinematografica (azul) ===== */}
       <section className="bg-phosphor px-4 pb-16 pt-16 text-paper md:px-6 md:pb-24 md:pt-24">
         <Typing text={`> abrindo /trabalhos/${project.slug}`} className="type-label text-paper/60" />
-        <Scramble as="h1" text={project.title} className="type-tese mt-8 max-w-5xl" />
+        <Scramble as="h1" text={project.title} className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
         <div className="mt-10 grid gap-4 border-y border-paper/25 py-4 font-mono text-xs uppercase tracking-widest text-paper/70 md:grid-cols-3">
           <span>categoria · {project.category || "projeto"}</span>
           <span>status · publicado</span>
