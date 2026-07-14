@@ -16,6 +16,7 @@ const fragmentShader = /* glsl */ `
   uniform float uOutlineThickness;
   uniform float uDepthScale;
   uniform float uNormalScale;
+  uniform float uThreshold;
 
   float lind(float d) {
     float z = d * 2.0 - 1.0;
@@ -60,7 +61,9 @@ const fragmentShader = /* glsl */ `
     vec3 gny = (n6 + 2.0 * n7 + n8) - (n0 + 2.0 * n1 + n2);
     float edgeNormal = length(gnx) + length(gny);
 
-    float outline = clamp(edgeDepth * uDepthScale + edgeNormal * uNormalScale, 0.0, 1.0);
+    float e = edgeDepth * uDepthScale + edgeNormal * uNormalScale;
+    // so vira linha em descontinuidade real (limiar), nao na inclinacao suave
+    float outline = smoothstep(uThreshold, uThreshold + 0.8, e);
     // nao contorna o vazio (plano de fundo)
     if (depth > 0.999) outline = 0.0;
 
@@ -76,6 +79,7 @@ export interface MoebiusOptions {
   outlineThickness?: number;
   depthScale?: number;
   normalScale?: number;
+  threshold?: number;
 }
 
 export class MoebiusEffect extends Effect {
@@ -96,6 +100,7 @@ export class MoebiusEffect extends Effect {
         ["uOutlineThickness", new THREE.Uniform(opts.outlineThickness ?? 1.0)],
         ["uDepthScale", new THREE.Uniform(opts.depthScale ?? 25.0)],
         ["uNormalScale", new THREE.Uniform(opts.normalScale ?? 1.0)],
+        ["uThreshold", new THREE.Uniform(opts.threshold ?? 1.2)],
       ]),
     });
 
@@ -138,6 +143,7 @@ export class MoebiusEffect extends Effect {
   set outlineThickness(v: number) { (this.uniforms.get("uOutlineThickness") as THREE.Uniform).value = v; }
   set depthScale(v: number) { (this.uniforms.get("uDepthScale") as THREE.Uniform).value = v; }
   set normalScale(v: number) { (this.uniforms.get("uNormalScale") as THREE.Uniform).value = v; }
+  set threshold(v: number) { (this.uniforms.get("uThreshold") as THREE.Uniform).value = v; }
 
   dispose() {
     this.normalRT.dispose();
