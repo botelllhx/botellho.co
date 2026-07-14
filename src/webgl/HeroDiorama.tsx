@@ -34,6 +34,10 @@ const Diorama = () => {
         mat.emissiveIntensity = 1.3;
         mat.toneMapped = false;
       }
+      // quadros: unlit (imagem cheia) — sao "conteudo" e ficam fora da hachura
+      if (mat && (mat.name === "QuadroVert" || mat.name === "QuadroHoriz")) {
+        m.material = new THREE.MeshBasicMaterial({ map: mat.map, toneMapped: false });
+      }
     });
   }, [scene]);
 
