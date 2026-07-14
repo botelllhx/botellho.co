@@ -7,18 +7,27 @@ interface WindowProps {
   className?: string;
   /** janela arrastavel pela barra de titulo (desktop) */
   draggable?: boolean;
+  /** limita o arrasto ao ancestral com data-window-bounds */
+  bounded?: boolean;
   children: ReactNode;
 }
 
-// Janela DOS (window chrome), arrastavel pela barra de titulo. Sem isso o
-// conceito de janela nao se sustenta (brand guide / direcao v3).
-const Window = ({ title, phosphor, bodyClassName, className, draggable = true, children }: WindowProps) => {
+// Janela DOS (window chrome), arrastavel pela barra de titulo. Com bounded, o
+// arrasto fica preso a area (o ancestral com data-window-bounds), pra nao
+// escapar da sessao. Sem isso o conceito de janela nao se sustenta.
+const Window = ({ title, phosphor, bodyClassName, className, draggable = true, bounded = false, children }: WindowProps) => {
+  const root = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
-  const drag = useRef<{ px: number; py: number; ox: number; oy: number } | null>(null);
+  const drag = useRef<{ px: number; py: number; ox: number; oy: number; minX: number; maxX: number; minY: number; maxY: number } | null>(null);
 
   const onMove = useCallback((e: MouseEvent) => {
-    if (!drag.current) return;
-    setPos({ x: drag.current.ox + (e.clientX - drag.current.px), y: drag.current.oy + (e.clientY - drag.current.py) });
+    const d = drag.current;
+    if (!d) return;
+    let nx = d.ox + (e.clientX - d.px);
+    let ny = d.oy + (e.clientY - d.py);
+    nx = Math.max(d.minX, Math.min(d.maxX, nx));
+    ny = Math.max(d.minY, Math.min(d.maxY, ny));
+    setPos({ x: nx, y: ny });
   }, []);
   const onUp = useCallback(() => {
     drag.current = null;
@@ -36,12 +45,28 @@ const Window = ({ title, phosphor, bodyClassName, className, draggable = true, c
 
   const onBarDown = (e: React.MouseEvent) => {
     if (!draggable || window.matchMedia("(pointer: coarse)").matches) return;
-    drag.current = { px: e.clientX, py: e.clientY, ox: pos.x, oy: pos.y };
+    const el = root.current;
+    let minX = -Infinity;
+    let maxX = Infinity;
+    let minY = -Infinity;
+    let maxY = Infinity;
+    const container = bounded && el ? el.closest("[data-window-bounds]") : null;
+    if (container && el) {
+      const br = container.getBoundingClientRect();
+      const wr = el.getBoundingClientRect();
+      const baseLeft = wr.left - pos.x;
+      const baseTop = wr.top - pos.y;
+      minX = br.left - baseLeft;
+      maxX = br.right - wr.width - baseLeft;
+      minY = br.top - baseTop;
+      maxY = br.bottom - wr.height - baseTop;
+    }
+    drag.current = { px: e.clientX, py: e.clientY, ox: pos.x, oy: pos.y, minX, maxX, minY, maxY };
     document.body.style.userSelect = "none";
   };
 
   return (
-    <div className={`win ${className ?? ""}`} style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}>
+    <div ref={root} className={`win ${className ?? ""}`} style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}>
       <div
         className={`win__bar ${phosphor ? "win__bar--phosphor" : ""} ${draggable ? "win__bar--drag" : ""}`}
         onMouseDown={onBarDown}

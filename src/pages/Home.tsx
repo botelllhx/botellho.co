@@ -6,6 +6,9 @@ import Reveal from "@/motion/Reveal";
 import Window from "@/system/Window";
 import ContactForm from "@/system/ContactForm";
 import ProjectMedia from "@/system/ProjectMedia";
+import ScatterField from "@/system/ScatterField";
+import GifList from "@/system/GifList";
+import RetroDesktop from "@/system/RetroDesktop";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
 const SERVICOS = [
@@ -16,7 +19,18 @@ const SERVICOS = [
   { n: "05", nome: "Parceria white-label", img: "/ban/ban-1.png", desc: "Construímos o front e as interações que outros estúdios desenham." },
 ];
 
-const SETORES = ["Marcas", "Cultura e instituições", "Eventos e lançamentos", "Produto digital", "Educação"];
+const SETORES = [
+  "Marcas e lançamentos",
+  "Cultura e instituições",
+  "Educação",
+  "Produto digital",
+  "Ecommerce e varejo",
+  "Eventos e experiências",
+  "Editorial e conteúdo",
+  "Tecnologia e startups",
+  "Imobiliário e arquitetura",
+  "Saúde e bem-estar",
+];
 
 const Home = () => {
   const { projects } = useLoaderData() as WorksLoaderData;
@@ -76,7 +90,7 @@ const Home = () => {
         <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
           <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
             <span>manifesto</span>
-            <span className="normal-case tracking-normal">02 / 06</span>
+            <span className="normal-case tracking-normal">02 / 08</span>
           </div>
 
           <div className="flex flex-1 items-center py-14">
@@ -160,37 +174,49 @@ craft = engenharia
           </div>
         </section>
 
-        {/* ===== 5 · Prova / setores (branco; split sticky) ===== */}
+        {/* ===== 5 · Campo de blocos (branco, blocos azuis, >100vh) ===== */}
+        <ScatterField />
+
+        {/* ===== 6 · Regras da casa (azul; lista gigante centralizada com gif no hover) ===== */}
+        <GifList />
+
+        {/* ===== 7 · Prova / atuacoes (branco; split sticky, leque aberto) ===== */}
         <section className="bg-background px-4 py-20 md:px-6 md:py-28">
           <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
             <div className="md:sticky md:top-24 md:self-start">
               <span className="type-label text-muted-foreground">por que confiar</span>
-              <Scramble as="h2" text="Entendemos o setor cultural por dentro." className="type-title mt-5" />
+              <Scramble as="h2" text="A mesma régua de craft em qualquer setor." className="type-title mt-5" />
               <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
-                Leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.
+                Do institucional ao experimental, cada projeto recebe a mesma
+                exigência técnica e visual. O setor muda, a régua não.
               </p>
             </div>
             <ul className="border-t border-foreground/15">
               {SETORES.map((setor, i) => (
-                <Reveal as="li" key={setor} className="dir-row flex items-baseline gap-4 border-b border-foreground/15 px-2 py-6 md:px-4">
+                <Reveal as="li" key={setor} className="dir-row flex items-baseline gap-4 border-b border-foreground/15 px-2 py-5 md:px-4">
                   <span className="font-mono text-xs text-phosphor">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-3xl md:text-4xl">{setor}</span>
+                  <span className="font-display text-2xl md:text-4xl">{setor}</span>
                 </Reveal>
               ))}
             </ul>
           </div>
         </section>
 
-        {/* ===== 6 · Contato embutido (azul; janela arrastavel) ===== */}
-        <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
-          <div className="mx-auto max-w-3xl">
-            <Window title="começar um projeto" draggable className="text-foreground">
+        {/* ===== 8 · Contato (azul; desktop retro, janela arrastavel presa a area) ===== */}
+        <section className="bg-phosphor px-4 py-16 text-paper md:px-6 md:py-24">
+          <div className="mb-8 flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+            <span>contato</span>
+            <span className="normal-case tracking-normal">08 / 08</span>
+          </div>
+          <RetroDesktop>
+            <Window title="começar_um_projeto.exe" phosphor draggable bounded className="w-full max-w-xl text-foreground">
               <p className="mb-8 font-sans text-base text-muted-foreground">
-                Conte o que você quer construir. Quanto mais específico, melhor a nossa resposta. Arraste a janela se quiser.
+                Conte o que você quer construir. Quanto mais específico, melhor a
+                nossa resposta. Arraste a janela pela barra se quiser.
               </p>
               <ContactForm />
             </Window>
-          </div>
+          </RetroDesktop>
         </section>
       </div>
     </>
