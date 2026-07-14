@@ -57,7 +57,7 @@ const SiteFooter = () => {
 
       <div className="mt-8 flex flex-col gap-2 px-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
         <span>© 2026 botellho. Todos os direitos reservados.</span>
-        <span>feito em belo horizonte · <span className="text-phosphor">fósforo azul</span></span>
+        <span>feito em belo horizonte</span>
       </div>
     </footer>
   );

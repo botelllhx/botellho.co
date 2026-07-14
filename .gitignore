@@ -28,3 +28,6 @@ assets/ban-source
 *.njsproj
 *.sln
 *.sw?
+
+# Modelos 3D brutos (grandes; os otimizados ficam em public/3d)
+assets/3d-source

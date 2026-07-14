@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { mkdirSync } from "fs";
 
 const PHOSPHOR = [11, 44, 162]; // #0b2ca2
-const SRC = "assets/ban-source";
+const SRC = "public/ban";
 const OUT = "public/ban";
 const WIDTH = 480; // resolucao do dither; o display sobe com pixelated
 
