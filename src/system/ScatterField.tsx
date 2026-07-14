@@ -5,15 +5,17 @@ import { prefersReducedMotion } from "@/motion/prefs";
 // de DVD antigo. Cada frase deriva pelo palco, bate nas bordas trocando de cor
 // (azul <-> preto) e colide com as outras se empurrando. Fundo branco, entao as
 // duas cores aparecem. Mobile e reduced-motion: lista estatica, legivel.
+// Afirmativo: o METODO, o que a gente faz e entrega. As recusas bem-humoradas
+// (o que a gente NAO faz) ficam na secao "regras da casa", pra nao repetir.
 const FRASES = [
   "a gente escreve o próprio código",
   "3d que roda em qualquer máquina",
-  "design acessível de verdade",
-  "performance é parte do craft",
+  "design que passa no acessível",
+  "performance faz parte do craft",
   "arte e engenharia na mesma mesa",
+  "protótipo navegável antes do código",
   "entrega no prazo combinado",
-  "detalhe que ninguém pediu",
-  "sem tema pronto, sem atalho",
+  "acompanhamento depois do lançamento",
 ];
 
 const INK = "hsl(var(--foreground))";

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const NAV = [
-  { n: "01", to: "/estudio", label: "Estúdio" },
-  { n: "02", to: "/trabalhos", label: "Trabalhos" },
-  { n: "03", to: "/laboratorio", label: "Laboratório" },
-  { n: "04", to: "/contato", label: "Contato" },
+  { n: "01", to: "/", label: "Início" },
+  { n: "02", to: "/estudio", label: "Estúdio" },
+  { n: "03", to: "/trabalhos", label: "Trabalhos" },
+  { n: "04", to: "/laboratorio", label: "Laboratório" },
+  { n: "05", to: "/contato", label: "Contato" },
 ];
 
 const CommandBar = () => {
@@ -24,6 +25,7 @@ const CommandBar = () => {
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.to === "/"}
                 className={({ isActive }) =>
                   `flex items-center gap-1.5 px-3 py-1.5 font-mono text-xs tracking-wider transition-colors duration-[180ms] ${
                     isActive ? "bg-phosphor text-paper" : "text-foreground/70 hover:bg-foreground hover:text-background"
@@ -65,10 +67,11 @@ const CommandBar = () => {
         <div className="fixed inset-0 z-40 bg-background pt-[var(--bar-h)] md:hidden">
           <nav className="flex h-full flex-col justify-center gap-2 px-6" aria-label="principal móvel">
             <span className="type-label mb-4 text-muted-foreground">Navegar</span>
-            {[{ n: "00", to: "/", label: "Início" }, ...NAV].map((item) => (
+            {NAV.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.to === "/"}
                 onClick={() => setOpen(false)}
                 className="type-title flex items-baseline gap-3 py-2 text-foreground transition-colors hover:text-phosphor"
               >
