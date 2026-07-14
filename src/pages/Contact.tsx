@@ -2,9 +2,10 @@ import { Head } from "vite-react-ssg";
 import Typing from "@/motion/Typing";
 import Scramble from "@/motion/Scramble";
 import Window from "@/system/Window";
+import RetroDesktop from "@/system/RetroDesktop";
 import ContactForm from "@/system/ContactForm";
 
-// /contato: um programa de contato enquadrado como janela retro.
+// /contato: mesmo ambiente de desktop retro da home, precedido por um titulo.
 const Contact = () => {
   return (
     <>
@@ -21,6 +22,7 @@ const Contact = () => {
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
+      {/* ===== Titulo (branco) ===== */}
       <section className="bg-background px-4 pt-16 md:px-6 md:pt-24">
         <Typing text="> vamos conversar sobre seu projeto" className="type-label text-muted-foreground" />
         <Scramble as="h1" text="Conte o que você quer construir." className="type-tese mt-8 max-w-4xl" />
@@ -30,10 +32,17 @@ const Contact = () => {
         </p>
       </section>
 
+      {/* ===== Desktop retro com a janela arrastavel (igual a home) ===== */}
       <section className="bg-phosphor px-4 py-16 text-paper md:px-6 md:py-24">
-        <Window title="contato.exe" phosphor draggable={false} className="mx-auto max-w-3xl text-foreground">
-          <ContactForm />
-        </Window>
+        <RetroDesktop>
+          <Window title="começar_um_projeto.exe" phosphor draggable bounded className="w-full max-w-2xl text-foreground">
+            <p className="mb-8 font-sans text-base text-muted-foreground">
+              Conte o que você quer construir. Quanto mais específico, melhor a
+              nossa resposta. Arraste a janela pela barra se quiser.
+            </p>
+            <ContactForm />
+          </Window>
+        </RetroDesktop>
       </section>
     </>
   );
