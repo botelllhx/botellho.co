@@ -123,18 +123,21 @@ const Studio = () => {
           </ol>
         </section>
 
-        {/* ===== 5 · No que a gente acredita (branco): imagem gigante + texto, a la basement people ===== */}
-        <section className="bg-background px-4 py-20 md:px-6 md:py-28">
+        {/* ===== 5 · No que a gente acredita (branco): imagem gigante + texto que EMPILHA (basement people) ===== */}
+        <section className="bg-background px-4 pt-20 md:px-6 md:pt-28">
           <span className="type-label text-muted-foreground">no que a gente acredita</span>
-          <div className="mt-8 border-t border-foreground/15">
+          <div className="mt-8">
             {CRENCAS.map((c) => (
-              <Reveal as="div" key={c.titulo} className="grid items-center gap-8 border-b border-foreground/15 py-12 md:grid-cols-3 md:gap-12 md:py-16">
+              <div
+                key={c.titulo}
+                className="sticky top-[var(--bar-h)] grid min-h-[calc(100svh-var(--bar-h))] items-center gap-8 border-t border-foreground/15 bg-background py-8 md:grid-cols-[1fr_1.1fr_0.9fr] md:gap-12"
+              >
                 <h3 className="font-display text-3xl leading-[0.95] md:text-5xl">{c.titulo}</h3>
                 <div className="flex aspect-[4/3] items-center justify-center border border-foreground/15 bg-paper" data-cursor="3d">
                   <img src={c.img} alt="Ban, o mascote, em bitmap" className="h-4/5 w-4/5 object-contain grayscale contrast-[1.3]" style={{ imageRendering: "pixelated" }} />
                 </div>
                 <p className="font-sans text-lg leading-relaxed text-muted-foreground md:text-xl">{c.desc}</p>
-              </Reveal>
+              </div>
             ))}
           </div>
         </section>
