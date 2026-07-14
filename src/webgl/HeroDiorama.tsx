@@ -44,7 +44,7 @@ const Diorama = () => {
 // visualizar cada buffer via leva pra aprovar antes do Sobel (Etapa 4).
 const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
   const { scene, camera } = useThree();
-  const { modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, specThreshold, shininess } = useControls("moebius", {
+  const { modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, hatchLevel, specThreshold, shininess } = useControls("moebius", {
     modo: { value: 0, options: { moebius: 0, normais: 1, profundidade: 2 } },
     outlineThickness: { value: 1.4, min: 0.3, max: 4, step: 0.1 },
     depthScale: { value: 25, min: 0, max: 80, step: 1 },
