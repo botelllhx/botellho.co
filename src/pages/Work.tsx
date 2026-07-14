@@ -3,6 +3,7 @@ import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import LineReveal from "@/motion/LineReveal";
 import Typing from "@/motion/Typing";
+import ProjectMedia from "@/system/ProjectMedia";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
 const toHex = (index: number) => `0x${(index * 74 + 74).toString(16).toUpperCase().padStart(4, "0")}`;
@@ -78,18 +79,13 @@ const Work = () => {
                   <span className="font-mono text-[11px] text-muted-foreground">{toHex(index)}</span>
                   <span className="type-label text-muted-foreground">{project.category || "projeto"}</span>
                 </div>
-                {project.cover_media_url ? (
-                  <div className="aspect-[16/10] overflow-hidden bg-muted">
-                    <img
-                      src={project.cover_media_url}
-                      alt={`Capa do projeto ${project.title}`}
-                      loading="lazy"
-                      className="h-full w-full object-cover grayscale contrast-[1.35] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100"
-                    />
-                  </div>
-                ) : (
-                  <div className="type-dos flex aspect-[16/10] items-center justify-center bg-muted text-phosphor">[sem visual]</div>
-                )}
+                <div className="aspect-[16/10] overflow-hidden bg-muted">
+                  <ProjectMedia
+                    project={project}
+                    index={index}
+                    className="h-full w-full object-cover grayscale contrast-[1.35] brightness-90 transition-[filter] duration-[320ms] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100"
+                  />
+                </div>
                 <div className="flex items-baseline justify-between px-3 py-4">
                   <h2 className="font-display text-2xl transition-colors group-hover:text-phosphor md:text-3xl">{project.title}</h2>
                   <span className="font-mono text-xs text-muted-foreground">abrir →</span>

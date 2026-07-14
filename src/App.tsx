@@ -18,7 +18,7 @@ export const routes: RouteRecord[] = [
     element: <Layout />,
     entry: "src/Layout.tsx",
     children: [
-      { index: true, Component: Home },
+      { index: true, Component: Home, loader: worksLoader },
       { path: "estudio", Component: Studio },
       { path: "trabalhos", Component: Work, loader: worksLoader },
       { path: "trabalhos/:slug", Component: WorkCase, loader: workCaseLoader },
