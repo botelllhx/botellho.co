@@ -6,6 +6,7 @@ import { useControls } from "leva";
 import * as THREE from "three";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
+import { RetroEffect } from "./RetroEffect";
 
 // Hero: o estudio-diorama do Ban. Etapa 2 (cena crua): carrega o diorama.glb,
 // camera 3/4 + luz direcional, SEM pos-processamento ainda. Full-width, ocupa a
@@ -87,10 +88,33 @@ const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
     effect.specThreshold = specThreshold;
     effect.shininess = shininess;
   }, [effect, modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, hatchLevel, specThreshold, shininess]);
-  useEffect(() => () => effect.dispose(), [effect]);
+  useEffect(() => () => effect?.dispose?.(), [effect]);
   return <primitive ref={ref} object={effect} dispose={null} />;
 });
 Moebius.displayName = "Moebius";
+
+// Passe retro/bitmap (Etapa 5): pixelizacao calibravel + Bayer 4x4 + paleta
+// 1-bit (ink/azul/branco). Roda DEPOIS do Moebius (full-res). Comece leve.
+const Retro = forwardRef<RetroEffect>((_, ref) => {
+  const { ligado, pixelSize, dither, forca, loBand, hiBand } = useControls("retro", {
+    ligado: { value: true },
+    pixelSize: { value: 2, min: 1, max: 12, step: 1 },
+    dither: { value: 0.35, min: 0, max: 1, step: 0.01 },
+    forca: { value: 1, min: 0, max: 1, step: 0.01 },
+    loBand: { value: 0.34, min: 0.05, max: 0.6, step: 0.01 },
+    hiBand: { value: 0.68, min: 0.4, max: 0.95, step: 0.01 },
+  });
+  const effect = useMemo(() => new RetroEffect(), []);
+  useEffect(() => {
+    effect.pixelSize = pixelSize;
+    effect.dither = dither;
+    effect.mix = ligado ? forca : 0;
+    effect.loBand = loBand;
+    effect.hiBand = hiBand;
+  }, [effect, ligado, pixelSize, dither, forca, loBand, hiBand]);
+  return <primitive ref={ref} object={effect} dispose={null} />;
+});
+Retro.displayName = "Retro";
 
 const HeroDiorama = () => {
   const [mounted, setMounted] = useState(false);
@@ -121,6 +145,7 @@ const HeroDiorama = () => {
           </Suspense>
           <EffectComposer>
             <Moebius />
+            <Retro />
           </EffectComposer>
         </Canvas>
       ) : null}

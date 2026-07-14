@@ -110,7 +110,9 @@ export class MoebiusEffect extends Effect {
 
   constructor(scene: THREE.Scene, camera: THREE.Camera, opts: MoebiusOptions = {}) {
     super("MoebiusEffect", fragmentShader, {
-      attributes: EffectAttribute.DEPTH,
+      // DEPTH: precisa do depth buffer. CONVOLUTION: forca passe proprio, pra o
+      // passe retro (pixelizacao) rodar DEPOIS, sobre o resultado full-res.
+      attributes: EffectAttribute.DEPTH | EffectAttribute.CONVOLUTION,
       uniforms: new Map<string, THREE.Uniform>([
         ["uNormalBuffer", new THREE.Uniform(null)],
         ["uDebug", new THREE.Uniform(opts.debug ?? 0)],
