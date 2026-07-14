@@ -2,7 +2,6 @@ import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
 import Scramble from "@/motion/Scramble";
 import Typing from "@/motion/Typing";
-import SystemDivider from "@/system/SystemDivider";
 import type { WorkCaseLoaderData } from "@/pages/workLoaders";
 
 // Case como heroi (A -> C -> B -> D), com alternancia de cor e a imagem
@@ -57,7 +56,7 @@ const WorkCase = () => {
       </Head>
 
       {/* ===== A · Abertura cinematografica (azul) ===== */}
-      <section className="bg-phosphor px-4 pt-16 text-paper md:px-6 md:pt-24">
+      <section className="bg-phosphor px-4 pb-16 pt-16 text-paper md:px-6 md:pb-24 md:pt-24">
         <Typing text={`> abrindo /trabalhos/${project.slug}`} className="type-label text-paper/60" />
         <Scramble as="h1" text={project.title} className="type-tese mt-8 max-w-5xl" />
         <div className="mt-10 grid gap-4 border-y border-paper/25 py-4 font-mono text-xs uppercase tracking-widest text-paper/70 md:grid-cols-3">
@@ -81,8 +80,6 @@ const WorkCase = () => {
         ) : null}
       </section>
 
-      <SystemDivider label="contexto" />
-
       {/* ===== C · Contexto (branco, lead grande) ===== */}
       <section className="bg-background px-4 py-20 md:px-6 md:py-28">
         <span className="type-label text-muted-foreground">contexto</span>
@@ -90,8 +87,6 @@ const WorkCase = () => {
           {project.short_description}
         </p>
       </section>
-
-      <SystemDivider label="abordagem" ban />
 
       {/* ===== B · Abordagem (azul, leitura longa) ===== */}
       <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
@@ -114,9 +109,7 @@ const WorkCase = () => {
         </div>
       </section>
 
-      <SystemDivider label="fechar" />
-
-      {/* ===== D · Fecho (paper) ===== */}
+      {/* ===== D · Fecho (branco) ===== */}
       <section className="px-4 py-16 md:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <Link to="/trabalhos" className="font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-phosphor">
