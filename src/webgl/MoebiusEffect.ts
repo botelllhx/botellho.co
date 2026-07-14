@@ -20,6 +20,7 @@ const fragmentShader = /* glsl */ `
   uniform float uWobbleFreq;
   uniform float uHatch;
   uniform float uHatchSpacing;
+  uniform float uHatchLevel;
   uniform vec3 uOutlineColor;
 
   float hash(vec2 p) {
@@ -77,9 +78,11 @@ const fragmentShader = /* glsl */ `
     if (uHatch > 0.5 && depth <= 0.99) {
       float lm = luma(inputColor.rgb);
       float sp = uHatchSpacing;
-      if (lm <= 0.45 && mod(uv.x * uResolution.y + uv.y * uResolution.x, sp) <= uOutlineThickness) col = uOutlineColor;
-      if (lm <= 0.32 && mod(uv.x * uResolution.x, sp) <= uOutlineThickness) col = uOutlineColor;
-      if (lm <= 0.20 && mod(uv.y * uResolution.y, sp) <= uOutlineThickness) col = uOutlineColor;
+      float L = uHatchLevel;
+      // so hachura em area de fato escura; mais escuro = mais camadas
+      if (lm <= L && mod(uv.x * uResolution.y + uv.y * uResolution.x, sp) <= uOutlineThickness) col = uOutlineColor;
+      if (lm <= L * 0.65 && mod(uv.x * uResolution.x, sp) <= uOutlineThickness) col = uOutlineColor;
+      if (lm <= L * 0.4 && mod(uv.y * uResolution.y, sp) <= uOutlineThickness) col = uOutlineColor;
     }
 
     col = mix(col, uOutlineColor, outline);
@@ -122,6 +125,7 @@ export class MoebiusEffect extends Effect {
         ["uWobbleFreq", new THREE.Uniform(opts.wobbleFreq ?? 0.08)],
         ["uHatch", new THREE.Uniform((opts.hatch ?? true) ? 1 : 0)],
         ["uHatchSpacing", new THREE.Uniform(8.0)],
+        ["uHatchLevel", new THREE.Uniform(0.33)],
         ["uOutlineColor", new THREE.Uniform(new THREE.Color("#0d0d10"))],
       ]),
     });
@@ -168,6 +172,7 @@ export class MoebiusEffect extends Effect {
   set wobbleFreq(v: number) { (this.uniforms.get("uWobbleFreq") as THREE.Uniform).value = v; }
   set hatch(v: boolean) { (this.uniforms.get("uHatch") as THREE.Uniform).value = v ? 1 : 0; }
   set hatchSpacing(v: number) { (this.uniforms.get("uHatchSpacing") as THREE.Uniform).value = v; }
+  set hatchLevel(v: number) { (this.uniforms.get("uHatchLevel") as THREE.Uniform).value = v; }
   set specThreshold(v: number) { this.normalMaterial.uniforms.uSpecThreshold.value = v; }
   set shininess(v: number) { this.normalMaterial.uniforms.uShininess.value = v; }
 

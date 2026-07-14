@@ -53,6 +53,7 @@ const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
     wobbleFreq: { value: 0.08, min: 0.01, max: 0.4, step: 0.01 },
     hatch: { value: true },
     hatchSpacing: { value: 8, min: 3, max: 20, step: 1 },
+    hatchLevel: { value: 0.33, min: 0.05, max: 0.7, step: 0.01 },
     specThreshold: { value: 0.25, min: 0, max: 1, step: 0.01 },
     shininess: { value: 40, min: 1, max: 200, step: 1 },
   });
@@ -66,9 +67,10 @@ const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
     effect.wobbleFreq = wobbleFreq;
     effect.hatch = hatch;
     effect.hatchSpacing = hatchSpacing;
+    effect.hatchLevel = hatchLevel;
     effect.specThreshold = specThreshold;
     effect.shininess = shininess;
-  }, [effect, modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, specThreshold, shininess]);
+  }, [effect, modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, hatchLevel, specThreshold, shininess]);
   useEffect(() => () => effect.dispose(), [effect]);
   return <primitive ref={ref} object={effect} dispose={null} />;
 });
@@ -95,9 +97,9 @@ const HeroDiorama = () => {
           }}
         >
           {/* sem shadow map: a sombra do moebius e por cross-hatch */}
-          <ambientLight intensity={0.85} />
-          <directionalLight position={[4.5, 6, 3.5]} intensity={2.4} />
-          <directionalLight position={[-4, 3, -2]} intensity={0.55} />
+          <ambientLight intensity={1.05} />
+          <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
+          <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Suspense fallback={null}>
             <Diorama />
           </Suspense>
