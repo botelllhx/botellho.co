@@ -5,6 +5,13 @@ import Reveal from "@/motion/Reveal";
 import Typing from "@/motion/Typing";
 import Window from "@/system/Window";
 
+const FAZEMOS = [
+  { nome: "sites e plataformas", desc: "Do institucional ao produto: presença digital com clareza, acessibilidade e performance, construída à mão." },
+  { nome: "experiências 3d e webgl", desc: "3D, motion e imersivo para marcas, lançamentos e exposições. A experiência é a própria mensagem." },
+  { nome: "direção de arte digital", desc: "O visual como diferencial, não como enfeite. Uma identidade que se move e se lembra." },
+  { nome: "cultura e instituições", desc: "Acervo, memória e patrimônio de um jeito que as pessoas realmente querem explorar." },
+];
+
 const PASSOS = [
   { num: "01", nome: "imersão", desc: "Entender o setor, o público e o objetivo antes de desenhar qualquer tela." },
   { num: "02", nome: "conceito", desc: "A ideia que organiza tudo: a tese que o projeto vai defender." },
@@ -13,11 +20,12 @@ const PASSOS = [
   { num: "05", nome: "no ar", desc: "Entrega medindo o que importa: performance, acessibilidade e SEO." },
 ];
 
-const VALORES = [
-  "engenharia e arte na mesma mesa",
-  "o detalhe é o produto",
-  "web aberta, rápida e acessível",
-  "no prazo combinado, sem drama",
+const COM_QUEM = [
+  "Marcas e lançamentos",
+  "Cultura e instituições",
+  "Educação",
+  "Produto digital",
+  "Estúdios parceiros (white-label)",
 ];
 
 const Studio = () => {
@@ -40,7 +48,7 @@ const Studio = () => {
             <Typing text="> estúdio" className="type-label text-muted-foreground" />
             <h1 className="type-tese mt-6">
               <Scramble as="span" text="estúdio de" className="block" onMount />
-              <Scramble as="span" text="web & experiências" className="block font-bitmap" onMount delay={160} />
+              <Scramble as="span" text="web & experiências" className="block" onMount delay={160} />
             </h1>
             <p className="mt-8 max-w-md font-sans text-lg leading-relaxed text-muted-foreground">
               botellho junta engenharia de verdade com direção de arte, do site
@@ -58,7 +66,7 @@ const Studio = () => {
         </div>
       </section>
 
-      {/* ===== 2 · Manifesto / filosofia (azul): declaracao gigante full-bleed ===== */}
+      {/* ===== 2 · Manifesto (azul): declaracao gigante full-width, como a home ===== */}
       <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
         <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
           <span>manifesto</span>
@@ -66,62 +74,75 @@ const Studio = () => {
         </div>
 
         <div className="flex flex-1 items-center py-14">
-          <div className="max-w-6xl">
-            <Scramble as="p" text="Um site pode ser tão bem construído quanto aquilo que apresenta." className="block font-display leading-[0.92] tracking-[-0.02em] text-[clamp(2.5rem,7vw,8rem)]" duration={1100} />
-            <p className="mt-10 font-bitmap leading-[1.05] text-[clamp(1.5rem,4vw,3.5rem)] text-paper/90">craft não é enfeite.</p>
-          </div>
+          <Scramble as="p" text="Um site pode ser tão bem construído quanto aquilo que ele apresenta." className="block font-display leading-[0.9] tracking-[-0.02em] text-[clamp(2.75rem,8.4vw,10rem)]" duration={1100} />
         </div>
 
         <p className="max-w-xl border-t border-paper/25 pt-6 font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
-          É o que separa o memorável do esquecível. E é a única régua que a gente
-          aplica igual, do institucional ao experimental.
+          Craft não é enfeite: é o que separa o memorável do esquecível. E é a
+          única régua que a gente aplica igual, do institucional ao experimental.
         </p>
       </section>
 
-      {/* ===== 3 · Como trabalhamos (branco): processo em 5 passos ===== */}
+      {/* ===== 3 · O que fazemos (branco): grid 2x2 a la basement ===== */}
       <section className="bg-background px-4 py-20 md:px-6 md:py-28">
-        <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
-          <div className="md:sticky md:top-24 md:self-start">
-            <span className="type-label text-muted-foreground">como trabalhamos</span>
-            <Scramble as="h2" text="Do setor à medição no ar." className="type-title mt-5" />
-            <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
-              Cinco passos, sem etapa pulada. Arte e engenharia caminham juntas o tempo todo.
-            </p>
-          </div>
-          <ol className="border-t border-foreground/15">
-            {PASSOS.map((passo) => (
-              <Reveal as="li" key={passo.num} className="grid grid-cols-[auto_1fr] items-baseline gap-5 border-b border-foreground/15 py-7 md:gap-8">
-                <span className="font-bitmap text-4xl leading-none text-phosphor md:text-6xl">{passo.num}</span>
-                <div>
-                  <h3 className="font-display text-2xl md:text-4xl">{passo.nome}</h3>
-                  <p className="mt-2 max-w-md font-sans text-sm leading-relaxed text-muted-foreground">{passo.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+        <span className="type-label text-muted-foreground">o que fazemos</span>
+        <div className="mt-10 grid gap-x-10 gap-y-14 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-x-16">
+          {FAZEMOS.map((f) => (
+            <Reveal as="div" key={f.nome}>
+              <span className="font-mono text-xs uppercase tracking-widest text-phosphor">{f.nome}</span>
+              <p className="mt-4 font-sans text-2xl font-medium leading-snug text-foreground md:text-3xl">{f.desc}</p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* ===== 4 · No que a gente acredita + fechamento (azul) ===== */}
+      {/* ===== 4 · Como trabalhamos (azul): sequencia de passos com numeros gigantes ===== */}
       <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
-        <span className="type-label text-paper/60">no que a gente acredita</span>
-        <ul className="mt-8 border-t border-paper/25">
-          {VALORES.map((v, i) => (
-            <li key={v} className="flex items-baseline gap-4 border-b border-paper/25 py-6">
-              <span className="font-mono text-xs text-paper/60">{String(i + 1).padStart(2, "0")}</span>
-              <Scramble as="span" text={v} className="font-display text-3xl leading-none md:text-5xl" />
-            </li>
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-paper/25 pb-6">
+          <Scramble as="h2" text="Do setor à medição no ar." className="type-title max-w-2xl" />
+          <span className="font-mono text-xs uppercase tracking-widest text-paper/60">como trabalhamos · 5 passos</span>
+        </div>
+        <ol>
+          {PASSOS.map((passo) => (
+            <Reveal as="li" key={passo.num} className="grid grid-cols-[auto_1fr] items-start gap-6 border-b border-paper/25 py-8 md:grid-cols-[8rem_1fr] md:gap-10 md:py-10">
+              <span className="font-bitmap text-5xl leading-none text-paper/80 md:text-8xl">{passo.num}</span>
+              <div className="pt-1">
+                <h3 className="font-display text-3xl leading-none md:text-5xl">{passo.nome}</h3>
+                <p className="mt-3 max-w-lg font-sans text-base leading-relaxed text-paper/80">{passo.desc}</p>
+              </div>
+            </Reveal>
           ))}
-        </ul>
+        </ol>
+      </section>
 
-        <div className="mt-14 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-lg font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
-            Se você trata o digital como parte da obra, e não como obrigação, a gente se entende.
-          </p>
-          <div className="flex shrink-0 flex-wrap gap-3">
-            <Link to="/contato" className="cmd-button !border-paper !bg-paper !text-phosphor">Começar um projeto</Link>
-            <Link to="/trabalhos" className="cmd-button-ghost !border-paper/60 !text-paper">Ver trabalhos</Link>
-          </div>
+      {/* ===== 5 · Fechamento (branco): janela IBM com quem trabalhamos + cta ===== */}
+      <section className="bg-background px-4 py-20 md:px-6 md:py-28">
+        <div className="mx-auto max-w-4xl">
+          <Window title="com-quem.txt" draggable={false} bodyClassName="!p-0">
+            <div className="metastrip border-b border-foreground/15 px-4 py-2" aria-hidden>
+              <span className="type-label text-muted-foreground">botellho</span>
+              <span className="type-label text-phosphor">disponível para novos projetos</span>
+              <span className="type-label text-muted-foreground">belo horizonte, br</span>
+            </div>
+            <div className="p-5 md:p-8">
+              <span className="type-label text-muted-foreground">com quem trabalhamos</span>
+              <ul className="mt-6 divide-y divide-foreground/10 border-y border-foreground/10">
+                {COM_QUEM.map((quem) => (
+                  <li key={quem} className="flex items-baseline gap-4 px-1 py-4 md:px-2">
+                    <span className="text-phosphor">▪</span>
+                    <span className="font-display text-2xl md:text-3xl">{quem}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-8 max-w-lg font-sans text-base leading-relaxed text-muted-foreground">
+                Se você trata o digital como parte da obra, e não como obrigação, a gente se entende.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+                <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
+              </div>
+            </div>
+          </Window>
         </div>
       </section>
     </>
