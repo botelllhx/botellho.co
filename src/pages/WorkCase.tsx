@@ -1,6 +1,6 @@
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
-import LineReveal from "@/motion/LineReveal";
+import Scramble from "@/motion/Scramble";
 import Typing from "@/motion/Typing";
 import SystemDivider from "@/system/SystemDivider";
 import type { WorkCaseLoaderData } from "@/pages/workLoaders";
@@ -56,11 +56,11 @@ const WorkCase = () => {
         </script>
       </Head>
 
-      {/* ===== A · Abertura cinematografica (ink) ===== */}
-      <section className="dark bg-background px-4 pt-16 text-foreground md:px-6 md:pt-24">
-        <Typing text={`> abrindo /trabalhos/${project.slug}`} className="type-label text-muted-foreground" />
-        <LineReveal as="h1" className="type-tese mt-8 max-w-5xl">{project.title}</LineReveal>
-        <div className="mt-10 grid gap-4 border-y border-foreground/15 py-4 font-mono text-xs uppercase tracking-widest text-muted-foreground md:grid-cols-3">
+      {/* ===== A · Abertura cinematografica (azul) ===== */}
+      <section className="bg-phosphor px-4 pt-16 text-paper md:px-6 md:pt-24">
+        <Typing text={`> abrindo /trabalhos/${project.slug}`} className="type-label text-paper/60" />
+        <Scramble as="h1" text={project.title} className="type-tese mt-8 max-w-5xl" />
+        <div className="mt-10 grid gap-4 border-y border-paper/25 py-4 font-mono text-xs uppercase tracking-widest text-paper/70 md:grid-cols-3">
           <span>categoria · {project.category || "projeto"}</span>
           <span>status · publicado</span>
           {project.tags.length > 0 ? <span>craft · {project.tags.join(", ")}</span> : <span />}
@@ -83,32 +83,32 @@ const WorkCase = () => {
 
       <SystemDivider label="contexto" />
 
-      {/* ===== C · Contexto (paper, editorial serif) ===== */}
-      <section className="px-4 py-20 md:px-6 md:py-28">
-        <span className="type-label text-muted-foreground">&gt; contexto</span>
-        <p className="mt-6 max-w-3xl font-serif text-2xl leading-relaxed text-foreground md:text-3xl">
+      {/* ===== C · Contexto (branco, lead grande) ===== */}
+      <section className="bg-background px-4 py-20 md:px-6 md:py-28">
+        <span className="type-label text-muted-foreground">contexto</span>
+        <p className="mt-6 max-w-4xl font-sans text-2xl font-medium leading-snug text-foreground md:text-4xl">
           {project.short_description}
         </p>
       </section>
 
       <SystemDivider label="abordagem" ban />
 
-      {/* ===== B · Abordagem (ink, leitura longa) ===== */}
-      <section className="dark bg-background px-4 py-20 text-foreground md:px-6 md:py-28">
+      {/* ===== B · Abordagem (azul, leitura longa) ===== */}
+      <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
         <div className="grid gap-10 md:grid-cols-[0.7fr_1.3fr] md:gap-16">
           <div className="md:sticky md:top-24 md:self-start">
-            <span className="type-label text-muted-foreground">&gt; abordagem</span>
+            <span className="type-label text-paper/60">abordagem</span>
             {project.tags.length > 0 ? (
               <div className="mt-6 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
-                  <span key={tag} className="border border-foreground/25 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">{tag}</span>
+                  <span key={tag} className="border border-paper/30 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-paper/80">{tag}</span>
                 ))}
               </div>
             ) : null}
           </div>
           <div className="max-w-2xl space-y-6">
             {paragraphs.map((paragraph, index) => (
-              <p key={index} className="font-sans text-lg leading-relaxed text-foreground/80">{paragraph}</p>
+              <p key={index} className="font-sans text-lg leading-relaxed text-paper/85">{paragraph}</p>
             ))}
           </div>
         </div>
