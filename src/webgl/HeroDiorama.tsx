@@ -28,8 +28,6 @@ const Diorama = () => {
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
-      m.castShadow = true;
-      m.receiveShadow = true;
       const mat = m.material as THREE.MeshStandardMaterial;
       if (mat && mat.name === "MonitorScreen") {
         mat.emissive = new THREE.Color("#1c3fd6");
@@ -46,13 +44,16 @@ const Diorama = () => {
 // visualizar cada buffer via leva pra aprovar antes do Sobel (Etapa 4).
 const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
   const { scene, camera } = useThree();
-  const { modo, outlineThickness, depthScale, normalScale, threshold, specThreshold, shininess } = useControls("moebius", {
+  const { modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, specThreshold, shininess } = useControls("moebius", {
     modo: { value: 0, options: { moebius: 0, normais: 1, profundidade: 2 } },
-    outlineThickness: { value: 1.0, min: 0.3, max: 3, step: 0.1 },
+    outlineThickness: { value: 1.4, min: 0.3, max: 4, step: 0.1 },
     depthScale: { value: 25, min: 0, max: 80, step: 1 },
     normalScale: { value: 1.0, min: 0, max: 6, step: 0.1 },
-    threshold: { value: 1.2, min: 0.1, max: 6, step: 0.05 },
-    specThreshold: { value: 0.55, min: 0, max: 1, step: 0.01 },
+    wobbleAmp: { value: 3.0, min: 0, max: 12, step: 0.1 },
+    wobbleFreq: { value: 0.08, min: 0.01, max: 0.4, step: 0.01 },
+    hatch: { value: true },
+    hatchSpacing: { value: 8, min: 3, max: 20, step: 1 },
+    specThreshold: { value: 0.25, min: 0, max: 1, step: 0.01 },
     shininess: { value: 40, min: 1, max: 200, step: 1 },
   });
   const effect = useMemo(() => new MoebiusEffect(scene, camera), [scene, camera]);
@@ -61,10 +62,13 @@ const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
     effect.outlineThickness = outlineThickness;
     effect.depthScale = depthScale;
     effect.normalScale = normalScale;
-    effect.threshold = threshold;
+    effect.wobbleAmp = wobbleAmp;
+    effect.wobbleFreq = wobbleFreq;
+    effect.hatch = hatch;
+    effect.hatchSpacing = hatchSpacing;
     effect.specThreshold = specThreshold;
     effect.shininess = shininess;
-  }, [effect, modo, outlineThickness, depthScale, normalScale, threshold, specThreshold, shininess]);
+  }, [effect, modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, specThreshold, shininess]);
   useEffect(() => () => effect.dispose(), [effect]);
   return <primitive ref={ref} object={effect} dispose={null} />;
 });
@@ -82,24 +86,18 @@ const HeroDiorama = () => {
     <div className="h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
       {mounted ? (
         <Canvas
-          shadows
           dpr={[1, 1.8]}
           gl={{ antialias: true, powerPreference: "high-performance" }}
-          camera={{ position: CAM_POS, fov: CAM_FOV, near: 0.1, far: 100 }}
+          camera={{ position: CAM_POS, fov: CAM_FOV, near: 0.1, far: 15 }}
           onCreated={({ camera, scene }) => {
             camera.lookAt(CAM_TARGET);
             scene.background = new THREE.Color("#b7bbc0");
           }}
         >
-          <ambientLight intensity={0.75} />
-          <directionalLight
-            position={[4.5, 6, 3.5]}
-            intensity={2.6}
-            castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-          />
-          <directionalLight position={[-4, 3, -2]} intensity={0.6} />
+          {/* sem shadow map: a sombra do moebius e por cross-hatch */}
+          <ambientLight intensity={0.85} />
+          <directionalLight position={[4.5, 6, 3.5]} intensity={2.4} />
+          <directionalLight position={[-4, 3, -2]} intensity={0.55} />
           <Suspense fallback={null}>
             <Diorama />
           </Suspense>
