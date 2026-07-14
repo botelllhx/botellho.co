@@ -6,6 +6,8 @@ import Reveal from "@/motion/Reveal";
 import Parallax from "@/motion/Parallax";
 import CountUp from "@/motion/CountUp";
 import PinnedRow from "@/motion/PinnedRow";
+import SignatureCanvas from "@/webgl/SignatureCanvas";
+import DioramaScene from "@/webgl/DioramaScene";
 import SystemDivider from "@/system/SystemDivider";
 import Window from "@/system/Window";
 import ContactForm from "@/system/ContactForm";
@@ -88,9 +90,16 @@ const Home = () => {
           <Parallax amount={6}>
             <Window title="ban.exe" phosphor bodyClassName="!p-0">
               <div className="crt-frame aspect-[4/3] w-full !rounded-none border-0" data-cursor="3d">
-                <img src="/hero-fallback.png" alt="O estúdio do Ban, em bitmap" className="h-full w-full object-cover" style={{ imageRendering: "pixelated" }} />
+                <SignatureCanvas
+                  className="absolute inset-0"
+                  crt={0.5}
+                  camera={{ fov: 42, position: [-4, 2, 8] }}
+                  fallback={<img src="/hero-fallback.png" alt="O estúdio do Ban, em bitmap" className="h-full w-full object-cover" style={{ imageRendering: "pixelated" }} />}
+                >
+                  <DioramaScene />
+                </SignatureCanvas>
                 <div className="crt-frame__glass !rounded-none" />
-                <span className="crt-frame__tag type-label">sinal // bitmap</span>
+                <span className="crt-frame__tag type-label">estúdio // ao vivo</span>
               </div>
             </Window>
           </Parallax>

@@ -1,58 +1,59 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import BanModel from "./BanModel";
 
-// Estudio-diorama do Ban: um quarto retrocomputador em corte (chao + duas
-// paredes), com mesa, CRTs mostrando o boot, cabos, posteres e o Ban vivendo
-// dentro. A camera passeia pela cena com o scroll (motor narrativo) e faz
-// parallax com o cursor. Tudo low-poly; o dither unifica e da a atmosfera.
+// Estudio-diorama do Ban com os modelos reais (otimizados) que o Mateus
+// forneceu: setup gamer (monitor+teclado+pc), cadeira e planta, mais a sala
+// e o Ban procedural (placeholder ate haver um modelo do Ban). Camera guiada
+// pelo scroll + parallax de cursor. Tudo rasterizado pelo pipeline bitmap.
 
-const NEUTRAL = "#8a8a8a";
+const DRACO = "/draco/";
 const WALL = "#6f6f6f";
 const DESK = "#7a7a7a";
-const CASE = "#565656";
 const PHOSPHOR = "#0b2ca2";
 
-// Um CRT: gabinete + tela acesa (phosphor) com "linhas de boot" escuras
-const Crt = ({ position, rotation = [0, 0, 0] }: { position: [number, number, number]; rotation?: [number, number, number] }) => (
-  <group position={position} rotation={rotation as unknown as THREE.Euler}>
-    <mesh>
-      <boxGeometry args={[1.5, 1.2, 1.2]} />
-      <meshStandardMaterial color={CASE} roughness={0.7} />
-    </mesh>
-    <mesh position={[0, 0.05, 0.62]}>
-      <planeGeometry args={[1.15, 0.85]} />
-      <meshBasicMaterial color={PHOSPHOR} />
-    </mesh>
-    {[0.25, 0.05, -0.15].map((y) => (
-      <mesh key={y} position={[-0.15, y + 0.05, 0.63]}>
-        <planeGeometry args={[0.7, 0.06]} />
-        <meshBasicMaterial color="#0a0a0a" />
-      </mesh>
-    ))}
-    <mesh position={[0, -0.75, 0]}>
-      <boxGeometry args={[0.8, 0.3, 0.7]} />
-      <meshStandardMaterial color={CASE} roughness={0.7} />
-    </mesh>
-  </group>
-);
+useGLTF.preload("/3d/gamer_setup_pack.glb", DRACO);
+useGLTF.preload("/3d/cadeira_gamer.glb", DRACO);
+useGLTF.preload("/3d/potted_plant.glb", DRACO);
+
+const GamerSetup = () => {
+  const { scene } = useGLTF("/3d/gamer_setup_pack.glb", DRACO);
+  const cloned = useMemo(() => {
+    const s = scene.clone(true);
+    // Faz as telas/leds do monitor acenderem em phosphor
+    s.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      const name = m.name.toLowerCase();
+      if (name.includes("monitor") || name.includes("led") || name.includes("glass")) {
+        m.material = new THREE.MeshBasicMaterial({ color: new THREE.Color(PHOSPHOR) });
+      }
+    });
+    return s;
+  }, [scene]);
+  // setup ~2u de largura; centro y=0.63 (base no chao local)
+  return <primitive object={cloned} position={[-1.1, 1.0, -1.4]} rotation={[0, 0.35, 0]} scale={1.15} />;
+};
+
+const Chair = () => {
+  const { scene } = useGLTF("/3d/cadeira_gamer.glb", DRACO);
+  const cloned = useMemo(() => scene.clone(true), [scene]);
+  // origem alta (centro y=4.58, altura 2.26): base ~3.45 -> desce pro chao
+  return <primitive object={cloned} position={[0.9, -3.45, 0.6]} rotation={[0, -0.5, 0]} scale={0.95} />;
+};
+
+const Plant = () => {
+  const { scene } = useGLTF("/3d/potted_plant.glb", DRACO);
+  const cloned = useMemo(() => scene.clone(true), [scene]);
+  return <primitive object={cloned} position={[-3.4, 0.35, -1.2]} scale={1.3} />;
+};
 
 const DioramaScene = () => {
   const { camera } = useThree();
   const pointer = useRef({ x: 0, y: 0 });
   const scroll = useRef(0);
-
-  // Cabo curvo de um CRT para o chao
-  const cableGeo = useMemo(() => {
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-1.4, -0.6, -1.6),
-      new THREE.Vector3(-1.8, -1.4, -1.2),
-      new THREE.Vector3(-1.2, -1.7, -0.4),
-      new THREE.Vector3(-0.3, -1.72, 0.6),
-    ]);
-    return new THREE.TubeGeometry(curve, 24, 0.05, 6, false);
-  }, []);
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -71,78 +72,57 @@ const DioramaScene = () => {
   }, []);
 
   useFrame(() => {
-    // Scroll conduz a camera de um plano geral para dentro da cena;
-    // o cursor faz parallax discreto por cima.
     const p = scroll.current;
-    const px = pointer.current.x;
-    const py = pointer.current.y;
-    const targetPos = new THREE.Vector3(
-      -3.2 + p * 2.2 + px * 0.8,
-      1.4 - p * 0.7 + py * 0.5,
-      7.5 - p * 3.4,
-    );
-    camera.position.lerp(targetPos, 0.06);
-    camera.lookAt(0.4 + px * 0.4, -0.2, 0);
+    const target = new THREE.Vector3(-4 + p * 2.6 + pointer.current.x * 0.9, 2 - p * 0.9 + pointer.current.y * 0.6, 8 - p * 4);
+    camera.position.lerp(target, 0.06);
+    camera.lookAt(0.2 + pointer.current.x * 0.4, 0.2, -0.6);
   });
 
   return (
     <>
       <ambientLight intensity={0.5} />
-      <directionalLight position={[-4, 5, 5]} intensity={2.6} />
+      <directionalLight position={[-4, 6, 5]} intensity={3} />
       <directionalLight position={[5, 2, -1]} intensity={1.6} />
-      <pointLight position={[-1.2, 0.4, 2.2]} intensity={18} distance={9} color="#4a6bd8" />
+      <pointLight position={[-1, 1.4, 0]} intensity={16} distance={8} color="#4a6bd8" />
 
-      {/* Quarto em corte: chao + parede de fundo + parede lateral */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.75, 0]}>
-        <planeGeometry args={[24, 24]} />
-        <meshStandardMaterial color={NEUTRAL} roughness={0.9} />
+      {/* Sala em corte: chao + parede de fundo + parede lateral */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        <planeGeometry args={[26, 26]} />
+        <meshStandardMaterial color="#8a8a8a" roughness={0.95} />
       </mesh>
-      <mesh position={[0, 2.5, -3.2]}>
-        <planeGeometry args={[24, 12]} />
-        <meshStandardMaterial color={WALL} roughness={0.95} />
+      <mesh position={[0, 5, -3]}>
+        <planeGeometry args={[26, 14]} />
+        <meshStandardMaterial color={WALL} roughness={0.98} />
       </mesh>
-      <mesh rotation={[0, Math.PI / 2, 0]} position={[-4.6, 2.5, 0]}>
-        <planeGeometry args={[16, 12]} />
-        <meshStandardMaterial color={WALL} roughness={0.95} />
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[-4.6, 5, 0]}>
+        <planeGeometry args={[18, 14]} />
+        <meshStandardMaterial color={WALL} roughness={0.98} />
       </mesh>
 
-      {/* Posteres na parede de fundo (molduras phosphor) */}
-      {[[-2.2, 3], [1.6, 2.8]].map(([x, y], i) => (
-        <mesh key={i} position={[x, y, -3.15]}>
-          <planeGeometry args={[1.4, 1.9]} />
-          <meshBasicMaterial color={i === 0 ? PHOSPHOR : CASE} />
+      {/* Mesa */}
+      <group position={[-1, 0, -1.4]}>
+        <mesh position={[0, 0.95, 0]}>
+          <boxGeometry args={[5, 0.16, 2]} />
+          <meshStandardMaterial color={DESK} roughness={0.85} />
         </mesh>
-      ))}
-
-      {/* Mesa contra a parede */}
-      <group position={[0, -0.5, -2]}>
-        <mesh position={[0, 0.5, 0]}>
-          <boxGeometry args={[6, 0.2, 1.6]} />
-          <meshStandardMaterial color={DESK} roughness={0.8} />
-        </mesh>
-        {[[-2.8, -0.6], [2.8, -0.6], [-2.8, 0.6], [2.8, 0.6]].map(([x, z], i) => (
-          <mesh key={i} position={[x, -0.2, z]}>
-            <boxGeometry args={[0.15, 1.2, 0.15]} />
-            <meshStandardMaterial color={DESK} roughness={0.8} />
+        {[[-2.2, -0.8], [2.2, -0.8], [-2.2, 0.8], [2.2, 0.8]].map(([x, z], i) => (
+          <mesh key={i} position={[x, 0.45, z]}>
+            <boxGeometry args={[0.16, 1, 0.16]} />
+            <meshStandardMaterial color={DESK} roughness={0.85} />
           </mesh>
         ))}
       </group>
 
-      {/* Os CRTs em cima da mesa */}
-      <Crt position={[-1.6, 0.55, -1.9]} rotation={[0, 0.3, 0]} />
-      <Crt position={[1.7, 0.55, -2] as [number, number, number]} rotation={[0, -0.35, 0]} />
+      <GamerSetup />
+      <Chair />
+      <Plant />
 
-      {/* Cabo */}
-      <mesh geometry={cableGeo}>
-        <meshStandardMaterial color={CASE} roughness={0.7} />
+      {/* Tapete + o Ban vivendo na cena */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.4, 0.02, 1.6]}>
+        <planeGeometry args={[4, 2.6]} />
+        <meshStandardMaterial color="#565656" roughness={0.98} />
       </mesh>
-
-      {/* Tapete e o Ban vivendo na cena */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.6, -1.72, 0.8]}>
-        <planeGeometry args={[4.4, 2.6]} />
-        <meshStandardMaterial color={CASE} roughness={0.95} />
-      </mesh>
-      <BanModel position={[0.6, -1, 0.9]} scale={0.62} />
+      <BanModel position={[1.4, 0.5, 1.7]} scale={0.5} />
     </>
   );
 };
