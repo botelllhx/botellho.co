@@ -46,17 +46,23 @@ const Diorama = () => {
 // visualizar cada buffer via leva pra aprovar antes do Sobel (Etapa 4).
 const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
   const { scene, camera } = useThree();
-  const { modo, specThreshold, shininess } = useControls("moebius", {
-    modo: { value: 1, options: { cena: 0, normais: 1, profundidade: 2 } },
+  const { modo, outlineThickness, depthScale, normalScale, specThreshold, shininess } = useControls("moebius", {
+    modo: { value: 0, options: { moebius: 0, normais: 1, profundidade: 2 } },
+    outlineThickness: { value: 1.0, min: 0.3, max: 3, step: 0.1 },
+    depthScale: { value: 25, min: 0, max: 80, step: 1 },
+    normalScale: { value: 1.0, min: 0, max: 6, step: 0.1 },
     specThreshold: { value: 0.55, min: 0, max: 1, step: 0.01 },
     shininess: { value: 40, min: 1, max: 200, step: 1 },
   });
   const effect = useMemo(() => new MoebiusEffect(scene, camera), [scene, camera]);
   useEffect(() => {
     effect.debug = modo;
+    effect.outlineThickness = outlineThickness;
+    effect.depthScale = depthScale;
+    effect.normalScale = normalScale;
     effect.specThreshold = specThreshold;
     effect.shininess = shininess;
-  }, [effect, modo, specThreshold, shininess]);
+  }, [effect, modo, outlineThickness, depthScale, normalScale, specThreshold, shininess]);
   useEffect(() => () => effect.dispose(), [effect]);
   return <primitive ref={ref} object={effect} dispose={null} />;
 });
