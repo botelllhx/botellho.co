@@ -66,8 +66,8 @@ const BootOverlay = () => {
           <img
             src="/ban/ban-1.png"
             alt=""
-            className="boot__ban-img"
-            style={{ clipPath: `inset(${Math.max(0, 100 - progress * 5.4)}% 0 0 0)` }}
+            className="boot__ban-img invert"
+            style={{ clipPath: `inset(${Math.max(0, 100 - progress * 5.4)}% 0 0 0)`, imageRendering: "pixelated" }}
           />
           <span className="boot__scan" style={{ top: `${Math.min(100, progress * 5.4)}%` }} />
         </div>

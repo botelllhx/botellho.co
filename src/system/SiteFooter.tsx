@@ -19,7 +19,7 @@ const SiteFooter = () => {
             contato@botellho.com
           </a>
           <p className="mt-4 flex items-center gap-3 font-sans text-sm leading-relaxed text-muted-foreground">
-            <img src="/ban/ban-1.png" alt="Ban, o mascote" className="h-9 w-9 object-contain" style={{ imageRendering: "pixelated" }} />
+            <img src="/ban/ban-mark.png" alt="Ban, o mascote" className="h-8 w-14 object-contain invert" style={{ imageRendering: "pixelated" }} />
             Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas.
           </p>
         </div>
