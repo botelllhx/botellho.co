@@ -13,8 +13,10 @@ const DRACO = "/draco/";
 if (typeof window !== "undefined") useGLTF.preload(DIORAMA, DRACO);
 
 // posicoes convertidas do Blender (Z-up) pra R3F (Y-up): (x,y,z)->(x,z,-y)
-const CAM_POS: [number, number, number] = [3.1, 2.3, 3.1];
-const CAM_TARGET = new THREE.Vector3(0, 0.6, -0.05);
+// enquadramento fechado 3/4 aprovado (blender cam 2.95,-2.85,1.5 -> alvo 0.12,0,0.42)
+const CAM_POS: [number, number, number] = [2.95, 1.5, 2.85];
+const CAM_TARGET = new THREE.Vector3(0.12, 0.42, 0);
+const CAM_FOV = 43;
 
 const Diorama = () => {
   const { scene } = useGLTF(DIORAMA, DRACO);
@@ -52,7 +54,7 @@ const HeroDiorama = () => {
           shadows
           dpr={[1, 1.8]}
           gl={{ antialias: true, powerPreference: "high-performance" }}
-          camera={{ position: CAM_POS, fov: 42, near: 0.1, far: 100 }}
+          camera={{ position: CAM_POS, fov: CAM_FOV, near: 0.1, far: 100 }}
           onCreated={({ camera, scene }) => {
             camera.lookAt(CAM_TARGET);
             scene.background = new THREE.Color("#b7bbc0");
