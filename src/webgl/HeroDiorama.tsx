@@ -25,6 +25,7 @@ const Diorama = () => {
   const { scene } = useGLTF(DIORAMA, DRACO);
 
   useEffect(() => {
+    let quadros = 0;
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
@@ -34,11 +35,20 @@ const Diorama = () => {
         mat.emissiveIntensity = 1.3;
         mat.toneMapped = false;
       }
-      // quadros: unlit (imagem cheia) — sao "conteudo" e ficam fora da hachura
+      // quadros: unlit (imagem cheia) pra a arte aparecer forte; a hachura por
+      // luminancia so pega as partes escuras da capa (poucas hachuras).
       if (mat && (mat.name === "QuadroVert" || mat.name === "QuadroHoriz")) {
-        m.material = new THREE.MeshBasicMaterial({ map: mat.map, toneMapped: false });
+        quadros++;
+        // eslint-disable-next-line no-console
+        console.log("[QUADRO]", mat.name, "map?", !!mat.map, "img", mat.map?.image ? mat.map.image.width + "x" + mat.map.image.height : "SEM-IMG");
+        if (mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace;
+          m.material = new THREE.MeshBasicMaterial({ map: mat.map, toneMapped: false });
+        }
       }
     });
+    // eslint-disable-next-line no-console
+    console.log("[QUADRO] total encontrados:", quadros);
   }, [scene]);
 
   return <primitive object={scene} />;

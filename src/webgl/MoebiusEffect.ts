@@ -74,12 +74,8 @@ const fragmentShader = /* glsl */ `
     if (depth > 0.999) outline = 0.0;
 
     // cross-hatch das sombras (3 camadas por luminancia)
-    // superficies de "conteudo" (quadros) ficam fora do passe de normais
-    // (alfa ~0 mas ha geometria) -> sem hachura, mostram a imagem cheia.
-    float centerA = texture2D(uNormalBuffer, uv).a;
-    bool isContent = centerA < 0.01;
     vec3 col = inputColor.rgb;
-    if (uHatch > 0.5 && depth <= 0.99 && !isContent) {
+    if (uHatch > 0.5 && depth <= 0.99) {
       float lm = luma(inputColor.rgb);
       float sp = uHatchSpacing;
       float L = uHatchLevel;
@@ -106,32 +102,11 @@ export interface MoebiusOptions {
   hatch?: boolean;
 }
 
-// nomes dos materiais que sao "conteudo" (quadros): mostram a imagem cheia e
-// ficam fora do passe de normais -> sem hachura, so o contorno os emoldura.
-const CONTENT_MATERIALS = ["QuadroVert", "QuadroHoriz"];
-
-// material-sentinela do passe de normais: escreve alfa = 0. Geometria real
-// escreve alfa = view-Z (>= near > 0), entao o shader reconhece o "conteudo"
-// por centerA < 0.01 (mesmo com a parede logo atras do quadro).
-class ContentSentinelMaterial extends THREE.ShaderMaterial {
-  constructor() {
-    super({
-      vertexShader: "void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
-      fragmentShader: "void main(){ gl_FragColor = vec4(0.0); }",
-    });
-  }
-}
-
 export class MoebiusEffect extends Effect {
   private scene: THREE.Scene;
   private camera: THREE.Camera;
   private normalRT: THREE.WebGLRenderTarget;
   private normalMaterial: CustomNormalMaterial;
-  private sentinelMaterial: ContentSentinelMaterial;
-  private normalMeshes: THREE.Mesh[] = [];
-  private contentMeshes: THREE.Mesh[] = [];
-  private savedMats = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
-  private collected = false;
 
   constructor(scene: THREE.Scene, camera: THREE.Camera, opts: MoebiusOptions = {}) {
     super("MoebiusEffect", fragmentShader, {
@@ -158,7 +133,6 @@ export class MoebiusEffect extends Effect {
     this.scene = scene;
     this.camera = camera;
     this.normalMaterial = new CustomNormalMaterial();
-    this.sentinelMaterial = new ContentSentinelMaterial();
     if (opts.specThreshold !== undefined) this.normalMaterial.uniforms.uSpecThreshold.value = opts.specThreshold;
     if (opts.shininess !== undefined) this.normalMaterial.uniforms.uShininess.value = opts.shininess;
     this.normalRT = new THREE.WebGLRenderTarget(1, 1, {
@@ -174,31 +148,14 @@ export class MoebiusEffect extends Effect {
     (this.uniforms.get("uResolution") as THREE.Uniform).value.set(width, height);
   }
 
-  private collectContent() {
-    this.scene.traverse((o) => {
-      const m = o as THREE.Mesh;
-      if (!m.isMesh) return;
-      const mat = m.material as THREE.Material;
-      const name = Array.isArray(mat) ? "" : mat?.name ?? "";
-      if (CONTENT_MATERIALS.includes(name)) this.contentMeshes.push(m);
-      else this.normalMeshes.push(m);
-    });
-    this.collected = true;
-  }
-
   update(renderer: THREE.WebGLRenderer, _inputBuffer: THREE.WebGLRenderTarget, _dt: number) {
-    if (!this.collected) this.collectContent();
-
     const prevRT = renderer.getRenderTarget();
-    // troca por mesh: geometria -> normais; quadros -> sentinela (alfa 0).
-    // nao usa scene.overrideMaterial (que seria global) pra poder diferenciar.
-    this.savedMats.clear();
-    for (const m of this.normalMeshes) { this.savedMats.set(m, m.material); m.material = this.normalMaterial; }
-    for (const m of this.contentMeshes) { this.savedMats.set(m, m.material); m.material = this.sentinelMaterial; }
+    const prevOverride = this.scene.overrideMaterial;
+    this.scene.overrideMaterial = this.normalMaterial;
     renderer.setRenderTarget(this.normalRT);
     renderer.clear();
     renderer.render(this.scene, this.camera);
-    for (const [m, mat] of this.savedMats) m.material = mat;
+    this.scene.overrideMaterial = prevOverride;
     renderer.setRenderTarget(prevRT);
 
     (this.uniforms.get("uNormalBuffer") as THREE.Uniform).value = this.normalRT.texture;
@@ -222,7 +179,6 @@ export class MoebiusEffect extends Effect {
   dispose() {
     this.normalRT.dispose();
     this.normalMaterial.dispose();
-    this.sentinelMaterial.dispose();
     super.dispose();
   }
 }
