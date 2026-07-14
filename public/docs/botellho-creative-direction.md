@@ -21,7 +21,9 @@ botellho é um estúdio de web e experiências digitais com craft de nível de p
 - **Poolsuite e Low-Tech Magazine:** DOS/OS de verdade e imagens em dither reais.
 
 ## 3. Regras não-negociáveis
-PROIBIDO (kill-list): fundo preto em seções (não casou, usar branco e azul); efeito de GLITCH nos textos (terrível, remover de vez); a transição de página com dither ruim (refazer, caminho novo); jargão técnico na copy visível (ex.: "fósforo azul" no footer, sai); duas seções seguidas com o mesmo conceito de layout; onda no hero.
+PROIBIDO (kill-list): fundo preto em seções (não casou, usar branco e azul); efeito de GLITCH nos textos (terrível, remover de vez); a transição de página com dither ruim (refazer, caminho novo); jargão técnico na copy visível (ex.: "fósforo azul" no footer, sai); COMANDOS de terminal reais na interface (ls, cd, mkdir, etc. — o usuário não sabe o que é); duas seções seguidas com o mesmo conceito de layout; onda no hero.
+
+BEM-VINDO (o oposto do de cima): decoração DOS que NÃO é comando — caminhos como /com-quem-trabalhamos, prompts de flavor como "> volte em breve_", rótulos .txt/.log, glifos de bloco. Isso dá a estética sem confundir. A régua: se parece uma ORDEM que o usuário teria que digitar/entender (ls, cd), sai; se é só textura/rótulo, fica.
 SIM: DOS a sério (janelas retrô, bitmap, glifos); imagens reais e gigantes filtradas em bitmap; títulos GIGANTES (às vezes 100% da tela) com variação de fonte; scroll controlando tudo; scramble e digitado bem-feitos; diversidade real de layout.
 
 ## 4. Identidade
@@ -32,8 +34,8 @@ SIM: DOS a sério (janelas retrô, bitmap, glifos); imagens reais e gigantes fil
 - Copy visível NUNCA expõe termos técnicos internos (o token pode se chamar phosphor no código, mas no site é só "azul" ou nada). Footer: "feito em Belo Horizonte", sem jargão.
 
 ### 4.2 Tipografia
-- **Archivo Black** e **Averia Serif Libre** ALTERNANDO NOS TÍTULOS (a variação de fonte nos títulos é assinatura; ora grotesca pesada, ora serifa editorial gigante à la Locomotive). Averia NÃO é fonte de parágrafo.
-- **Geist Pixel** para dados, rótulos, chrome de janela e números. **int10h** para os momentos bitmap/DOS.
+- **Archivo Black** e **IBM VGA (int10h)** ALTERNANDO NOS TÍTULOS (a variação de fonte é assinatura; ora grotesca pesada, ora bitmap DOS gigante). A **Averia foi APOSENTADA** — a IBM VGA assume a variação dos títulos. Bitmap/IBM VGA NÃO é fonte de parágrafo.
+- **Geist Pixel** para dados, rótulos, chrome de janela e números. **IBM VGA (int10h)** para os momentos bitmap/DOS e como par de variação dos títulos (uso ampliado, no lugar da Averia).
 - Títulos GIGANTES, alguns ocupando 100% da largura da tela. Hierarquia limpa, muita variação de escala.
 
 ### 4.3 Imagens (contexto real, sempre filtrado)
@@ -85,9 +87,9 @@ Manter o footer atual (o Mateus gosta de tudo nele), MAS adicionar o efeito à l
 
 ## 11. Páginas (tudo em português; slugs /trabalhos, /estudio, /laboratorio, /contato)
 - **/ (home):** cheia e com conteúdo real. Hero → (empilha) próxima seção → o que fazemos (lista gigante com hover, à la AREA17) → seleção de trabalhos com previews e imagens gigantes filtradas → prova (clientes, setores, depoimentos) → seção de contato embutida → footer com o reveal do logo gigante. Cada seção num arquétipo diferente.
-- **/estudio:** manifesto com títulos gigantes (Archivo Black + Averia alternando), como trabalhamos, prova.
+- **/estudio:** manifesto com títulos gigantes (Archivo Black + IBM VGA alternando), como trabalhamos, prova.
 - **/trabalhos:** MANTER o filtro preto e branco elegante do índice (o Mateus gosta), e melhorar ainda mais. Previews grandes.
-- **/trabalhos/:slug:** MANTER a base das páginas individuais (o Mateus gosta muito), e melhorar: textos às vezes a 100% da tela, gigantes; variação de fonte nos títulos; Averia só em título, nunca como parágrafo.
+- **/trabalhos/:slug:** MANTER a base das páginas individuais (o Mateus gosta muito), e melhorar: textos às vezes a 100% da tela, gigantes; variação de fonte nos títulos (Archivo Black + IBM VGA); bitmap nunca como parágrafo.
 - **/laboratorio:** experimentos e teardowns (motor de SEO de cauda longa).
 - **/contato:** formulário como janela retrô arrastável, labels claros em PT, contato por função; nunca vazio na tela.
 - **404:** bitmap + Ban, saída clara.
@@ -107,4 +109,4 @@ Conteúdo/scroll: https://podium.global/ · https://wearebouldergroup.com/ · ht
 DOS/retrô/dither: https://poolsuite.net/ · https://solar.lowtechmagazine.com/ · https://webamp.org/
 Tipografia/foundry: https://abcdinamo.com/
 Técnica: https://blog.maximeheckel.com/posts/the-art-of-dithering-and-retro-shading-web/ · https://www.ascii-magic.com/
-Fontes: Archivo Black · Averia Serif Libre · Geist Pixel · int10h.org/oldschool-pc-fonts/
+Fontes: Archivo Black · Geist Pixel · IBM VGA (int10h.org/oldschool-pc-fonts/). Averia aposentada.
