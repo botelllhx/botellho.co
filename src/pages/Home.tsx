@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Head } from "vite-react-ssg";
 import { Link, useLoaderData } from "react-router-dom";
-import LineReveal from "@/motion/LineReveal";
 import Scramble from "@/motion/Scramble";
 import Reveal from "@/motion/Reveal";
 import Window from "@/system/Window";
@@ -47,9 +46,9 @@ const Home = () => {
               <span className="text-phosphor">▪</span> estúdio de web e experiências digitais
             </span>
             <h1 className="type-tese mt-5">
-              <LineReveal as="span" className="block">Web que</LineReveal>
-              <LineReveal as="span" className="block font-serif font-normal italic" delay={0.08}>se move.</LineReveal>
-              <Scramble as="span" text="Experiências digitais." className="block" onMount />
+              <Scramble as="span" text="Web que" className="block" onMount />
+              <Scramble as="span" text="se move." className="block" onMount delay={140} />
+              <Scramble as="span" text="experiências digitais." className="block" onMount delay={280} />
             </h1>
             <p className="mt-8 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
               Craft de nível de prêmio em web e WebGL, para marcas, cultura e
@@ -73,17 +72,28 @@ const Home = () => {
 
       {/* O resto empilha sobre o hero (stacking) */}
       <div className="relative z-10">
-        {/* ===== 2 · Manifesto (azul; editorial full-bleed) ===== */}
-        <section className="bg-phosphor px-4 py-24 text-paper md:px-6 md:py-36">
-          <span className="type-label text-paper/60">manifesto</span>
-          <LineReveal as="p" className="type-tese mt-8 max-w-6xl">
-            A maior parte do digital é <span className="font-serif font-normal italic">esquecível</span>. A gente faz o contrário.
-          </LineReveal>
-          <p className="mt-10 max-w-2xl font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
-            Juntamos engenharia de verdade com direção de arte, do site
-            institucional ao imersivo em 3D, sempre com a mesma régua de craft.
-          </p>
-          <Link to="/estudio" className="mt-8 inline-flex items-center gap-2 font-mono text-sm text-paper underline-offset-4 hover:underline">conheça o estúdio ►</Link>
+        {/* ===== 2 · Manifesto (azul; declaracao gigante + codigo misturado, basement/dos) ===== */}
+        <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
+          <div className="flex items-center gap-4 border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+            <span>manifesto</span>
+            <span className="hidden select-none md:inline" aria-hidden>▚▚▚▚▚▚▚▚▚▚▚▚</span>
+            <span className="ml-auto normal-case tracking-normal">02 / 06</span>
+          </div>
+
+          <div className="flex flex-1 items-center py-14">
+            <Scramble as="p" text="A maior parte do digital é esquecível. A gente faz o contrário." className="block font-display leading-[0.9] tracking-[-0.02em] text-[clamp(2.75rem,8.4vw,10rem)]" duration={1100} />
+          </div>
+
+          <div className="grid gap-8 border-t border-paper/25 pt-8 md:grid-cols-[minmax(0,auto)_1fr_auto] md:items-end">
+            <pre className="hidden font-mono text-xs leading-relaxed text-paper/55 md:block" aria-hidden>{`// o método
+craft = engenharia
+      + direção de arte`}</pre>
+            <p className="max-w-xl font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
+              Juntamos engenharia de verdade com direção de arte, do site
+              institucional ao imersivo em 3D, sempre com a mesma régua de craft.
+            </p>
+            <Link to="/estudio" className="shrink-0 font-mono text-sm text-paper underline-offset-4 hover:underline">conheça o estúdio ►</Link>
+          </div>
         </section>
 
         {/* ===== 3 · O que fazemos (branco; lista gigante com hover, AREA17) ===== */}
@@ -123,7 +133,7 @@ const Home = () => {
         {/* ===== 4 · Trabalhos (azul; media grid com previews gigantes) ===== */}
         <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
           <div className="flex items-end justify-between">
-            <LineReveal as="h2" className="type-title max-w-2xl">Trabalhos selecionados.</LineReveal>
+            <Scramble as="h2" text="Trabalhos selecionados." className="type-title max-w-2xl" />
             <Link to="/trabalhos" className="hidden font-mono text-sm text-paper underline-offset-4 hover:underline md:inline">ver todos ►</Link>
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -156,7 +166,7 @@ const Home = () => {
           <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
             <div className="md:sticky md:top-24 md:self-start">
               <span className="type-label text-muted-foreground">por que confiar</span>
-              <LineReveal as="h2" className="type-title mt-5">Entendemos o setor cultural por dentro.</LineReveal>
+              <Scramble as="h2" text="Entendemos o setor cultural por dentro." className="type-title mt-5" />
               <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
                 Leis de incentivo, editais, prestação de contas. É um porquê confiar, não a definição do estúdio.
               </p>
