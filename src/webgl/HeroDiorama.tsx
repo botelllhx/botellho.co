@@ -1,0 +1,79 @@
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
+import { prefersReducedMotion } from "@/motion/prefs";
+
+// Hero: o estudio-diorama do Ban. Etapa 2 (cena crua): carrega o diorama.glb,
+// camera 3/4 + luz direcional, SEM pos-processamento ainda. Full-width, ocupa a
+// tela abaixo da barra. Client-only (WebGL nao roda no SSR).
+
+const DIORAMA = "/3d/diorama.glb";
+const DRACO = "/draco/";
+if (typeof window !== "undefined") useGLTF.preload(DIORAMA, DRACO);
+
+// posicoes convertidas do Blender (Z-up) pra R3F (Y-up): (x,y,z)->(x,z,-y)
+const CAM_POS: [number, number, number] = [3.1, 2.3, 3.1];
+const CAM_TARGET = new THREE.Vector3(0, 0.6, -0.05);
+
+const Diorama = () => {
+  const { scene } = useGLTF(DIORAMA, DRACO);
+
+  useEffect(() => {
+    scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      m.castShadow = true;
+      m.receiveShadow = true;
+      const mat = m.material as THREE.MeshStandardMaterial;
+      if (mat && mat.name === "MonitorScreen") {
+        mat.emissive = new THREE.Color("#1c3fd6");
+        mat.emissiveIntensity = 1.3;
+        mat.toneMapped = false;
+      }
+    });
+  }, [scene]);
+
+  return <primitive object={scene} />;
+};
+
+const HeroDiorama = () => {
+  const [mounted, setMounted] = useState(false);
+  const reduced = useRef(false);
+  useEffect(() => {
+    reduced.current = prefersReducedMotion();
+    setMounted(true);
+  }, []);
+
+  return (
+    <div className="h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
+      {mounted ? (
+        <Canvas
+          shadows
+          dpr={[1, 1.8]}
+          gl={{ antialias: true, powerPreference: "high-performance" }}
+          camera={{ position: CAM_POS, fov: 42, near: 0.1, far: 100 }}
+          onCreated={({ camera, scene }) => {
+            camera.lookAt(CAM_TARGET);
+            scene.background = new THREE.Color("#b7bbc0");
+          }}
+        >
+          <ambientLight intensity={0.75} />
+          <directionalLight
+            position={[4.5, 6, 3.5]}
+            intensity={2.6}
+            castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+          />
+          <directionalLight position={[-4, 3, -2]} intensity={0.6} />
+          <Suspense fallback={null}>
+            <Diorama />
+          </Suspense>
+        </Canvas>
+      ) : null}
+    </div>
+  );
+};
+
+export default HeroDiorama;

@@ -9,6 +9,7 @@ import ProjectMedia from "@/system/ProjectMedia";
 import ScatterField from "@/system/ScatterField";
 import GifList from "@/system/GifList";
 import RetroDesktop from "@/system/RetroDesktop";
+import HeroDiorama from "@/webgl/HeroDiorama";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
 const SERVICOS = [
@@ -52,36 +53,9 @@ const Home = () => {
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== 1 · Hero placeholder (branco; o diorama 3D entra por ultimo) ===== */}
-      <section className="sticky top-[var(--bar-h)] z-0 bg-background">
-        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 px-4 py-10 md:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <span className="type-label flex items-center gap-2 text-muted-foreground">
-              <span className="text-phosphor">▪</span> estúdio de web e experiências digitais
-            </span>
-            <h1 className="type-tese mt-5">
-              <Scramble as="span" text="Web que" className="block" onMount />
-              <Scramble as="span" text="se move." className="block" onMount delay={140} />
-              <Scramble as="span" text="experiências digitais." className="block" onMount delay={280} />
-            </h1>
-            <p className="mt-8 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
-              Craft de nível de prêmio em web e WebGL, para marcas, cultura e
-              instituições que tratam o digital como experiência.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/contato" className="cmd-button">Começar um projeto</Link>
-              <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
-            </div>
-          </div>
-
-          <Window title="ban.bmp" phosphor bodyClassName="!p-0">
-            <div className="crt-frame flex aspect-[4/3] items-center justify-center !rounded-none border-0 bg-ink" data-cursor="3d">
-              <img src="/ban/ban-1.png" alt="Ban, em bitmap" className="h-4/5 w-4/5 object-contain invert" style={{ imageRendering: "pixelated" }} />
-              <div className="crt-frame__glass !rounded-none" />
-              <span className="crt-frame__tag type-label">ban // bitmap</span>
-            </div>
-          </Window>
-        </div>
+      {/* ===== 1 · Hero: estudio-diorama do Ban (cena crua, sem texto por enquanto) ===== */}
+      <section className="sticky top-[var(--bar-h)] z-0 bg-background" data-cursor="3d">
+        <HeroDiorama />
       </section>
 
       {/* O resto empilha sobre o hero (stacking) */}
