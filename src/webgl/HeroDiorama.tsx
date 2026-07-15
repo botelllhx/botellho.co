@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import { useControls } from "leva";
@@ -23,18 +23,35 @@ const CAM_POS: [number, number, number] = [2.95, 1.5, 2.85];
 const CAM_TARGET = new THREE.Vector3(0.12, 0.42, 0);
 const CAM_FOV = 43;
 
-const Diorama = () => {
+const SCREEN_BASE = 1.3;
+
+interface AnimProps {
+  reduced: boolean;
+  banIdle: number;
+  flicker: number;
+}
+
+const Diorama = ({ reduced, banIdle, flicker }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
+  const ban = useRef<THREE.Object3D | null>(null);
+  const banBase = useRef({ y: 0, rz: 0 });
+  const screen = useRef<THREE.MeshStandardMaterial | null>(null);
 
   useEffect(() => {
     scene.traverse((o) => {
+      // o Ban e um sculpt sem rig -> animacao procedural por transform
+      if (o.name === "Ban") {
+        ban.current = o;
+        banBase.current = { y: o.position.y, rz: o.rotation.z };
+      }
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const mat = m.material as THREE.MeshStandardMaterial;
       if (mat && mat.name === "MonitorScreen") {
         mat.emissive = new THREE.Color("#1c3fd6");
-        mat.emissiveIntensity = 1.3;
+        mat.emissiveIntensity = SCREEN_BASE;
         mat.toneMapped = false;
+        screen.current = mat;
       }
       // quadros: unlit (imagem cheia) pra a arte aparecer forte; a hachura por
       // luminancia so pega as partes escuras da capa (poucas hachuras).
@@ -55,7 +72,48 @@ const Diorama = () => {
     });
   }, [scene]);
 
+  useFrame((state) => {
+    if (reduced) return;
+    const t = state.clock.elapsedTime;
+    // Ban: respiracao (sobe/desce) + balanco lento. Amplitudes em metros/rad —
+    // de proposito minusculas: e vida, nao dança.
+    if (ban.current && banIdle > 0) {
+      ban.current.position.y = banBase.current.y + Math.sin(t * 1.5) * 0.007 * banIdle;
+      ban.current.rotation.z = banBase.current.rz + Math.sin(t * 0.7) * 0.015 * banIdle;
+    }
+    // monitor: cintilancia de tubo velho (duas senoides dessincronizadas)
+    if (screen.current && flicker > 0) {
+      const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
+      screen.current.emissiveIntensity = SCREEN_BASE + f * flicker;
+    }
+  });
+
   return <primitive object={scene} />;
+};
+
+// Parallax de camera: o mouse te deixa espiar dentro do diorama. Damping com
+// constante de tempo (independente de framerate). Em reduced-motion, trava.
+const Rig = ({ reduced, parallax, suavidade }: { reduced: boolean; parallax: number; suavidade: number }) => {
+  const { camera, pointer } = useThree();
+  const base = useMemo(() => new THREE.Vector3(...CAM_POS), []);
+  const goal = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame((_, dt) => {
+    if (reduced) {
+      camera.position.copy(base);
+      camera.lookAt(CAM_TARGET);
+      return;
+    }
+    goal.set(
+      base.x + pointer.x * parallax,
+      base.y + pointer.y * parallax * 0.55,
+      base.z - Math.abs(pointer.x) * parallax * 0.15,
+    );
+    camera.position.lerp(goal, 1 - Math.exp(-dt / Math.max(suavidade, 0.001)));
+    camera.lookAt(CAM_TARGET);
+  });
+
+  return null;
 };
 
 // Passe Moebius (Etapa 4) — valores calibrados e TRAVADOS (ver MoebiusEffect).
@@ -74,34 +132,28 @@ const Retro = () => {
   return <primitive object={effect} dispose={null} />;
 };
 
-// Passe CRT (Etapa 6) — o ultimo: curvatura, scanlines, vinheta. Em calibragem.
+// Passe CRT (Etapa 6) — o ultimo: curvatura, scanlines, vinheta.
+// Valores calibrados e TRAVADOS (ver CrtEffect).
 const Crt = () => {
-  const { ligado, curvatura, scanline, scanScale, vinheta, brilho } = useControls("crt", {
-    ligado: { value: true },
-    curvatura: { value: 0.06, min: 0, max: 0.3, step: 0.005 },
-    scanline: { value: 0.12, min: 0, max: 0.6, step: 0.01 },
-    scanScale: { value: 1.6, min: 0.5, max: 4, step: 0.1 },
-    vinheta: { value: 0.35, min: 0, max: 1.5, step: 0.05 },
-    brilho: { value: 1.05, min: 0.5, max: 1.6, step: 0.01 },
-  });
   const effect = useMemo(() => new CrtEffect(), []);
-  useEffect(() => {
-    effect.curvature = ligado ? curvatura : 0;
-    effect.scanline = ligado ? scanline : 0;
-    effect.scanScale = scanScale;
-    effect.vignette = ligado ? vinheta : 0;
-    effect.brightness = ligado ? brilho : 1;
-  }, [effect, ligado, curvatura, scanline, scanScale, vinheta, brilho]);
   return <primitive object={effect} dispose={null} />;
 };
 
 const HeroDiorama = () => {
   const [mounted, setMounted] = useState(false);
-  const reduced = useRef(false);
+  const [reduced, setReduced] = useState(false);
   useEffect(() => {
-    reduced.current = prefersReducedMotion();
+    setReduced(prefersReducedMotion());
     setMounted(true);
   }, []);
+
+  // Etapa 7 em calibragem
+  const { parallax, suavidade, banIdle, flicker } = useControls("interacao", {
+    parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
+    suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
+    banIdle: { value: 1, min: 0, max: 3, step: 0.05 },
+    flicker: { value: 1, min: 0, max: 3, step: 0.05 },
+  });
 
   return (
     <div className="h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
@@ -119,8 +171,9 @@ const HeroDiorama = () => {
           <ambientLight intensity={1.05} />
           <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
+          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} />
           <Suspense fallback={null}>
-            <Diorama />
+            <Diorama reduced={reduced} banIdle={banIdle} flicker={flicker} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
           <EffectComposer>

@@ -55,11 +55,12 @@ export class CrtEffect extends Effect {
     super("CrtEffect", fragmentShader, {
       uniforms: new Map<string, THREE.Uniform>([
         ["uResolution", new THREE.Uniform(new THREE.Vector2(1280, 720))],
-        ["uCurvature", new THREE.Uniform(opts.curvature ?? 0.06)],
-        ["uScanline", new THREE.Uniform(opts.scanline ?? 0.12)],
+        // valores calibrados e travados pelo Mateus
+        ["uCurvature", new THREE.Uniform(opts.curvature ?? 0.15)],
+        ["uScanline", new THREE.Uniform(opts.scanline ?? 0.3)],
         ["uScanScale", new THREE.Uniform(opts.scanScale ?? 1.6)],
-        ["uVignette", new THREE.Uniform(opts.vignette ?? 0.35)],
-        ["uBrightness", new THREE.Uniform(opts.brightness ?? 1.05)],
+        ["uVignette", new THREE.Uniform(opts.vignette ?? 0.3)],
+        ["uBrightness", new THREE.Uniform(opts.brightness ?? 1.6)],
         ["uInk", new THREE.Uniform(new THREE.Color("hsl(0, 0%, 5%)"))],
       ]),
     });
