@@ -1,4 +1,4 @@
-import { Suspense, forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
 import { RetroEffect } from "./RetroEffect";
+import { CrtEffect } from "./CrtEffect";
 
 // Hero: o estudio-diorama do Ban. Etapa 2 (cena crua): carrega o diorama.glb,
 // camera 3/4 + luz direcional, SEM pos-processamento ainda. Full-width, ocupa a
@@ -57,64 +58,42 @@ const Diorama = () => {
   return <primitive object={scene} />;
 };
 
-// Passe Moebius (Etapa 3: buffers). Renderiza normais + profundidade e permite
-// visualizar cada buffer via leva pra aprovar antes do Sobel (Etapa 4).
-const Moebius = forwardRef<MoebiusEffect>((_, ref) => {
+// Passe Moebius (Etapa 4) — valores calibrados e TRAVADOS (ver MoebiusEffect).
+// Tem passe proprio (CONVOLUTION) pra rodar full-res antes do retro pixelizar.
+const Moebius = () => {
   const { scene, camera } = useThree();
-  const { modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, hatchLevel, specThreshold, shininess } = useControls("moebius", {
-    modo: { value: 0, options: { moebius: 0, normais: 1, profundidade: 2 } },
-    outlineThickness: { value: 1.4, min: 0.3, max: 4, step: 0.1 },
-    depthScale: { value: 25, min: 0, max: 80, step: 1 },
-    normalScale: { value: 1.0, min: 0, max: 6, step: 0.1 },
-    wobbleAmp: { value: 3.0, min: 0, max: 12, step: 0.1 },
-    wobbleFreq: { value: 0.08, min: 0.01, max: 0.4, step: 0.01 },
-    hatch: { value: true },
-    hatchSpacing: { value: 8, min: 3, max: 20, step: 1 },
-    hatchLevel: { value: 0.33, min: 0.05, max: 0.7, step: 0.01 },
-    specThreshold: { value: 0.25, min: 0, max: 1, step: 0.01 },
-    shininess: { value: 40, min: 1, max: 200, step: 1 },
-  });
   const effect = useMemo(() => new MoebiusEffect(scene, camera), [scene, camera]);
-  useEffect(() => {
-    effect.debug = modo;
-    effect.outlineThickness = outlineThickness;
-    effect.depthScale = depthScale;
-    effect.normalScale = normalScale;
-    effect.wobbleAmp = wobbleAmp;
-    effect.wobbleFreq = wobbleFreq;
-    effect.hatch = hatch;
-    effect.hatchSpacing = hatchSpacing;
-    effect.hatchLevel = hatchLevel;
-    effect.specThreshold = specThreshold;
-    effect.shininess = shininess;
-  }, [effect, modo, outlineThickness, depthScale, normalScale, wobbleAmp, wobbleFreq, hatch, hatchSpacing, hatchLevel, specThreshold, shininess]);
   useEffect(() => () => effect?.dispose?.(), [effect]);
-  return <primitive ref={ref} object={effect} dispose={null} />;
-});
-Moebius.displayName = "Moebius";
+  return <primitive object={effect} dispose={null} />;
+};
 
-// Passe retro/bitmap (Etapa 5): pixelizacao calibravel + Bayer 4x4 + paleta
-// 1-bit (ink/azul/branco). Roda DEPOIS do Moebius (full-res). Comece leve.
-const Retro = forwardRef<RetroEffect>((_, ref) => {
-  const { ligado, pixelSize, dither, forca, loBand, hiBand } = useControls("retro", {
-    ligado: { value: true },
-    pixelSize: { value: 2, min: 1, max: 12, step: 1 },
-    dither: { value: 0.35, min: 0, max: 1, step: 0.01 },
-    forca: { value: 1, min: 0, max: 1, step: 0.01 },
-    loBand: { value: 0.34, min: 0.05, max: 0.6, step: 0.01 },
-    hiBand: { value: 0.68, min: 0.4, max: 0.95, step: 0.01 },
-  });
+// Passe retro/bitmap (Etapa 5) — pixelizacao + Bayer 4x4 + paleta 1-bit
+// (ink/azul/branco). Valores calibrados e TRAVADOS (ver RetroEffect).
+const Retro = () => {
   const effect = useMemo(() => new RetroEffect(), []);
+  return <primitive object={effect} dispose={null} />;
+};
+
+// Passe CRT (Etapa 6) — o ultimo: curvatura, scanlines, vinheta. Em calibragem.
+const Crt = () => {
+  const { ligado, curvatura, scanline, scanScale, vinheta, brilho } = useControls("crt", {
+    ligado: { value: true },
+    curvatura: { value: 0.06, min: 0, max: 0.3, step: 0.005 },
+    scanline: { value: 0.12, min: 0, max: 0.6, step: 0.01 },
+    scanScale: { value: 1.6, min: 0.5, max: 4, step: 0.1 },
+    vinheta: { value: 0.35, min: 0, max: 1.5, step: 0.05 },
+    brilho: { value: 1.05, min: 0.5, max: 1.6, step: 0.01 },
+  });
+  const effect = useMemo(() => new CrtEffect(), []);
   useEffect(() => {
-    effect.pixelSize = pixelSize;
-    effect.dither = dither;
-    effect.mix = ligado ? forca : 0;
-    effect.loBand = loBand;
-    effect.hiBand = hiBand;
-  }, [effect, ligado, pixelSize, dither, forca, loBand, hiBand]);
-  return <primitive ref={ref} object={effect} dispose={null} />;
-});
-Retro.displayName = "Retro";
+    effect.curvature = ligado ? curvatura : 0;
+    effect.scanline = ligado ? scanline : 0;
+    effect.scanScale = scanScale;
+    effect.vignette = ligado ? vinheta : 0;
+    effect.brightness = ligado ? brilho : 1;
+  }, [effect, ligado, curvatura, scanline, scanScale, vinheta, brilho]);
+  return <primitive object={effect} dispose={null} />;
+};
 
 const HeroDiorama = () => {
   const [mounted, setMounted] = useState(false);
@@ -143,9 +122,11 @@ const HeroDiorama = () => {
           <Suspense fallback={null}>
             <Diorama />
           </Suspense>
+          {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
           <EffectComposer>
             <Moebius />
             <Retro />
+            <Crt />
           </EffectComposer>
         </Canvas>
       ) : null}

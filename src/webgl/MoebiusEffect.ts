@@ -120,14 +120,15 @@ export class MoebiusEffect extends Effect {
         ["uCamFar", new THREE.Uniform(15)],
         ["uTexel", new THREE.Uniform(new THREE.Vector2(1 / 1280, 1 / 720))],
         ["uResolution", new THREE.Uniform(new THREE.Vector2(1280, 720))],
-        ["uOutlineThickness", new THREE.Uniform(opts.outlineThickness ?? 1.4)],
+        // valores calibrados e travados pelo Mateus
+        ["uOutlineThickness", new THREE.Uniform(opts.outlineThickness ?? 1.3)],
         ["uDepthScale", new THREE.Uniform(opts.depthScale ?? 25.0)],
         ["uNormalScale", new THREE.Uniform(opts.normalScale ?? 1.0)],
         ["uWobbleAmp", new THREE.Uniform(opts.wobbleAmp ?? 3.0)],
-        ["uWobbleFreq", new THREE.Uniform(opts.wobbleFreq ?? 0.08)],
+        ["uWobbleFreq", new THREE.Uniform(opts.wobbleFreq ?? 0.06)],
         ["uHatch", new THREE.Uniform((opts.hatch ?? true) ? 1 : 0)],
         ["uHatchSpacing", new THREE.Uniform(8.0)],
-        ["uHatchLevel", new THREE.Uniform(0.33)],
+        ["uHatchLevel", new THREE.Uniform(0.4)],
         ["uOutlineColor", new THREE.Uniform(new THREE.Color("#0d0d10"))],
       ]),
     });
@@ -135,8 +136,8 @@ export class MoebiusEffect extends Effect {
     this.scene = scene;
     this.camera = camera;
     this.normalMaterial = new CustomNormalMaterial();
-    if (opts.specThreshold !== undefined) this.normalMaterial.uniforms.uSpecThreshold.value = opts.specThreshold;
-    if (opts.shininess !== undefined) this.normalMaterial.uniforms.uShininess.value = opts.shininess;
+    this.normalMaterial.uniforms.uSpecThreshold.value = opts.specThreshold ?? 0.17;
+    this.normalMaterial.uniforms.uShininess.value = opts.shininess ?? 36;
     this.normalRT = new THREE.WebGLRenderTarget(1, 1, {
       minFilter: THREE.NearestFilter,
       magFilter: THREE.NearestFilter,

@@ -53,11 +53,12 @@ export class RetroEffect extends Effect {
     super("RetroEffect", fragmentShader, {
       uniforms: new Map<string, THREE.Uniform>([
         ["uResolution", new THREE.Uniform(new THREE.Vector2(1280, 720))],
+        // valores calibrados e travados pelo Mateus
         ["uPixelSize", new THREE.Uniform(opts.pixelSize ?? 2)],
-        ["uDither", new THREE.Uniform(opts.dither ?? 0.35)],
+        ["uDither", new THREE.Uniform(opts.dither ?? 0.09)],
         ["uMix", new THREE.Uniform(opts.mix ?? 1)],
-        ["uLoBand", new THREE.Uniform(opts.loBand ?? 0.34)],
-        ["uHiBand", new THREE.Uniform(opts.hiBand ?? 0.68)],
+        ["uLoBand", new THREE.Uniform(opts.loBand ?? 0.05)],
+        ["uHiBand", new THREE.Uniform(opts.hiBand ?? 0.55)],
         ["uInk", new THREE.Uniform(new THREE.Color("hsl(0, 0%, 5%)"))],
         ["uBlue", new THREE.Uniform(new THREE.Color("hsl(227, 87%, 34%)"))],
         ["uPaper", new THREE.Uniform(new THREE.Color("hsl(0, 0%, 100%)"))],
