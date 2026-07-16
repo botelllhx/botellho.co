@@ -517,7 +517,12 @@ const Rig = ({
     const largura = Math.max(tam.x, tam.z);
     const dV = tam.y / 2 / Math.tan(fovV / 2);
     const dH = largura / 2 / Math.tan(fovH / 2);
-    const dist = Math.max(dV, dH) * zoomMargem * (f.abertura ? 1.9 : 1);
+    // O respiro da abertura nao pode ser fixo: num container LARGO e baixo quem
+    // manda e a altura, e um multiplicador alto joga a camera longe demais (vira
+    // panoramica do estudio em vez de close na tela). Entao ele acompanha a
+    // proporcao: quanto mais largo o container, menos respiro.
+    const respiro = f.abertura ? THREE.MathUtils.clamp(2.3 / Math.max(cam.aspect, 0.6), 0.85, 1.9) : 1;
+    const dist = Math.max(dV, dH) * zoomMargem * respiro;
     if (f.seguir) {
       destPos.copy(centro).add(DIR_BAN.clone().multiplyScalar(dist));
     } else if (f.abertura) {
