@@ -4,6 +4,7 @@ import Scramble from "@/motion/Scramble";
 import Reveal from "@/motion/Reveal";
 import Typing from "@/motion/Typing";
 import Window from "@/system/Window";
+import HeroDiorama from "@/webgl/HeroDiorama";
 
 const FAZEMOS = [
   { nome: "sites e plataformas", desc: "Do institucional ao produto: presença digital com clareza, acessibilidade e performance, construída à mão." },
@@ -63,10 +64,13 @@ const Studio = () => {
             </p>
           </div>
 
-          <Window title="ban.bmp" phosphor bodyClassName="!p-0">
-            <div className="relative flex aspect-[4/3] items-center justify-center bg-paper" data-cursor="3d">
-              <img src="/ban/ban-3.png" alt="Ban, o mascote, em bitmap" className="h-4/5 w-4/5 object-contain" style={{ imageRendering: "pixelated" }} />
-              <span className="crt-frame__tag type-label !text-foreground/60">ban // bitmap</span>
+          {/* o mesmo diorama do hero, mas abrindo focado NA TELA — que roda o
+              boot com os servicos do estudio. Clicar puxa a camera pra tras e
+              revela o estudio inteiro. */}
+          <Window title="estudio.exe" phosphor bodyClassName="!p-0">
+            <div className="relative aspect-[4/3]" data-cursor="nativo">
+              <HeroDiorama focoInicial="Monitor" className="h-full" />
+              <span className="crt-frame__tag type-label !text-foreground/60">clique para revelar o estúdio</span>
             </div>
           </Window>
         </div>

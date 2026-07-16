@@ -65,6 +65,8 @@ const ALVOS: Record<string, { label: string }> = {
 export interface Foco {
   obj: THREE.Object3D;
   label: string;
+  /** foco de ABERTURA (pagina do estudio): quer mais respiro que um zoom de click */
+  abertura?: boolean;
   // o Ban nao fica parado: a camera recalcula o enquadramento a cada frame
   seguir?: boolean;
 }
@@ -76,9 +78,11 @@ interface AnimProps {
   onHover: (label: string | null) => void;
   onFocar: (f: Foco | null) => void;
   foco: Foco | null;
+  // abre a cena ja focada num alvo (ex.: a pagina do estudio abre na tela)
+  focoInicial?: string;
 }
 
-const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco, focoInicial }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
   const screen = useRef<THREE.MeshBasicMaterial | null>(null);
   const [ativo, setAtivo] = useState<string | null>(null);
@@ -133,8 +137,23 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
         // parede. (o que as ocluia antes era o `optimize` fundindo as paredes
         // dentro do no "Floor" — resolvido exportando sem join/flatten.)
       }
+      });
+
+    if (!focoInicial) return;
+    // ja abre focado: acha o alvo tagueado e manda a camera pra ele
+    // prefere a TELA (plana, bbox limpo) ao vidro curvo do monitor: o bbox do
+    // vidro e irregular e joga o enquadramento pra dentro/torto.
+    let alvo: THREE.Object3D | null = null;
+    scene.traverse((o) => {
+      if (o.userData?.alvo !== focoInicial) return;
+      const mm = (o as THREE.Mesh).material as THREE.Material | undefined;
+      if (!alvo || o.name === "MonitorTela" || mm?.name === "MonitorTela") alvo = o;
     });
-  }, [scene]);
+    if (alvo && ALVOS[focoInicial]) {
+      onFocar({ obj: alvo, label: ALVOS[focoInicial].label, abertura: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene, focoInicial]);
 
   useFrame((state) => {
     if (reduced) return;
@@ -328,6 +347,8 @@ const Ban = ({
   onHover: (l: string | null) => void;
   onFocar: (f: Foco | null) => void;
   foco: Foco | null;
+  // abre a cena ja focada num alvo (ex.: a pagina do estudio abre na tela)
+  focoInicial?: string;
 }) => {
   const { scene, animations } = useGLTF(BAN, DRACO);
   const pivo = useRef<THREE.Group>(null);
@@ -470,9 +491,14 @@ const Rig = ({
     caixa.getCenter(centro);
     caixa.getSize(tam);
     const cam = camera as THREE.PerspectiveCamera;
-    const fov = THREE.MathUtils.degToRad(cam.fov);
-    const meia = Math.max(tam.y, Math.max(tam.x, tam.z) / cam.aspect) / 2;
-    const dist = (meia / Math.tan(fov / 2)) * zoomMargem;
+    const fovV = THREE.MathUtils.degToRad(cam.fov);
+    const fovH = 2 * Math.atan(Math.tan(fovV / 2) * cam.aspect);
+    // distancia que satisfaz ALTURA e LARGURA. So a altura (como era antes) faz
+    // a camera entrar demais em container estreito, tipo o 4:3 do /estudio.
+    const largura = Math.max(tam.x, tam.z);
+    const dV = tam.y / 2 / Math.tan(fovV / 2);
+    const dH = largura / 2 / Math.tan(fovH / 2);
+    const dist = Math.max(dV, dH) * zoomMargem * (f.abertura ? 1.9 : 1);
     if (f.seguir) {
       destPos.copy(centro).add(DIR_BAN.clone().multiplyScalar(dist));
     } else {
@@ -556,7 +582,14 @@ const Crt = () => {
   return <primitive object={effect} dispose={null} />;
 };
 
-const HeroDiorama = () => {
+interface HeroProps {
+  /** abre a cena ja focada num alvo. Ex.: "Monitor" na pagina do estudio. */
+  focoInicial?: string;
+  /** altura do container. Padrao: a tela toda abaixo da barra (home). */
+  className?: string;
+}
+
+const HeroDiorama = ({ focoInicial, className }: HeroProps = {}) => {
   const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
@@ -599,9 +632,9 @@ const HeroDiorama = () => {
 
   return (
     <div
-      className={`relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0] ${
-        label && !foco ? "hero-alvo" : ""
-      }`}
+      className={`relative w-full bg-[#b7bbc0] ${
+        className ?? "h-[calc(100svh-var(--bar-h))]"
+      } ${label && !foco ? "hero-alvo" : ""}`}
     >
       {/* focado: clicar em qualquer lugar volta */}
       {foco ? <div className="absolute inset-0 z-10" onClick={() => setFoco(null)} /> : null}
@@ -631,9 +664,9 @@ const HeroDiorama = () => {
           <ambientLight intensity={1.05} />
           <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
-          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
+          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={focoInicial ? 0 : scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} focoInicial={focoInicial} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
