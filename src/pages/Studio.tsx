@@ -55,11 +55,13 @@ const Studio = () => {
         <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 lg:grid-cols-[1fr_0.95fr]">
           <div className="px-4 py-10 md:px-6">
             <Typing text="> estúdio" className="type-label text-muted-foreground" />
-            <h1 className="type-tese mt-6">
+            {/* o type-tese e calibrado pra largura cheia (7vw); aqui o texto mora
+                numa coluna de ~metade da tela, entao sobe pra preencher ela */}
+            <h1 className="type-tese mt-6 text-[clamp(2.4rem,9.2vw,8.5rem)] leading-[0.88]">
               <Scramble as="span" text="estúdio de" className="block" onMount />
               <Scramble as="span" text="web & experiências" className="block" onMount delay={160} />
             </h1>
-            <p className="mt-8 max-w-md font-sans text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-8 max-w-lg font-sans text-xl leading-relaxed text-muted-foreground">
               botellho junta engenharia de verdade com direção de arte, do site
               institucional ao imersivo em 3D, sempre com a mesma régua de craft.
               Para marcas, cultura e instituições que querem ser lembradas.
