@@ -47,16 +47,20 @@ const SCREEN_BASE = 1.3;
 interface AnimProps {
   reduced: boolean;
   flicker: number;
+  giroPausa: number;
 }
 
-const Diorama = ({ reduced, flicker }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
   const screen = useRef<THREE.MeshStandardMaterial | null>(null);
+  // parte de cima da cadeira gamer: gira sozinha, a base fica parada
+  const cadeira = useRef<THREE.Object3D | null>(null);
+  const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
 
   useEffect(() => {
     scene.traverse((o) => {
-      // o Ban estatico do diorama some: quem entra e o riggado (ban_rigged.glb)
-      if (o.name === "Ban") o.visible = false;
+      // o assento (separado da base no Blender; origem no eixo do pistao)
+      if (o.name === "ChairTop") cadeira.current = o;
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const mat = m.material as THREE.MeshStandardMaterial;
@@ -76,11 +80,9 @@ const Diorama = ({ reduced, flicker }: AnimProps) => {
           side: THREE.DoubleSide,
           toneMapped: false,
         });
-        // as fotos vinham ~1cm ATRAS da superficie da parede (o mesh "Floor" e o
-        // box do comodo) -> a parede as ocluia. empurra pra frente (a cena usa
-        // +z como lado da camera) pra a arte aparecer.
-        m.position.z += 0.06;
-        m.updateMatrixWorld(true);
+        // sem empurrao aqui: no export novo as fotos ja saem 2cm A FRENTE da
+        // parede. (o que as ocluia antes era o `optimize` fundindo as paredes
+        // dentro do no "Floor" — resolvido exportando sem join/flatten.)
       }
     });
   }, [scene]);
@@ -92,6 +94,30 @@ const Diorama = ({ reduced, flicker }: AnimProps) => {
     if (screen.current && flicker > 0) {
       const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
       screen.current.emissiveIntensity = SCREEN_BASE + f * flicker;
+    }
+    // cadeira: de tempos em tempos o assento roda. So o topo — a base fica
+    // cravada, como cadeira gamer de verdade.
+    const c = cadeira.current;
+    if (c) {
+      const g = giro.current;
+      if (g.dur === 0 && t > g.ate) {
+        // uma rodada: entre 3/4 de volta e 2 voltas, pra um lado ou pro outro
+        const voltas = (0.75 + Math.random() * 1.25) * (Math.random() < 0.5 ? -1 : 1);
+        g.de = c.rotation.y;
+        g.para = g.de + voltas * Math.PI * 2;
+        g.t0 = t;
+        g.dur = 1.6 + Math.random() * 1.4;
+      }
+      if (g.dur > 0) {
+        const k = Math.min(1, (t - g.t0) / g.dur);
+        // easeOutCubic: sai rapido e vai morrendo — inercia de cadeira
+        const e = 1 - Math.pow(1 - k, 3);
+        c.rotation.y = g.de + (g.para - g.de) * e;
+        if (k >= 1) {
+          g.dur = 0;
+          g.ate = t + giroPausa + Math.random() * giroPausa;
+        }
+      }
     }
   });
 
@@ -237,11 +263,12 @@ const HeroDiorama = () => {
   }, []);
 
   // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, flicker } = useControls("interacao", {
+  const { parallax, suavidade, banSpeed, banPausa, giroPausa, flicker } = useControls("interacao", {
     parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
     suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
     banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
     banPausa: { value: 4, min: 1, max: 12, step: 0.5 },
+    giroPausa: { value: 7, min: 2, max: 25, step: 0.5 },
     flicker: { value: 1, min: 0, max: 3, step: 0.05 },
   });
 
@@ -263,7 +290,7 @@ const HeroDiorama = () => {
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
