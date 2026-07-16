@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
+import { marcarHeroPronto } from "@/system/heroPronto";
 import * as THREE from "three";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
@@ -608,6 +609,19 @@ const Crt = () => {
   return <primitive object={effect} dispose={null} />;
 };
 
+// Avisa o boot que o hero esta na tela. Mora DENTRO do <Suspense> do Canvas,
+// entao so monta depois que os GLBs carregaram, e o useFrame garante que ja
+// houve um frame desenhado: montar nao basta, o canvas ainda estaria preto.
+const AvisarPronto = () => {
+  const avisou = useRef(false);
+  useFrame(() => {
+    if (avisou.current) return;
+    avisou.current = true;
+    marcarHeroPronto();
+  });
+  return null;
+};
+
 interface HeroProps {
   /** abre a cena ja focada num alvo. Ex.: "Monitor" na pagina do estudio. */
   focoInicial?: string;
@@ -697,6 +711,7 @@ const HeroDiorama = ({ focoInicial, travado, className }: HeroProps = {}) => {
           <Suspense fallback={null}>
             <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} focoInicial={focoInicial} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
+            <AvisarPronto />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
           <EffectComposer>

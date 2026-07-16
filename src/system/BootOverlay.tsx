@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { prefersReducedMotion } from "@/motion/prefs";
+import { aoHeroPronto, heroJaPronto, heroRegistrado } from "@/system/heroPronto";
 
 // Boot DOS como primeira impressao da marca: tela azul, log revelando linha a
 // linha com leaders pontilhados, o Ban acordando por scanline e uma barra em
@@ -29,7 +30,14 @@ const LINHAS = [
 ];
 
 const CELLS = 24;
+// Tempo da vinheta: e o que revela o Ban e enche a barra.
 const BOOT_MS = 3000;
+// Minimo em tela, com um respiro depois da barra encher. So depois disto o boot
+// olha se tem 3D pra esperar.
+const MINIMO_MS = BOOT_MS + 300;
+// Teto contado do inicio: rede ruim ou GLB que nao chega nao podem prender
+// ninguem numa tela azul.
+const TETO_MS = 8000;
 
 const BootOverlay = () => {
   // `!booted` e igual no servidor e no cliente na primeira carga (o modulo nasce
@@ -57,23 +65,54 @@ const BootOverlay = () => {
       if (t >= 1) clearInterval(progTimer);
     }, 60);
 
-    const done = setTimeout(() => setPronto(true), BOOT_MS + 300);
-    const sair = setTimeout(() => setOff(true), BOOT_MS + 1050);
-    const remove = setTimeout(() => setVisible(false), BOOT_MS + 1050 + 600);
+    // Fecha o boot: marca pronto, deixa a pessoa ler, e sobe revelando o site.
+    let sair: ReturnType<typeof setTimeout>;
+    let remove: ReturnType<typeof setTimeout>;
+    let teto: ReturnType<typeof setTimeout>;
+    let desinscrever = () => {};
+    let fechado = false;
+    const fechar = () => {
+      if (fechado) return;
+      fechado = true;
+      desinscrever();
+      clearTimeout(teto);
+      setPronto(true);
+      sair = setTimeout(() => setOff(true), 750);
+      remove = setTimeout(() => setVisible(false), 750 + 600);
+    };
+
+    // Passado o minimo da vinheta: se nao ha 3D vindo nesta pagina, sobe. Se ha,
+    // espera o primeiro frame do canvas. Sem isso o boot subia no meio do
+    // download e o 3D pulava pra dentro com a tela ja aberta.
+    const minimo = setTimeout(() => {
+      if (!heroRegistrado() || heroJaPronto()) {
+        fechar();
+        return;
+      }
+      desinscrever = aoHeroPronto(fechar);
+      teto = setTimeout(fechar, TETO_MS - MINIMO_MS);
+    }, MINIMO_MS);
 
     return () => {
       clearInterval(lineTimer);
       clearInterval(progTimer);
-      clearTimeout(done);
+      clearTimeout(minimo);
       clearTimeout(sair);
       clearTimeout(remove);
+      clearTimeout(teto);
+      desinscrever();
     };
   }, []);
 
   if (!visible) return null;
 
+  // `frac` e a vinheta: revela o Ban ao longo do BOOT_MS.
   const frac = prog / CELLS;
-  const pct = Math.round(frac * 100);
+  // A barra e o numero, porem, so fecham quando o hero esta MESMO pronto. Agora
+  // que o boot espera de verdade, cravar 100% enquanto ainda carrega seria
+  // mentira: segura no 99 ate ter o que mostrar.
+  const cheio = pronto ? CELLS : Math.min(prog, CELLS - 1);
+  const pct = pronto ? 100 : Math.min(99, Math.round(frac * 100));
 
   return (
     <div className={`boot ${off ? "boot--off" : ""}`} aria-hidden>
@@ -116,7 +155,7 @@ const BootOverlay = () => {
               <span className="tabular-nums text-paper/70">{pct}%</span>
             </div>
             <div className="mt-2 overflow-hidden tracking-[0.15em] text-paper" aria-hidden>
-              {"█".repeat(prog)}{"·".repeat(CELLS - prog)}
+              {"█".repeat(cheio)}{"·".repeat(CELLS - cheio)}
             </div>
           </div>
         </div>
