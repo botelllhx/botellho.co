@@ -5,6 +5,17 @@ import { prefersReducedMotion } from "@/motion/prefs";
 // linha com leaders pontilhados, o Ban acordando por scanline e uma barra em
 // blocos. Sem spinner, sem jargao. So na primeira visita da sessao (flag em
 // memoria, sem browser storage). Sai subindo, revelando o site.
+//
+// O estado inicial e `visible = true` DE PROPOSITO: o site e SSG, entao o
+// navegador pinta o HTML pronto antes de qualquer JS rodar. Se o boot so
+// ligasse no useEffect (que so roda depois da hidratacao), o site inteiro
+// apareceria primeiro e o boot cairia por cima depois, que e o oposto do que um
+// loader faz. Nascendo visivel, ele ja vem no HTML estatico e cobre desde o
+// primeiro frame.
+//
+// Quem pediu menos movimento nao ve o boot, e isso e resolvido no CSS
+// (.boot { display: none }) e nao aqui: CSS vale na primeira pintura, JS nao,
+// e mudar o estado inicial no cliente quebraria a hidratacao.
 let booted = false;
 
 // Log com cara de boot, mas puxando pro que a gente vende (desenvolvimento de
@@ -21,7 +32,10 @@ const CELLS = 24;
 const BOOT_MS = 3000;
 
 const BootOverlay = () => {
-  const [visible, setVisible] = useState(false);
+  // `!booted` e igual no servidor e no cliente na primeira carga (o modulo nasce
+  // zerado), entao a hidratacao casa. Numa remontagem (ex.: voltar do /admin) ja
+  // nasce false e o boot nao repete.
+  const [visible, setVisible] = useState(() => !booted);
   const [off, setOff] = useState(false);
   const [linhas, setLinhas] = useState(0);
   const [prog, setProg] = useState(0);
@@ -30,10 +44,10 @@ const BootOverlay = () => {
   useEffect(() => {
     if (booted || prefersReducedMotion()) {
       booted = true;
+      setVisible(false);
       return;
     }
     booted = true;
-    setVisible(true);
 
     const lineTimer = setInterval(() => setLinhas((n) => Math.min(n + 1, LINHAS.length)), 420);
     const start = performance.now();

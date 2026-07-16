@@ -620,6 +620,15 @@
   transition: transform 560ms var(--ease-inout);
 }
 
+/* Quem pediu menos movimento nao ve o boot. Precisa ser CSS e nao JS: o boot vem
+   no HTML estatico (ver BootOverlay), entao ele pinta antes de qualquer script
+   rodar. Esconder pelo React so apagaria depois de ja ter piscado. */
+@media (prefers-reduced-motion: reduce) {
+  .boot {
+    display: none;
+  }
+}
+
 /* Scanlines discretas em paper por cima do azul */
 .boot__scanlines {
   position: absolute;
