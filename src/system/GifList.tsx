@@ -1,25 +1,35 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 // Lista gigante centralizada a la Locomotive (carreiras): numeracao e linhas
-// divisorias na estetica DOS, e no hover um gif engracado abre INLINE no meio da
-// frase (tipo "Project [gif] Manager"). Gifs sao pesados, entao so carregam
-// depois do primeiro hover (lazy).
+// divisorias na estetica DOS, e no hover um clipe engracado abre INLINE no meio
+// da frase (tipo "Project [clip] Manager").
+//
+// Sao VIDEO, nao gif: os originais somavam 19MB (o tema.gif sozinho tinha 13MB,
+// 201 frames a 640px — era video salvo como gif). Em h264/vp9 o mesmo conteudo
+// da 598KB no total, sem perda visivel: gif so tem 256 cores, entao o mp4 fica
+// ate mais limpo. Segue lazy: so carrega depois do primeiro hover.
 const ITENS = [
-  { esq: "sem lorem", dir: "ipsum", gif: "/gifs/lorem.gif" },
-  { esq: "sem tema", dir: "de prateleira", gif: "/gifs/tema.gif" },
-  { esq: "sem powerpoint", dir: "infinito", gif: "/gifs/powerpoint.gif" },
-  { esq: "reunião que", dir: "era e-mail", gif: "/gifs/reuniao.gif" },
-  { esq: "sem site", dir: "travado", gif: "/gifs/travado.gif" },
-  { esq: "sem preguiça", dir: "de detalhe", gif: "/gifs/preguica.gif" },
+  { esq: "sem lorem", dir: "ipsum", clip: "lorem" },
+  { esq: "sem tema", dir: "de prateleira", clip: "tema" },
+  { esq: "sem powerpoint", dir: "infinito", clip: "powerpoint" },
+  { esq: "reunião que", dir: "era e-mail", clip: "reuniao" },
+  { esq: "sem site", dir: "travado", clip: "travado" },
+  { esq: "sem preguiça", dir: "de detalhe", clip: "preguica" },
 ];
 
 const GifList = () => {
   const [hover, setHover] = useState<number | null>(null);
   const [ativos, setAtivos] = useState<Set<number>>(new Set());
+  const videos = useRef(new Map<number, HTMLVideoElement>());
 
   const entrar = (i: number) => {
     setHover(i);
     setAtivos((s) => (s.has(i) ? s : new Set(s).add(i)));
+    // O clipe vive num span de largura ZERO que so abre no hover, e o Chrome nao
+    // toca video de tamanho zero: o autoplay morre no primeiro frame e nunca mais
+    // volta sozinho. Entao o play e pedido a cada hover, nao so no load.
+    const v = videos.current.get(i);
+    if (v) void v.play().catch(() => {});
   };
 
   return (
@@ -43,7 +53,33 @@ const GifList = () => {
                 <span>{item.esq}</span>
                 <span className="mx-2 inline-flex h-[1em] w-0 items-center justify-center overflow-hidden transition-[width] duration-300 ease-out group-hover:w-[1.6em] md:mx-3">
                   {ativos.has(i) ? (
-                    <img src={item.gif} alt="" className="h-full w-full object-cover" />
+                    // O gate de rede e o lazy (so monta apos o 1o hover), entao
+                    // aqui preload="auto": com "none" o autoplay nao teria dados
+                    // pra comecar e o clipe ficaria no frame zero.
+                    <video
+                      ref={(el) => {
+                        if (el) videos.current.set(i, el);
+                        else videos.current.delete(i);
+                      }}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                      aria-hidden
+                      onCanPlay={(e) => {
+                        void (e.currentTarget as HTMLVideoElement).play().catch(() => {});
+                      }}
+                      onError={(e) => {
+                        // arquivo ausente: some sem quebrar o layout (mesmo
+                        // contrato que o gif tinha antes)
+                        (e.currentTarget as HTMLVideoElement).style.display = "none";
+                      }}
+                    >
+                      <source src={`/gifs/${item.clip}.webm`} type="video/webm" />
+                      <source src={`/gifs/${item.clip}.mp4`} type="video/mp4" />
+                    </video>
                   ) : null}
                 </span>
                 <span>{item.dir}</span>
