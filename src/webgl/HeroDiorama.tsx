@@ -3,7 +3,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
-import { useControls } from "leva";
 import * as THREE from "three";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
@@ -74,13 +73,12 @@ interface AnimProps {
   reduced: boolean;
   flicker: number;
   giroPausa: number;
-  telaLuz: number;
   onHover: (label: string | null) => void;
   onFocar: (f: Foco | null) => void;
   foco: Foco | null;
 }
 
-const Diorama = ({ reduced, flicker, giroPausa, telaLuz, onHover, onFocar, foco }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
   const screen = useRef<THREE.MeshBasicMaterial | null>(null);
   const [ativo, setAtivo] = useState<string | null>(null);
@@ -89,9 +87,6 @@ const Diorama = ({ reduced, flicker, giroPausa, telaLuz, onHover, onFocar, foco 
   const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
   // a tela roda um boot DOS em loop e ACENDE a cena (unica fonte "viva" do diorama)
   const tela = useMemo(() => criarTelaViva(), []);
-  const luz = useRef<THREE.SpotLight>(null);
-  // alvo do spot: a luz vai PRA FRENTE (mesa/cadeira/chao), nao pra parede atras
-  const alvoLuz = useMemo(() => new THREE.Object3D(), []);
   const ativoObj = useRef<THREE.Object3D | null>(null);
   const escala0 = useRef(new THREE.Vector3(1, 1, 1));
 
@@ -152,10 +147,6 @@ const Diorama = ({ reduced, flicker, giroPausa, telaLuz, onHover, onFocar, foco 
     if (screen.current) {
       const b = SCREEN_BASE + f * flicker;
       screen.current.color.setRGB(b, b, b);
-    }
-    // a MESMA cintilancia vai na luz: a tela ilumina o quarto de verdade
-    if (luz.current) {
-      luz.current.intensity = telaLuz * tela.brilho() * (1 + f * flicker);
     }
     // hover: PISCA em blocos, tipo seleção de terminal. Sob a paleta 1-bit um
     // brilho suave e literalmente invisivel (ou o pixel cruza a banda do branco
@@ -280,19 +271,6 @@ const Diorama = ({ reduced, flicker, giroPausa, telaLuz, onHover, onFocar, foco 
 
   return (
     <>
-      {/* A tela como fonte de luz. So faz sentido com o quarto escuro: somar luz
-          num ambiente ja claro nao cruza a banda do 1-bit e vira invisivel. */}
-      <primitive object={alvoLuz} position={[0, 0.5, 0.9]} />
-      <spotLight
-        ref={luz}
-        position={[0, 1.0, -0.55]}
-        target={alvoLuz}
-        angle={1.25}
-        penumbra={1}
-        color="#88a0ff"
-        distance={4.5}
-        decay={1.1}
-      />
       <primitive
         object={scene}
         // onPointerMove, NAO onPointerOver: o handler esta na RAIZ do diorama, e o
@@ -619,19 +597,6 @@ const HeroDiorama = () => {
   const zoomMargem = 1.35;
   const flicker = 1.0;
 
-  // TESTE (a decidir): "noite" apaga a luz do quarto e deixa a TELA ser a fonte.
-  // Sob a paleta 1-bit nao adianta somar luz num quarto ja claro — o pixel so
-  // muda se cruzar a banda (0.55). Escurecendo, a tela empurra o que esta perto
-  // dela pro branco e a luz finalmente aparece.
-  const { noite, ambiente, principal, telaLuz } = useControls("luz (teste)", {
-    noite: { value: true },
-    ambiente: { value: 0.18, min: 0, max: 1.2, step: 0.01 },
-    principal: { value: 0.35, min: 0, max: 3, step: 0.05 },
-    telaLuz: { value: 14, min: 0, max: 40, step: 0.5 },
-  });
-  const amb = noite ? ambiente : 1.05;
-  const dir = noite ? principal : 2.7;
-
   return (
     <div
       className={`relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0] ${
@@ -663,12 +628,12 @@ const HeroDiorama = () => {
           }}
         >
           {/* sem shadow map: a sombra do moebius e por cross-hatch */}
-          <ambientLight intensity={amb} />
-          <directionalLight position={[4.5, 6, 3.5]} intensity={dir} />
-          <directionalLight position={[-4, 3, -2]} intensity={noite ? dir * 0.25 : 0.7} />
+          <ambientLight intensity={1.05} />
+          <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
+          <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} telaLuz={noite ? telaLuz : 0} onHover={setLabel} onFocar={setFoco} foco={foco} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
