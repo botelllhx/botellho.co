@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { writeFileSync } from "fs";
+import { writeFileSync, readdirSync, rmSync, statSync } from "fs";
 
 const SITE_URL = "https://botellho.com";
 
@@ -34,6 +34,21 @@ async function getPublishedSlugs(mode: string): Promise<string[]> {
     return [];
   }
 }
+
+// Tudo em public/ vai pra raiz do dominio. Documento interno ali VAZA: a
+// direcao criativa chegou a ficar publica em /docs/ e indexavel (o robots so
+// bloqueia /admin). Os .md que sobram sao nota de trabalho e licenca de
+// terceiros, nada que precise ser servido. Esta rede pega o proximo tambem.
+const limparDocs = (dir: string) => {
+  const varrer = (d: string) => {
+    for (const nome of readdirSync(d)) {
+      const alvo = path.join(d, nome);
+      if (statSync(alvo).isDirectory()) varrer(alvo);
+      else if (nome.toLowerCase().endsWith(".md")) rmSync(alvo);
+    }
+  };
+  varrer(dir);
+};
 
 const buildSitemap = (dir: string, slugs: string[]) => {
   const lastmod = new Date().toISOString().slice(0, 10);
@@ -96,7 +111,10 @@ export default defineConfig(async ({ command, mode }) => {
       // /admin e as rotas legadas ficam fora do SSG.
       includedRoutes: () => prerenderRoutes,
       // Gera o sitemap.xml no build com lastmod atual e os cases reais.
-      onFinished: (dir: string) => buildSitemap(dir, slugs),
+      onFinished: (dir: string) => {
+        buildSitemap(dir, slugs);
+        limparDocs(dir);
+      },
     },
   };
 });
