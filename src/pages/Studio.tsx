@@ -54,11 +54,10 @@ const Studio = () => {
       <section className="sticky top-[var(--bar-h)] z-0 flex flex-col bg-background">
         <div className="px-4 pb-6 pt-8 md:px-6 md:pb-8 md:pt-10">
           <Typing text="> estúdio" className="type-label text-muted-foreground" />
-          <h1 className="type-tese mt-5">
-            <Scramble as="span" text="estúdio de" className="block" onMount />
-            <Scramble as="span" text="web & experiências" className="block" onMount delay={160} />
-          </h1>
-          <p className="mt-6 max-w-2xl font-sans text-lg leading-relaxed text-muted-foreground">
+          {/* mesma escala do /trabalhos (que nao usa type-tese: tem clamp proprio,
+              maior que o teto de 7rem dele) */}
+          <Scramble as="h1" text="o estúdio." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" onMount />
+          <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
             botellho junta engenharia de verdade com direção de arte, do site
             institucional ao imersivo em 3D, sempre com a mesma régua de craft.
             Para marcas, cultura e instituições que querem ser lembradas.

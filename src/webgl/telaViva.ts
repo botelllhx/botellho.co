@@ -16,15 +16,24 @@ const LINHAS: [string, string][] = [
   ["acessibilidade", "wcag aa"],
 ];
 
-// o Ban em ASCII: some junto com o resto quando a tela troca de programa
+// O Ban em ASCII: gerado a partir da arte que o Mateus passou (130x46),
+// reamostrada pra 78 colunas preservando a proporcao — a fonte do canvas e
+// ~1.9x mais alta que larga, entao o passo vertical compensa isso.
 const BAN_ASCII = [
-  "        __        ",
-  "   ___ / _\\__     ",
-  "  /    \\_/   \\__  ",
-  " | o          _ \\ ",
-  "  \\__  ___   / /  ",
-  "     |/   |_/ /   ",
-  "     ||   ||      ",
+  "          -+**######*+- :",
+  "       :#%%%@@@%@@%%%@@@@%#+-",
+  "    -=*#%@@%@@@@@##@@@@@@@@@%%+=:",
+  "-+*%%%#***++**+*#*+*@@@@@@@%*%@@%#=",
+  ":*%@@@%%***#*+++#%@@@@@@@@@@@%+*+**--::----++***#######****+=-",
+  "    --==----:-++**@@@@@@@@@@@@@@@@@@@@%@@%%%%#%@@@@@@@@@@@@%%@@@#+:",
+  "                -#%@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*",
+  "                 *@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@%+:",
+  "                 +@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%###*#@@@@@@@%*##%#+=-:",
+  "                  #%@@@@%%%#%#**@@@@@@@@@@@@%*==-=@%%#%%#-  -+#%%@%%@@:   :-=-",
+  "                 =@@@@@@%#%@@@@@@@@@@@@%#+-:         -*#%%*        ##%:",
+  "               -+***++-      :---*@@@@#:             -+*+=:        ***+",
+  "           --=**#*+-            :+%#**:           +###*+           -++-",
+  "         =*#%***=::::::::::::::=##%#*=",
 ];
 
 const CICLO = 24; // segundos do ciclo inteiro (3 programas de 8s)
@@ -108,13 +117,13 @@ export const criarTelaViva = (): TelaViva => {
   // 3) o Ban em ASCII, digitando linha a linha
   const banAscii = (u: number, t: number) => {
     cabecalho("botellho :: ban.exe", t);
-    ctx.font = "16px monospace";
+    ctx.font = "11px monospace";
     ctx.fillStyle = CLARO;
-    const n = Math.min(BAN_ASCII.length, Math.floor(u * PROG / 0.35));
-    for (let i = 0; i < n; i++) ctx.fillText(BAN_ASCII[i], 120, 62 + i * 19);
+    const n = Math.min(BAN_ASCII.length, Math.floor((u * PROG) / 0.3));
+    for (let i = 0; i < n; i++) ctx.fillText(BAN_ASCII[i], 26, 62 + i * 12);
     if (n >= BAN_ASCII.length) {
-      ctx.font = "13px monospace";
-      ctx.fillText("ban, o salsicha // mascote", 120, 210);
+      ctx.font = "12px monospace";
+      ctx.fillText("ban, o salsicha // mascote", 26, 232);
     }
     return 0.85;
   };
