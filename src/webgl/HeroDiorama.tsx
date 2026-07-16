@@ -38,6 +38,10 @@ const BAN_PATH = [
 // e com isso que eu caso a velocidade do path com o timeScale -> os pes nao patinam.
 const STRIDE_PER_CYCLE = 0.127;
 
+// 3/4 de onde a camera acompanha o Ban: fixo no mundo, entao ele vira dentro do
+// quadro em vez de a camera girar junto com ele.
+const DIR_BAN = new THREE.Vector3(0.75, 0.45, 1).normalize();
+
 // posicoes convertidas do Blender (Z-up) pra R3F (Y-up): (x,y,z)->(x,z,-y)
 // enquadramento fechado 3/4 aprovado (blender cam 2.95,-2.85,1.5 -> alvo 0.12,0,0.42)
 const CAM_POS: [number, number, number] = [2.95, 1.5, 2.85];
@@ -56,11 +60,14 @@ const ALVOS: Record<string, { label: string }> = {
   Monitor: { label: "o estúdio" },
   PicV: { label: "trabalhos" },
   PicH: { label: "laboratório" },
+  Ban: { label: "ban, o salsicha" },
 };
 
 export interface Foco {
   obj: THREE.Object3D;
   label: string;
+  // o Ban nao fica parado: a camera recalcula o enquadramento a cada frame
+  seguir?: boolean;
 }
 
 interface AnimProps {
@@ -86,7 +93,7 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
   // alvo do spot: a luz da tela vai PRA FRENTE (mesa/cadeira), nao pra parede
   const alvoLuz = useMemo(() => new THREE.Object3D(), []);
   const ativoObj = useRef<THREE.Object3D | null>(null);
-  const escala0 = useRef(1);
+  const escala0 = useRef(new THREE.Vector3(1, 1, 1));
 
   useEffect(() => {
     scene.traverse((o) => {
@@ -150,12 +157,24 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
     if (luz.current) {
       luz.current.intensity = telaLuz * tela.brilho() * (1 + f * flicker);
     }
-    // hover: pulso na escala. E geometrico, entao sobrevive ao Moebius, ao 1-bit
-    // e ao CRT — diferente de brilho, que a paleta achata.
+    // hover: PISCA em blocos, tipo seleção de terminal. Sob a paleta 1-bit um
+    // brilho suave e literalmente invisivel (ou o pixel cruza a banda do branco
+    // ou nao muda nada), entao vai no talo: alterna entre normal e estourado a
+    // 3Hz. Mais 4% de escala, que e geometrico e sobrevive ao Moebius.
     const ao = ativoObj.current;
     if (ao) {
-      const p = 1 + Math.sin(t * 7) * 0.018 + 0.022;
-      ao.scale.setScalar(escala0.current * p);
+      const on = Math.sin(t * 19) > 0;
+      const p = 1 + (on ? 0.04 : 0);
+      ao.scale.set(escala0.current.x * p, escala0.current.y * p, escala0.current.z * p);
+      ao.traverse((c) => {
+        const cm = c as THREE.Mesh;
+        if (!cm.isMesh) return;
+        const mm = cm.material as THREE.MeshStandardMaterial;
+        if (!mm || !mm.color) return;
+        const v = on ? 6 : 1;
+        if (mm.userData.__base === undefined) mm.userData.__base = mm.color.getHex();
+        mm.color.setRGB(v, v, v);
+      });
     }
     // cadeira: de tempos em tempos o assento roda. So o topo — a base fica
     // cravada, como cadeira gamer de verdade.
@@ -268,7 +287,9 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
         e.stopPropagation();
         const alvo = objDe(e.object);
         if (alvo && ativoObj.current !== alvo) {
-          escala0.current = alvo.scale.x;
+          // guarda a escala INTEIRA: os quadros sao nao-uniformes (PicV .52/.52/1,
+          // PicH .66/.37/1) e usar so o X deformava a altura deles.
+          escala0.current.copy(alvo.scale);
           ativoObj.current = alvo;
         }
         setAtivo(nome);
@@ -276,7 +297,14 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
         document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
-        if (ativoObj.current) ativoObj.current.scale.setScalar(escala0.current);
+        if (ativoObj.current) {
+          ativoObj.current.scale.copy(escala0.current);
+          ativoObj.current.traverse((c) => {
+            const cm = c as THREE.Mesh;
+            const mm = cm.material as THREE.MeshStandardMaterial;
+            if (mm?.userData?.__base !== undefined) mm.color.setHex(mm.userData.__base);
+          });
+        }
         ativoObj.current = null;
         setAtivo(null);
         onHover(null);
@@ -287,7 +315,7 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
         const nome = tagDe(e.object);
         if (!alvo || !nome) return;
         e.stopPropagation();
-        if (ativoObj.current) ativoObj.current.scale.setScalar(escala0.current);
+        if (ativoObj.current) ativoObj.current.scale.copy(escala0.current);
         ativoObj.current = null;
         setAtivo(null);
         onHover(null);
@@ -302,7 +330,21 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
 
 // O Ban de verdade: riggado no Blender (21 ossos), clipes walk/idle. Anda um
 // circuito pelo estudio e para de vez em quando pra abanar o rabo.
-const Ban = ({ reduced, speed, pausa }: { reduced: boolean; speed: number; pausa: number }) => {
+const Ban = ({
+  reduced,
+  speed,
+  pausa,
+  onHover,
+  onFocar,
+  foco,
+}: {
+  reduced: boolean;
+  speed: number;
+  pausa: number;
+  onHover: (l: string | null) => void;
+  onFocar: (f: Foco | null) => void;
+  foco: Foco | null;
+}) => {
   const { scene, animations } = useGLTF(BAN, DRACO);
   const pivo = useRef<THREE.Group>(null);
   // o mixer prende no SCENE (a raiz dos ossos), nunca no grupo que eu movo
@@ -374,7 +416,26 @@ const Ban = ({ reduced, speed, pausa }: { reduced: boolean; speed: number; pausa
   });
 
   return (
-    <group ref={pivo}>
+    <group
+      ref={pivo}
+      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+        if (foco) return;
+        e.stopPropagation();
+        onHover(ALVOS.Ban.label);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        onHover(null);
+        document.body.style.cursor = "";
+      }}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+        onHover(null);
+        document.body.style.cursor = "";
+        // seguir: ele nao para de andar, a camera acompanha
+        if (pivo.current) onFocar({ obj: pivo.current, label: ALVOS.Ban.label, seguir: true });
+      }}
+    >
       <group position={BAN_OFFSET}>
         <primitive object={scene} />
       </group>
@@ -412,17 +473,30 @@ const Rig = ({
   // Onde a camera precisa ficar pra enquadrar o item DE FRENTE. Tudo que e
   // clicavel (quadros na parede do fundo, monitor) encara +Z, entao a camera vai
   // pro +Z do centro do objeto, a uma distancia que faz ele preencher o quadro.
-  const destino = useMemo(() => {
-    if (!foco) return null;
-    const box = new THREE.Box3().setFromObject(foco.obj);
-    const centro = box.getCenter(new THREE.Vector3());
-    const tam = box.getSize(new THREE.Vector3());
+  const caixa = useMemo(() => new THREE.Box3(), []);
+  const centro = useMemo(() => new THREE.Vector3(), []);
+  const tam = useMemo(() => new THREE.Vector3(), []);
+  const destPos = useMemo(() => new THREE.Vector3(), []);
+
+  // Onde a camera fica pra enquadrar o item. Quadros e monitor encaram +Z, entao
+  // a camera vai pro +Z deles. O Ban anda e vira, entao pra ele uso um 3/4 fixo
+  // (nao gruda atras dele girando junto, que embrulharia o estomago).
+  const enquadrar = (f: Foco) => {
+    caixa.setFromObject(f.obj);
+    if (caixa.isEmpty()) return null;
+    caixa.getCenter(centro);
+    caixa.getSize(tam);
     const cam = camera as THREE.PerspectiveCamera;
     const fov = THREE.MathUtils.degToRad(cam.fov);
-    const meia = Math.max(tam.y, tam.x / cam.aspect) / 2;
+    const meia = Math.max(tam.y, Math.max(tam.x, tam.z) / cam.aspect) / 2;
     const dist = (meia / Math.tan(fov / 2)) * zoomMargem;
-    return { pos: centro.clone().add(new THREE.Vector3(0, 0, dist)), olhar: centro };
-  }, [foco, camera, zoomMargem]);
+    if (f.seguir) {
+      destPos.copy(centro).add(DIR_BAN.clone().multiplyScalar(dist));
+    } else {
+      destPos.set(centro.x, centro.y, centro.z + dist);
+    }
+    return { pos: destPos, olhar: centro };
+  };
 
   // 0 -> hero cheio na tela; 1 -> hero totalmente coberto
   useEffect(() => {
@@ -448,12 +522,16 @@ const Rig = ({
     }
     // focado: a camera cruza ate o item e ignora mouse/scroll. Damping mais
     // lento (0.5s) pra o movimento ler como cinema, nao como teleporte.
-    if (destino) {
-      const k = 1 - Math.exp(-dt / 0.5);
-      camera.position.lerp(destino.pos, k);
-      alvo.lerp(destino.olhar, k);
-      camera.lookAt(alvo);
-      return;
+    if (foco) {
+      const d = enquadrar(foco);
+      if (d) {
+        // seguindo o Ban: damping mais curto, senao a camera fica pra tras dele
+        const k = 1 - Math.exp(-dt / (foco.seguir ? 0.28 : 0.5));
+        camera.position.lerp(d.pos, k);
+        alvo.lerp(d.olhar, k);
+        camera.lookAt(alvo);
+        return;
+      }
     }
     const s = progresso.current;
     // easeInOut pra o recuo nao arrancar no primeiro pixel de scroll
@@ -526,17 +604,19 @@ const HeroDiorama = () => {
     setMounted(true);
   }, []);
 
-  // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, zoomMargem, flicker, telaLuz } = useControls("interacao", {
-    parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
-    suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
-    banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
-    banPausa: { value: 4, min: 1, max: 12, step: 0.5 },
-    giroPausa: { value: 7, min: 2, max: 25, step: 0.5 },
-    scrollRecuo: { value: 1.1, min: 0, max: 3, step: 0.05 },
-    zoomMargem: { value: 1.35, min: 1, max: 3, step: 0.05 },
-    flicker: { value: 1, min: 0, max: 3, step: 0.05 },
-    telaLuz: { value: 2.2, min: 0, max: 8, step: 0.1 },
+  // Etapa 7: valores calibrados e TRAVADOS pelo Mateus.
+  const parallax = 1.2;
+  const suavidade = 0.18;
+  const banSpeed = 0.22;
+  const banPausa = 4.0;
+  const giroPausa = 7.0;
+  const scrollRecuo = 3.0;
+  const zoomMargem = 1.35;
+  const flicker = 1.0;
+  // a luz da tela segue em calibragem (ver nota no spotLight): sob a paleta 1-bit
+  // ela so "aparece" se empurrar a superficie pra outra banda.
+  const { telaLuz } = useControls("luz", {
+    telaLuz: { value: 8.0, min: 0, max: 30, step: 0.5 },
   });
 
   return (
@@ -572,7 +652,7 @@ const HeroDiorama = () => {
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
             <Diorama reduced={reduced} flicker={flicker} telaLuz={telaLuz} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
-            <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
+            <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
           <EffectComposer>
