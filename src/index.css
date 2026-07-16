@@ -344,6 +344,14 @@
   [data-cursor="nativo"] canvas {
     cursor: inherit !important;
   }
+
+  /* maozinha sobre os objetos clicaveis do diorama. Precisa de !important e de
+     specificity maior que `html *`, senao o `cursor: none` do cursor custom
+     vence — e por isso um style inline no body nao resolvia. */
+  [data-cursor="nativo"] .hero-alvo,
+  [data-cursor="nativo"] .hero-alvo canvas {
+    cursor: pointer !important;
+  }
 }
 
 .cursor.is-off,

@@ -247,7 +247,6 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
     ativoObj.current = null;
     setAtivo(null);
     onHover(null);
-    document.body.style.cursor = "";
   };
 
   // O raycast do R3F entrega a malha; o alvo pode estar nela ou num pai.
@@ -297,7 +296,6 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
         }
         setAtivo(nome);
         onHover(ALVOS[nome].label);
-        document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => limparHover()}
       onClick={(e: ThreeEvent<MouseEvent>) => {
@@ -410,17 +408,14 @@ const Ban = ({
         if (foco) return;
         e.stopPropagation();
         onHover(ALVOS.Ban.label);
-        document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
         onHover(null);
-        document.body.style.cursor = "";
-      }}
+          }}
       onClick={(e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
         onHover(null);
-        document.body.style.cursor = "";
-        // seguir: ele nao para de andar, a camera acompanha
+            // seguir: ele nao para de andar, a camera acompanha
         if (pivo.current) onFocar({ obj: pivo.current, label: ALVOS.Ban.label, seguir: true });
       }}
     >
@@ -603,7 +598,11 @@ const HeroDiorama = () => {
   const flicker = 1.0;
 
   return (
-    <div className="relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
+    <div
+      className={`relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0] ${
+        label && !foco ? "hero-alvo" : ""
+      }`}
+    >
       {/* focado: clicar em qualquer lugar volta */}
       {foco ? <div className="absolute inset-0 z-10" onClick={() => setFoco(null)} /> : null}
 
