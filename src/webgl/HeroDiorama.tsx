@@ -41,6 +41,11 @@ const STRIDE_PER_CYCLE = 0.127;
 // quadro em vez de a camera girar junto com ele.
 const DIR_BAN = new THREE.Vector3(0.75, 0.45, 1).normalize();
 
+// De onde a camera olha no foco de ABERTURA (/estudio). Reto no eixo Z o encosto
+// da cadeira (topo em ~1.15) fica bem na frente da tela (centro em ~1.0): olho um
+// pouco de cima e de lado, e a tela aparece limpa por cima do encosto.
+const DIR_ABERTURA = new THREE.Vector3(0.5, 0.62, 1).normalize();
+
 // posicoes convertidas do Blender (Z-up) pra R3F (Y-up): (x,y,z)->(x,z,-y)
 // enquadramento fechado 3/4 aprovado (blender cam 2.95,-2.85,1.5 -> alvo 0.12,0,0.42)
 const CAM_POS: [number, number, number] = [2.95, 1.5, 2.85];
@@ -103,9 +108,15 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco, focoInic
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const mat = m.material as THREE.MeshStandardMaterial;
-      // o vidro da tela: so o brilho azul de fundo. Nao da pra texturizar aqui —
-      // as faces vem do pack com UV de atlas, entao qualquer imagem sai chapada.
-      if (mat && mat.name === "MonitorScreen") {
+      // O useGLTF CACHEIA a cena: ao navegar entre paginas o mesmo objeto volta,
+      // ja com os materiais trocados por mim (e sem nome). Se eu procurasse por
+      // mat.name de novo, nao acharia nada — e a tela ficaria presa num
+      // CanvasTexture morto (era isso que congelava ela no "build"). Entao gravo
+      // a identidade em userData na primeira passada e uso ela dai em diante.
+      if (mat?.name && !m.userData.matOrig) m.userData.matOrig = mat.name;
+      const orig = (m.userData.matOrig as string | undefined) ?? mat?.name;
+
+      if (orig === "MonitorScreen") {
         mat.emissive = new THREE.Color("#1c3fd6");
         mat.emissiveIntensity = SCREEN_BASE * 0.5;
         mat.toneMapped = false;
@@ -113,19 +124,27 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco, focoInic
       }
       // a tela ACESA: plano proprio, criado no Blender com UV 0-1 na frente do
       // monitor. unlit pra a marca brilhar sozinha e sobreviver ao 1-bit.
-      if (mat && mat.name === "MonitorTela") {
-        // nada de papel de parede: entra o canvas animado
-        m.material = new THREE.MeshBasicMaterial({
-          map: tela.textura,
-          toneMapped: false,
-          side: THREE.DoubleSide,
-        });
-        screen.current = m.material as THREE.MeshBasicMaterial;
+      if (orig === "MonitorTela") {
+        // nada de papel de parede: entra o canvas animado. Sempre aponta pra
+        // textura DESTE mount — a anterior pode estar morta (ver nota acima).
+        const bm = mat as unknown as THREE.MeshBasicMaterial;
+        if (bm?.isMeshBasicMaterial) {
+          bm.map = tela.textura;
+          bm.needsUpdate = true;
+          screen.current = bm;
+        } else {
+          m.material = new THREE.MeshBasicMaterial({
+            map: tela.textura,
+            toneMapped: false,
+            side: THREE.DoubleSide,
+          });
+          screen.current = m.material as THREE.MeshBasicMaterial;
+        }
         m.userData.alvo = "Monitor";
       }
       // quadros: unlit (imagem cheia) pra a arte aparecer forte; a hachura por
       // luminancia so pega as partes escuras da capa (poucas hachuras).
-      if (mat && (mat.name === "QuadroVert" || mat.name === "QuadroHoriz") && mat.map) {
+      if ((orig === "QuadroVert" || orig === "QuadroHoriz") && mat?.map) {
         mat.map.colorSpace = THREE.SRGBColorSpace;
         mat.map.needsUpdate = true;
         m.material = new THREE.MeshBasicMaterial({
@@ -501,6 +520,8 @@ const Rig = ({
     const dist = Math.max(dV, dH) * zoomMargem * (f.abertura ? 1.9 : 1);
     if (f.seguir) {
       destPos.copy(centro).add(DIR_BAN.clone().multiplyScalar(dist));
+    } else if (f.abertura) {
+      destPos.copy(centro).add(DIR_ABERTURA.clone().multiplyScalar(dist));
     } else {
       destPos.set(centro.x, centro.y, centro.z + dist);
     }
