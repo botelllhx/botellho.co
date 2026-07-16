@@ -12,7 +12,8 @@ dist
 dist-ssr
 *.local
 
-# Fotos-fonte do Ban (grandes; os dithered gerados ficam em public/ban)
+# Fontes de asset: nao vao pra public/ (tudo la e servido no dominio) nem pro
+# bundle. As texturas dos quadros ja estao embutidas no diorama.glb como webp.
 assets/ban-source
 .env
 .env.*
