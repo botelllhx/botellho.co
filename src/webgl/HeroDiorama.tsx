@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useAnimations, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import { useControls } from "leva";
 import * as THREE from "three";
@@ -14,22 +14,8 @@ import { CrtEffect } from "./CrtEffect";
 // tela abaixo da barra. Client-only (WebGL nao roda no SSR).
 
 const DIORAMA = "/3d/diorama.glb";
-const BAN = "/3d/ban_rigged.glb";
 const DRACO = "/draco/";
-if (typeof window !== "undefined") {
-  useGLTF.preload(DIORAMA, DRACO);
-  useGLTF.preload(BAN, DRACO);
-}
-
-// O Ban riggado sai do Blender centrado na origem e olhando pra +Z.
-// Caminho dele pelo estudio (pontos no plano XZ do R3F), fechado em loop.
-const BAN_PATH = [
-  [0.95, 0.55], [0.35, 0.8], [-0.45, 0.6], [-0.7, 0.0], [-0.1, -0.25], [0.7, 0.05],
-] as const;
-// quanto o trote avanca por ciclo (1s): ~2 * comprimento da perna * sin(22deg).
-// e com isso que eu caso a velocidade do path com o timeScale do clipe -> os
-// pes nao patinam.
-const STRIDE_PER_CYCLE = 0.127;
+if (typeof window !== "undefined") useGLTF.preload(DIORAMA, DRACO);
 
 // posicoes convertidas do Blender (Z-up) pra R3F (Y-up): (x,y,z)->(x,z,-y)
 // enquadramento fechado 3/4 aprovado (blender cam 2.95,-2.85,1.5 -> alvo 0.12,0,0.42)
@@ -41,18 +27,23 @@ const SCREEN_BASE = 1.3;
 
 interface AnimProps {
   reduced: boolean;
+  banIdle: number;
   flicker: number;
 }
 
-const Diorama = ({ reduced, flicker }: AnimProps) => {
+const Diorama = ({ reduced, banIdle, flicker }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
+  const ban = useRef<THREE.Object3D | null>(null);
+  const banBase = useRef({ y: 0, rz: 0 });
   const screen = useRef<THREE.MeshStandardMaterial | null>(null);
 
   useEffect(() => {
     scene.traverse((o) => {
-      // o Ban estatico do diorama some: quem entra e o riggado (ban_rigged.glb),
-      // que anda de verdade. Ver <Ban/>.
-      if (o.name === "Ban") o.visible = false;
+      // o Ban e um sculpt sem rig -> animacao procedural por transform
+      if (o.name === "Ban") {
+        ban.current = o;
+        banBase.current = { y: o.position.y, rz: o.rotation.z };
+      }
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const mat = m.material as THREE.MeshStandardMaterial;
@@ -84,6 +75,12 @@ const Diorama = ({ reduced, flicker }: AnimProps) => {
   useFrame((state) => {
     if (reduced) return;
     const t = state.clock.elapsedTime;
+    // Ban: respiracao (sobe/desce) + balanco lento. Amplitudes em metros/rad —
+    // de proposito minusculas: e vida, nao dança.
+    if (ban.current && banIdle > 0) {
+      ban.current.position.y = banBase.current.y + Math.sin(t * 1.5) * 0.007 * banIdle;
+      ban.current.rotation.z = banBase.current.rz + Math.sin(t * 0.7) * 0.015 * banIdle;
+    }
     // monitor: cintilancia de tubo velho (duas senoides dessincronizadas)
     if (screen.current && flicker > 0) {
       const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
@@ -92,84 +89,6 @@ const Diorama = ({ reduced, flicker }: AnimProps) => {
   });
 
   return <primitive object={scene} />;
-};
-
-// O Ban de verdade: riggado no Blender (21 ossos), com clipes walk/idle.
-// Anda um circuito pelo estudio e para de vez em quando pra abanar o rabo.
-const Ban = ({ reduced, speed, pausa }: { reduced: boolean; speed: number; pausa: number }) => {
-  const { scene, animations } = useGLTF(BAN, DRACO);
-  const group = useRef<THREE.Group>(null);
-  const { actions } = useAnimations(animations, group);
-  const dist = useRef(0);
-  const phase = useRef({ walking: true, until: 6 });
-
-  const curve = useMemo(
-    () =>
-      new THREE.CatmullRomCurve3(
-        BAN_PATH.map(([x, z]) => new THREE.Vector3(x, 0, z)),
-        true,
-        "catmullrom",
-        0.5,
-      ),
-    [],
-  );
-
-  useEffect(() => {
-    // SkinnedMesh tem bounding volume da bind pose -> o three descarta ele no
-    // frustum culling quando anda/deforma. Desliga o culling (e 1 mesh so).
-    scene.traverse((o) => {
-      o.frustumCulled = false;
-    });
-  }, [scene]);
-
-  useEffect(() => {
-    // arranca no trote; o idle entra nas paradas
-    actions.walk?.reset().play();
-    actions.idle?.reset().play();
-    if (actions.idle) actions.idle.weight = 0;
-    if (actions.walk) actions.walk.weight = 1;
-  }, [actions]);
-
-  useFrame((state, dt) => {
-    const g = group.current;
-    if (!g) return;
-
-    // reduced-motion: fica parado no ponto inicial, sem clipes
-    if (reduced) {
-      const p = curve.getPointAt(0);
-      g.position.set(p.x, 0, p.z);
-      if (actions.walk) actions.walk.weight = 0;
-      if (actions.idle) actions.idle.weight = 0;
-      return;
-    }
-
-    const t = state.clock.elapsedTime;
-    const ph = phase.current;
-    if (t > ph.until) {
-      ph.walking = !ph.walking;
-      ph.until = t + (ph.walking ? 7 + Math.random() * 5 : pausa);
-    }
-
-    // crossfade manual walk<->idle (barato e previsivel)
-    const k = 1 - Math.exp(-dt / 0.25);
-    if (actions.walk) actions.walk.weight = THREE.MathUtils.lerp(actions.walk.weight, ph.walking ? 1 : 0, k);
-    if (actions.idle) actions.idle.weight = THREE.MathUtils.lerp(actions.idle.weight, ph.walking ? 0 : 1, k);
-
-    if (ph.walking) {
-      // casa o clipe com o avanco: sem patinacao
-      if (actions.walk) actions.walk.timeScale = speed / STRIDE_PER_CYCLE;
-      const len = curve.getLength();
-      dist.current = (dist.current + speed * dt) % len;
-      const u = dist.current / len;
-      const p = curve.getPointAt(u);
-      const tan = curve.getTangentAt(u);
-      g.position.set(p.x, 0, p.z);
-      // o Ban olha pra +Z, e lookAt de nao-camera aponta o +Z no alvo
-      g.lookAt(p.x + tan.x, 0, p.z + tan.z);
-    }
-  });
-
-  return <primitive ref={group} object={scene} />;
 };
 
 // Parallax de camera: o mouse te deixa espiar dentro do diorama. Damping com
@@ -229,12 +148,11 @@ const HeroDiorama = () => {
   }, []);
 
   // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, flicker } = useControls("interacao", {
-    parallax: { value: 1.2, min: 0, max: 1.2, step: 0.01 },
-    suavidade: { value: 0.2, min: 0.02, max: 0.8, step: 0.01 },
-    banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
-    banPausa: { value: 4, min: 1, max: 12, step: 0.5 },
-    flicker: { value: 1.8, min: 0, max: 3, step: 0.05 },
+  const { parallax, suavidade, banIdle, flicker } = useControls("interacao", {
+    parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
+    suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
+    banIdle: { value: 1, min: 0, max: 3, step: 0.05 },
+    flicker: { value: 1, min: 0, max: 3, step: 0.05 },
   });
 
   return (
@@ -255,8 +173,7 @@ const HeroDiorama = () => {
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} />
-            <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
+            <Diorama reduced={reduced} banIdle={banIdle} flicker={flicker} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
           <EffectComposer>
