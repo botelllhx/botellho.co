@@ -1,6 +1,8 @@
-// Gera os assets sociais a partir de SVG.
+// Gera o card social (og-image) a partir de SVG.
 // Uso: npm i -D sharp && node scripts/gen-og-assets.mjs
 // (sharp e usado apenas para gerar estes arquivos; nao e dependencia de runtime.)
+// A familia de icones (favicon.ico e apple-touch-icon) sai do gen-favicon.mjs,
+// que e o dono do Ban 1-bit.
 import sharp from "sharp";
 
 const BG = "#0d0d0d";
@@ -22,13 +24,6 @@ const ogSvg = `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http
   <text x="90" y="576" font-family="Arial, sans-serif" font-size="26" fill="${FG}" fill-opacity="0.5" letter-spacing="2" font-weight="700">botellho.com</text>
 </svg>`;
 
-const iconSvg = `<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-  <rect width="180" height="180" fill="${PRIMARY}"/>
-  <text x="82" y="132" font-family="Arial, sans-serif" font-size="140" fill="#ffffff" font-weight="800" text-anchor="middle" letter-spacing="-6">b</text>
-  <rect x="126" y="112" width="18" height="18" fill="#ffffff"/>
-</svg>`;
-
 await sharp(Buffer.from(ogSvg)).jpeg({ quality: 90 }).toFile("public/og-image.jpg");
-await sharp(Buffer.from(iconSvg)).png().toFile("public/apple-touch-icon.png");
 
-console.log("Gerados: public/og-image.jpg (1200x630) e public/apple-touch-icon.png (180x180)");
+console.log("Gerado: public/og-image.jpg (1200x630)");
