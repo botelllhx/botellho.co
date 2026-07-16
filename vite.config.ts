@@ -2,17 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { writeFileSync, readdirSync, rmSync, statSync } from "fs";
-
-const SITE_URL = "https://botellho.com";
-
-// Rotas publicas estaticas. Fonte para pre-render (SSG) e sitemap.
-const STATIC_ROUTES: { path: string; changefreq: string; priority: string }[] = [
-  { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/estudio", changefreq: "monthly", priority: "0.8" },
-  { path: "/trabalhos", changefreq: "weekly", priority: "0.9" },
-  { path: "/laboratorio", changefreq: "weekly", priority: "0.7" },
-  { path: "/contato", changefreq: "monthly", priority: "0.6" },
-];
+import { STATIC_ROUTES, gerarSitemap, hoje } from "./src/seo/sitemap";
 
 // Le os slugs de cases publicados no Supabase no momento do build.
 // Sem credenciais (dev local), retorna vazio: os cases so pre-renderizam no CI.
@@ -50,38 +40,9 @@ const limparDocs = (dir: string) => {
   varrer(dir);
 };
 
+// So o efeito: o XML e montado em src/seo/sitemap.ts (puro, testado).
 const buildSitemap = (dir: string, slugs: string[]) => {
-  const lastmod = new Date().toISOString().slice(0, 10);
-  const entries = [
-    ...STATIC_ROUTES.map((route) => ({
-      loc: route.path === "/" ? `${SITE_URL}/` : `${SITE_URL}${route.path}`,
-      changefreq: route.changefreq,
-      priority: route.priority,
-    })),
-    ...slugs.map((slug) => ({
-      loc: `${SITE_URL}/trabalhos/${slug}`,
-      changefreq: "monthly",
-      priority: "0.7",
-    })),
-  ];
-  const urls = entries
-    .map((entry) =>
-      [
-        "  <url>",
-        `    <loc>${entry.loc}</loc>`,
-        `    <lastmod>${lastmod}</lastmod>`,
-        `    <changefreq>${entry.changefreq}</changefreq>`,
-        `    <priority>${entry.priority}</priority>`,
-        "  </url>",
-      ].join("\n"),
-    )
-    .join("\n");
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
-</urlset>
-`;
-  writeFileSync(path.join(dir, "sitemap.xml"), xml);
+  writeFileSync(path.join(dir, "sitemap.xml"), gerarSitemap(slugs, hoje()));
 };
 
 // https://vitejs.dev/config/
