@@ -50,6 +50,10 @@ const WorkCase = () => {
             description: project.short_description,
             url: `https://botellho.com/trabalhos/${project.slug}`,
             image: ogImage,
+            inLanguage: "pt-BR",
+            // tags viram keywords; o link do projeto no ar entra como sameAs
+            ...(project.tags?.length ? { keywords: project.tags.join(", ") } : {}),
+            ...(project.project_url ? { sameAs: [project.project_url] } : {}),
             creator: { "@type": "Organization", name: "botellho", url: "https://botellho.com" },
           })}
         </script>
