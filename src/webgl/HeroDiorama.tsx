@@ -9,6 +9,7 @@ import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
 import { RetroEffect } from "./RetroEffect";
 import { CrtEffect } from "./CrtEffect";
+import { criarTelaViva } from "./telaViva";
 
 // Hero: o estudio-diorama do Ban. Etapa 2 (cena crua): carrega o diorama.glb,
 // camera 3/4 + luz direcional, SEM pos-processamento ainda. Full-width, ocupa a
@@ -65,19 +66,25 @@ export interface Foco {
 interface AnimProps {
   reduced: boolean;
   flicker: number;
+  telaLuz: number;
   giroPausa: number;
   onHover: (label: string | null) => void;
   onFocar: (f: Foco | null) => void;
   foco: Foco | null;
 }
 
-const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimProps) => {
+const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
   const screen = useRef<THREE.MeshBasicMaterial | null>(null);
   const [ativo, setAtivo] = useState<string | null>(null);
   // parte de cima da cadeira gamer: gira sozinha, a base fica parada
   const cadeira = useRef<THREE.Object3D | null>(null);
   const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
+  // a tela roda um boot DOS em loop e ACENDE a cena (unica fonte "viva" do diorama)
+  const tela = useMemo(() => criarTelaViva(), []);
+  const luz = useRef<THREE.PointLight>(null);
+  const ativoObj = useRef<THREE.Object3D | null>(null);
+  const escala0 = useRef(1);
 
   useEffect(() => {
     scene.traverse((o) => {
@@ -99,10 +106,9 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
       // a tela ACESA: plano proprio, criado no Blender com UV 0-1 na frente do
       // monitor. unlit pra a marca brilhar sozinha e sobreviver ao 1-bit.
       if (mat && mat.name === "MonitorTela") {
-        const img = mat.map ?? mat.emissiveMap;
-        if (img) img.colorSpace = THREE.SRGBColorSpace;
+        // nada de papel de parede: entra o canvas animado
         m.material = new THREE.MeshBasicMaterial({
-          map: img,
+          map: tela.textura,
           toneMapped: false,
           side: THREE.DoubleSide,
         });
@@ -129,12 +135,25 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
   useFrame((state) => {
     if (reduced) return;
     const t = state.clock.elapsedTime;
-    // monitor: cintilancia de tubo velho (duas senoides dessincronizadas).
-    // a tela e unlit, entao o nervosismo vai na COLOR (que multiplica a textura).
-    if (screen.current && flicker > 0) {
-      const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
+    // a tela desenha o boot em loop
+    tela.desenhar(t);
+    // cintilancia de tubo velho (duas senoides dessincronizadas). A tela e unlit,
+    // entao o nervosismo vai na COLOR (que multiplica a textura).
+    const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
+    if (screen.current) {
       const b = SCREEN_BASE + f * flicker;
       screen.current.color.setRGB(b, b, b);
+    }
+    // ...e a MESMA cintilancia vai na luz: a tela ilumina o quarto de verdade
+    if (luz.current) {
+      luz.current.intensity = telaLuz * tela.brilho() * (1 + f * flicker);
+    }
+    // hover: pulso na escala. E geometrico, entao sobrevive ao Moebius, ao 1-bit
+    // e ao CRT — diferente de brilho, que a paleta achata.
+    const ao = ativoObj.current;
+    if (ao) {
+      const p = 1 + Math.sin(t * 7) * 0.018 + 0.022;
+      ao.scale.setScalar(escala0.current * p);
     }
     // cadeira: de tempos em tempos o assento roda. So o topo — a base fica
     // cravada, como cadeira gamer de verdade.
@@ -223,18 +242,29 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
   };
 
   return (
-    <primitive
-      object={scene}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+    <>
+      {/* a tela acende o quarto de verdade: luz na frente do monitor, na cor do
+          fosforo, pulsando junto com a cintilancia dela */}
+      <pointLight ref={luz} position={[0, 1.0, -0.42]} color="#6f8bff" distance={2.6} decay={1.6} />
+      <primitive
+        object={scene}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
         if (foco) return;
         const nome = tagDe(e.object);
         if (!nome) return;
         e.stopPropagation();
+        const alvo = objDe(e.object);
+        if (alvo && ativoObj.current !== alvo) {
+          escala0.current = alvo.scale.x;
+          ativoObj.current = alvo;
+        }
         setAtivo(nome);
         onHover(ALVOS[nome].label);
         document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
+        if (ativoObj.current) ativoObj.current.scale.setScalar(escala0.current);
+        ativoObj.current = null;
         setAtivo(null);
         onHover(null);
         document.body.style.cursor = "";
@@ -244,13 +274,16 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimPr
         const nome = tagDe(e.object);
         if (!alvo || !nome) return;
         e.stopPropagation();
+        if (ativoObj.current) ativoObj.current.scale.setScalar(escala0.current);
+        ativoObj.current = null;
         setAtivo(null);
         onHover(null);
         document.body.style.cursor = "";
         // click aproxima em vez de navegar: a camera vai ate o item, de frente
         onFocar({ obj: alvo, label: ALVOS[nome].label });
       }}
-    />
+      />
+    </>
   );
 };
 
@@ -454,6 +487,17 @@ const HeroDiorama = () => {
   const [reduced, setReduced] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
   const [foco, setFoco] = useState<Foco | null>(null);
+  // a legenda cola no cursor em vez de morar num canto solto
+  const cursor = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const mover = (e: MouseEvent) => {
+      const el = cursor.current;
+      if (!el) return;
+      el.style.transform = `translate3d(${e.clientX + 16}px, ${e.clientY + 16}px, 0)`;
+    };
+    window.addEventListener("mousemove", mover, { passive: true });
+    return () => window.removeEventListener("mousemove", mover);
+  }, []);
 
   // Esc devolve a camera. Sem isso o usuario fica preso no zoom.
   useEffect(() => {
@@ -470,7 +514,7 @@ const HeroDiorama = () => {
   }, []);
 
   // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, zoomMargem, flicker } = useControls("interacao", {
+  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, zoomMargem, flicker, telaLuz } = useControls("interacao", {
     parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
     suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
     banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
@@ -479,26 +523,25 @@ const HeroDiorama = () => {
     scrollRecuo: { value: 1.1, min: 0, max: 3, step: 0.05 },
     zoomMargem: { value: 1.35, min: 1, max: 3, step: 0.05 },
     flicker: { value: 1, min: 0, max: 3, step: 0.05 },
+    telaLuz: { value: 2.2, min: 0, max: 8, step: 0.1 },
   });
 
   return (
     <div className="relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
-      {/* rotulo do objeto sob o cursor — mesma linguagem do [ ver ] do site */}
-      {label && !foco ? (
-        <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 border border-ink/25 bg-paper/90 px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ink">
-          [ {label} ]
-        </div>
-      ) : null}
+      {/* focado: clicar em qualquer lugar volta */}
+      {foco ? <div className="absolute inset-0 z-10" onClick={() => setFoco(null)} /> : null}
 
-      {/* focado: legenda do item + saida. clicar em qualquer lugar tambem volta */}
-      {foco ? (
-        <div className="absolute inset-0 z-10" onClick={() => setFoco(null)}>
-          <div className="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-3 border border-ink/25 bg-paper/90 px-4 py-2 font-mono text-xs uppercase tracking-widest text-ink">
-            <span>{foco.label}</span>
-            <span className="text-ink/45">esc ou clique para voltar</span>
-          </div>
-        </div>
-      ) : null}
+      {/* a legenda COLA no cursor (fixed, seguindo o mouse) — some quando nao ha
+          nada sob o ponteiro nem item focado */}
+      <div
+        ref={cursor}
+        className={`pointer-events-none fixed left-0 top-0 z-20 flex items-center gap-2 border border-ink/25 bg-paper/95 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-ink transition-opacity duration-150 ${
+          label || foco ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <span>{foco ? foco.label : label}</span>
+        {foco ? <span className="text-ink/45">esc para voltar</span> : null}
+      </div>
       {mounted ? (
         <Canvas
           dpr={[1, 1.8]}
@@ -515,7 +558,7 @@ const HeroDiorama = () => {
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
+            <Diorama reduced={reduced} flicker={flicker} telaLuz={telaLuz} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
