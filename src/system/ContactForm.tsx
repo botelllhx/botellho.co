@@ -72,7 +72,6 @@ const ContactForm = () => {
       return;
     }
     try {
-      // @ts-expect-error executeAsync existe no componente, tipos desatualizados
       const token = await recaptchaRef.current?.executeAsync();
       if (!token) {
         toast.error("Não foi possível validar o reCAPTCHA.");
