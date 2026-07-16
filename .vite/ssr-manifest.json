@@ -1,0 +1,364 @@
+{
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/@react-three/fiber/node_modules/scheduler/cjs/scheduler.production.min.js?commonjs-exports": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/@react-three/fiber/node_modules/scheduler/index.js?commonjs-module": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js?commonjs-exports": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/hoist-non-react-statics/node_modules/react-is/index.js?commonjs-module": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/prop-types/index.js?commonjs-module": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-dom/cjs/react-dom.production.min.js?commonjs-exports": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-dom/client.js?commonjs-exports": [
+    "/assets/client-Da2C9keN.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-dom/index.js?commonjs-module": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-reconciler/cjs/react-reconciler-constants.production.min.js?commonjs-exports": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-reconciler/constants.js?commonjs-module": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-reconciler/index.js?commonjs-module": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-reconciler/node_modules/scheduler/cjs/scheduler.production.min.js?commonjs-exports": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react-reconciler/node_modules/scheduler/index.js?commonjs-module": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react/cjs/react-jsx-runtime.production.min.js?commonjs-exports": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react/cjs/react.production.min.js?commonjs-exports": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react/index.js?commonjs-module": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/react/jsx-runtime.js?commonjs-module": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/scheduler/cjs/scheduler.production.min.js?commonjs-exports": [],
+  "\u0000/home/runner/work/botellho.co/botellho.co/node_modules/scheduler/index.js?commonjs-module": [],
+  "\u0000commonjsHelpers.js": [],
+  "\u0000vite/modulepreload-polyfill.js": [],
+  "\u0000vite/preload-helper.js": [],
+  "index.html": [],
+  "node_modules/@emailjs/browser/es/api/sendPost.js": [],
+  "node_modules/@emailjs/browser/es/errors/blockedEmailError/blockedEmailError.js": [],
+  "node_modules/@emailjs/browser/es/errors/headlessError/headlessError.js": [],
+  "node_modules/@emailjs/browser/es/errors/limitRateError/limitRateError.js": [],
+  "node_modules/@emailjs/browser/es/index.js": [],
+  "node_modules/@emailjs/browser/es/methods/init/init.js": [],
+  "node_modules/@emailjs/browser/es/methods/send/send.js": [],
+  "node_modules/@emailjs/browser/es/methods/sendForm/sendForm.js": [],
+  "node_modules/@emailjs/browser/es/models/EmailJSResponseStatus.js": [],
+  "node_modules/@emailjs/browser/es/store/store.js": [],
+  "node_modules/@emailjs/browser/es/utils/buildOptions/buildOptions.js": [],
+  "node_modules/@emailjs/browser/es/utils/createWebStorage/createWebStorage.js": [],
+  "node_modules/@emailjs/browser/es/utils/isBlockedValueInParams/isBlockedValueInParams.js": [],
+  "node_modules/@emailjs/browser/es/utils/isHeadless/isHeadless.js": [],
+  "node_modules/@emailjs/browser/es/utils/isLimitRateHit/isLimitRateHit.js": [],
+  "node_modules/@emailjs/browser/es/utils/validateBlockListParams/validateBlockListParams.js": [],
+  "node_modules/@emailjs/browser/es/utils/validateForm/validateForm.js": [],
+  "node_modules/@emailjs/browser/es/utils/validateLimitRateParams/validateLimitRateParams.js": [],
+  "node_modules/@emailjs/browser/es/utils/validateParams/validateParams.js": [],
+  "node_modules/@emailjs/browser/es/utils/validateTemplateParams/validateTemplateParams.js": [],
+  "node_modules/@floating-ui/core/dist/floating-ui.core.mjs": [],
+  "node_modules/@floating-ui/dom/dist/floating-ui.dom.mjs": [],
+  "node_modules/@floating-ui/react-dom/dist/floating-ui.react-dom.mjs": [],
+  "node_modules/@floating-ui/utils/dist/floating-ui.utils.dom.mjs": [],
+  "node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs": [],
+  "node_modules/@radix-ui/primitive/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-arrow/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-collection/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-compose-refs/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-context/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-label/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-popper/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-portal/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-presence/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-primitive/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-slot/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-toast/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-tooltip/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-use-escape-keydown/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-use-size/dist/index.mjs": [],
+  "node_modules/@radix-ui/react-visually-hidden/dist/index.mjs": [],
+  "node_modules/@react-three/drei/core/Gltf.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/drei/core/useAnimations.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/fiber/dist/events-776716bd.esm.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/fiber/node_modules/scheduler/cjs/scheduler.production.min.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/fiber/node_modules/scheduler/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/fiber/node_modules/zustand/esm/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@react-three/postprocessing/dist/EffectComposer.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/@remix-run/router/dist/router.js": [],
+  "node_modules/@supabase/auth-js/dist/module/AuthClient.js": [],
+  "node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.js": [],
+  "node_modules/@supabase/auth-js/dist/module/GoTrueClient.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/base64url.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/constants.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/errors.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/fetch.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/helpers.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/local-storage.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/locks.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/polyfills.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/types.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/version.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.js": [],
+  "node_modules/@supabase/auth-js/dist/module/lib/webauthn.js": [],
+  "node_modules/@supabase/functions-js/dist/module/FunctionsClient.js": [],
+  "node_modules/@supabase/functions-js/dist/module/helper.js": [],
+  "node_modules/@supabase/functions-js/dist/module/types.js": [],
+  "node_modules/@supabase/phoenix/priv/static/phoenix.mjs": [],
+  "node_modules/@supabase/postgrest-js/dist/index.mjs": [],
+  "node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/constants.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/normalizeChannelError.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/serializer.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/transformers.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/version.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/phoenix/channelAdapter.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/phoenix/presenceAdapter.js": [],
+  "node_modules/@supabase/realtime-js/dist/module/phoenix/socketAdapter.js": [],
+  "node_modules/@supabase/storage-js/dist/index.mjs": [],
+  "node_modules/@supabase/supabase-js/dist/index.mjs": [],
+  "node_modules/@tanstack/query-core/build/modern/focusManager.js": [],
+  "node_modules/@tanstack/query-core/build/modern/infiniteQueryBehavior.js": [],
+  "node_modules/@tanstack/query-core/build/modern/mutation.js": [],
+  "node_modules/@tanstack/query-core/build/modern/mutationCache.js": [],
+  "node_modules/@tanstack/query-core/build/modern/notifyManager.js": [],
+  "node_modules/@tanstack/query-core/build/modern/onlineManager.js": [],
+  "node_modules/@tanstack/query-core/build/modern/query.js": [],
+  "node_modules/@tanstack/query-core/build/modern/queryCache.js": [],
+  "node_modules/@tanstack/query-core/build/modern/queryClient.js": [],
+  "node_modules/@tanstack/query-core/build/modern/queryObserver.js": [],
+  "node_modules/@tanstack/query-core/build/modern/removable.js": [],
+  "node_modules/@tanstack/query-core/build/modern/retryer.js": [],
+  "node_modules/@tanstack/query-core/build/modern/subscribable.js": [],
+  "node_modules/@tanstack/query-core/build/modern/thenable.js": [],
+  "node_modules/@tanstack/query-core/build/modern/utils.js": [],
+  "node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js": [],
+  "node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js": [],
+  "node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js": [],
+  "node_modules/@tanstack/react-query/build/modern/errorBoundaryUtils.js": [],
+  "node_modules/@tanstack/react-query/build/modern/suspense.js": [],
+  "node_modules/@tanstack/react-query/build/modern/useBaseQuery.js": [],
+  "node_modules/@tanstack/react-query/build/modern/useQuery.js": [],
+  "node_modules/class-variance-authority/dist/index.mjs": [],
+  "node_modules/clsx/dist/clsx.mjs": [],
+  "node_modules/gsap/CSSPlugin.js": [],
+  "node_modules/gsap/Observer.js": [],
+  "node_modules/gsap/ScrollTrigger.js": [],
+  "node_modules/gsap/gsap-core.js": [],
+  "node_modules/gsap/index.js": [],
+  "node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.production.min.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/hoist-non-react-statics/node_modules/react-is/index.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/iceberg-js/dist/index.mjs": [],
+  "node_modules/invariant/browser.js": [],
+  "node_modules/its-fine/dist/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/lenis/dist/lenis.mjs": [],
+  "node_modules/lucide-react/dist/esm/Icon.js": [],
+  "node_modules/lucide-react/dist/esm/createLucideIcon.js": [],
+  "node_modules/lucide-react/dist/esm/defaultAttributes.js": [],
+  "node_modules/lucide-react/dist/esm/icons/loader-circle.js": [],
+  "node_modules/lucide-react/dist/esm/icons/log-out.js": [],
+  "node_modules/lucide-react/dist/esm/icons/pencil.js": [],
+  "node_modules/lucide-react/dist/esm/icons/plus.js": [],
+  "node_modules/lucide-react/dist/esm/icons/save.js": [],
+  "node_modules/lucide-react/dist/esm/icons/trash-2.js": [],
+  "node_modules/lucide-react/dist/esm/icons/upload.js": [],
+  "node_modules/lucide-react/dist/esm/icons/x.js": [],
+  "node_modules/lucide-react/dist/esm/shared/src/utils.js": [],
+  "node_modules/next-themes/dist/index.mjs": [],
+  "node_modules/postprocessing/build/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/prop-types/factoryWithThrowingShims.js": [],
+  "node_modules/prop-types/index.js": [],
+  "node_modules/prop-types/lib/ReactPropTypesSecret.js": [],
+  "node_modules/react-async-script/lib/esm/async-script-loader.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/react-dom/cjs/react-dom.production.min.js": [],
+  "node_modules/react-dom/client.js": [
+    "/assets/client-Da2C9keN.js"
+  ],
+  "node_modules/react-dom/index.js": [],
+  "node_modules/react-fast-compare/index.js": [],
+  "node_modules/react-google-recaptcha/lib/esm/index.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/react-google-recaptcha/lib/esm/recaptcha-wrapper.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/react-google-recaptcha/lib/esm/recaptcha.js": [
+    "/assets/index-DMFCW7YX.js"
+  ],
+  "node_modules/react-reconciler/cjs/react-reconciler-constants.production.min.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-reconciler/cjs/react-reconciler.production.min.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-reconciler/constants.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-reconciler/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-reconciler/node_modules/scheduler/cjs/scheduler.production.min.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-reconciler/node_modules/scheduler/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react-router-dom/dist/index.js": [],
+  "node_modules/react-router/dist/index.js": [],
+  "node_modules/react-use-measure/dist/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/react/cjs/react-jsx-runtime.production.min.js": [],
+  "node_modules/react/cjs/react.production.min.js": [],
+  "node_modules/react/index.js": [],
+  "node_modules/react/jsx-runtime.js": [],
+  "node_modules/scheduler/cjs/scheduler.production.min.js": [],
+  "node_modules/scheduler/index.js": [],
+  "node_modules/shallowequal/index.js": [],
+  "node_modules/sonner/dist/index.mjs": [],
+  "node_modules/suspend-react/index.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/tailwind-merge/dist/bundle-mjs.mjs": [],
+  "node_modules/three-stdlib/_polyfill/LoaderUtils.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/_polyfill/constants.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/libs/MeshoptDecoder.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/loaders/DRACOLoader.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/loaders/GLTFLoader.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/misc/WebGL.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three-stdlib/utils/BufferGeometryUtils.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three/build/three.core.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/three/build/three.module.js": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "node_modules/tslib/tslib.es6.mjs": [],
+  "node_modules/vite-react-ssg/dist/index.mjs": [],
+  "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.BhGKpaqQ.mjs": [],
+  "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.C6pK7rvr.mjs": [],
+  "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.CoMLbIiW.mjs": [],
+  "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.DTTf7HZy.mjs": [],
+  "node_modules/vite-react-ssg/node_modules/react-helmet-async/lib/index.module.js": [],
+  "src/App.tsx": [],
+  "src/Layout.tsx": [],
+  "src/components/ui/button.tsx": [],
+  "src/components/ui/input.tsx": [],
+  "src/components/ui/label.tsx": [],
+  "src/components/ui/sonner.tsx": [],
+  "src/components/ui/toast.tsx": [],
+  "src/components/ui/toaster.tsx": [],
+  "src/components/ui/tooltip.tsx": [],
+  "src/hooks/use-toast.ts": [],
+  "src/hooks/useAdminPortfolioProjects.ts": [],
+  "src/hooks/useContactForm.ts": [],
+  "src/hooks/useSmoothScroll.ts": [],
+  "src/hooks/useSupabaseSession.ts": [],
+  "src/index.css": [],
+  "src/integrations/supabase/client.ts": [],
+  "src/lib/utils.ts": [],
+  "src/main.tsx": [],
+  "src/motion/Reveal.tsx": [],
+  "src/motion/Scramble.tsx": [],
+  "src/motion/Typing.tsx": [],
+  "src/motion/prefs.ts": [],
+  "src/pages/Admin.tsx": [],
+  "src/pages/Contact.tsx": [],
+  "src/pages/Home.tsx": [],
+  "src/pages/Lab.tsx": [],
+  "src/pages/NotFound.tsx": [],
+  "src/pages/Studio.tsx": [],
+  "src/pages/Work.tsx": [],
+  "src/pages/WorkCase.tsx": [],
+  "src/pages/workLoaders.ts": [],
+  "src/system/BootOverlay.tsx": [],
+  "src/system/CommandBar.tsx": [],
+  "src/system/CommandPalette.tsx": [],
+  "src/system/ContactForm.tsx": [],
+  "src/system/CursorSystem.tsx": [],
+  "src/system/GifList.tsx": [],
+  "src/system/ProjectMedia.tsx": [],
+  "src/system/RetroDesktop.tsx": [],
+  "src/system/RouteTransition.tsx": [],
+  "src/system/ScatterField.tsx": [],
+  "src/system/SiteFooter.tsx": [],
+  "src/system/SlugRedirect.tsx": [],
+  "src/system/StatusBar.tsx": [],
+  "src/system/Window.tsx": [],
+  "src/webgl/CrtEffect.ts": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "src/webgl/CustomNormalMaterial.ts": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "src/webgl/HeroDiorama.tsx": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "src/webgl/HeroSlot.tsx": [],
+  "src/webgl/MoebiusEffect.ts": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "src/webgl/RetroEffect.ts": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ],
+  "src/webgl/telaViva.ts": [
+    "/assets/HeroDiorama-dygEdqfG.js"
+  ]
+}

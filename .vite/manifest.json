@@ -1,0 +1,43 @@
+{
+  "_client-Da2C9keN.js": {
+    "file": "assets/client-Da2C9keN.js",
+    "name": "client",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "index.html": {
+    "file": "assets/app-BN_2-MCa.js",
+    "name": "app",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "_client-Da2C9keN.js",
+      "_client-Da2C9keN.js",
+      "node_modules/react-google-recaptcha/lib/esm/index.js",
+      "src/webgl/HeroDiorama.tsx"
+    ],
+    "css": [
+      "assets/app-D1CHjgxF.css"
+    ]
+  },
+  "node_modules/react-google-recaptcha/lib/esm/index.js": {
+    "file": "assets/index-DMFCW7YX.js",
+    "name": "index",
+    "src": "node_modules/react-google-recaptcha/lib/esm/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "src/webgl/HeroDiorama.tsx": {
+    "file": "assets/HeroDiorama-dygEdqfG.js",
+    "name": "HeroDiorama",
+    "src": "src/webgl/HeroDiorama.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  }
+}
