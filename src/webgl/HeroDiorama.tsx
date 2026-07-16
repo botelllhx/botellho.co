@@ -1,9 +1,11 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import { useControls } from "leva";
 import * as THREE from "three";
+import { useNavigate } from "react-router-dom";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
 import { RetroEffect } from "./RetroEffect";
@@ -44,15 +46,26 @@ const CAM_FOV = 43;
 
 const SCREEN_BASE = 1.3;
 
+// Objetos "vivos" do diorama: hover acende, click navega. O nome bate com o nó
+// do glb. E o gancho pra ideia do site rodando dentro do monitor.
+const ALVOS: Record<string, { rota: string; label: string }> = {
+  ChairTop: { rota: "/estudio", label: "o estúdio" },
+  PicV: { rota: "/trabalhos", label: "trabalhos" },
+  PicH: { rota: "/laboratorio", label: "laboratório" },
+};
+
 interface AnimProps {
   reduced: boolean;
   flicker: number;
   giroPausa: number;
+  onHover: (label: string | null) => void;
 }
 
-const Diorama = ({ reduced, flicker, giroPausa }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
+  const navigate = useNavigate();
   const screen = useRef<THREE.MeshStandardMaterial | null>(null);
+  const [ativo, setAtivo] = useState<string | null>(null);
   // parte de cima da cadeira gamer: gira sozinha, a base fica parada
   const cadeira = useRef<THREE.Object3D | null>(null);
   const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
@@ -121,7 +134,69 @@ const Diorama = ({ reduced, flicker, giroPausa }: AnimProps) => {
     }
   });
 
-  return <primitive object={scene} />;
+  // realce do hover: sob a paleta 1-bit nao adianta outline sutil — o que le e
+  // subir a luminancia, ai o objeto pula pra banda do branco.
+  useEffect(() => {
+    if (!ativo) return;
+    const orig = new Map<THREE.MeshStandardMaterial, number>();
+    scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      let p: THREE.Object3D | null = o;
+      let nome: string | null = null;
+      while (p) { if (ALVOS[p.name]) { nome = p.name; break; } p = p.parent; }
+      // so o alvo em hover. sem `ativo` acima, null !== null era falso e isso
+      // acendia a cena inteira.
+      if (!nome || nome !== ativo) return;
+      const mat = m.material as THREE.MeshStandardMaterial;
+      if (!mat || !("emissive" in mat)) return;
+      orig.set(mat, mat.emissiveIntensity ?? 1);
+      mat.emissive = new THREE.Color("#ffffff");
+      mat.emissiveIntensity = 0.55;
+    });
+    return () => {
+      orig.forEach((v, mat) => {
+        mat.emissive = new THREE.Color("#000000");
+        mat.emissiveIntensity = v;
+      });
+    };
+  }, [scene, ativo]);
+
+  // O raycast do R3F sobe pelos pais, entao acho o alvo subindo a hierarquia.
+  const alvoDe = (o: THREE.Object3D | null): string | null => {
+    let p: THREE.Object3D | null = o;
+    while (p) {
+      if (ALVOS[p.name]) return p.name;
+      p = p.parent;
+    }
+    return null;
+  };
+
+  return (
+    <primitive
+      object={scene}
+      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+        const nome = alvoDe(e.object);
+        if (!nome) return;
+        e.stopPropagation();
+        setAtivo(nome);
+        onHover(ALVOS[nome].label);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        setAtivo(null);
+        onHover(null);
+        document.body.style.cursor = "";
+      }}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        const nome = alvoDe(e.object);
+        if (!nome) return;
+        e.stopPropagation();
+        document.body.style.cursor = "";
+        navigate(ALVOS[nome].rota);
+      }}
+    />
+  );
 };
 
 // O Ban de verdade: riggado no Blender (21 ossos), clipes walk/idle. Anda um
@@ -206,12 +281,44 @@ const Ban = ({ reduced, speed, pausa }: { reduced: boolean; speed: number; pausa
   );
 };
 
-// Parallax de camera: o mouse te deixa espiar dentro do diorama. Damping com
-// constante de tempo (independente de framerate). Em reduced-motion, trava.
-const Rig = ({ reduced, parallax, suavidade }: { reduced: boolean; parallax: number; suavidade: number }) => {
+// Camera: parallax do mouse + reacao ao scroll.
+//  - mouse: te deixa espiar dentro do diorama
+//  - scroll: o hero e sticky e a proxima secao sobe por cima; entao enquanto ela
+//    sobe a camera recua e desce um pouco. O diorama "afunda" em vez de so ficar
+//    parado sendo tapado — o corte fica sendo uma transicao, nao uma cortina.
+// Damping por constante de tempo (identico em 60Hz ou 144Hz). Reduced-motion trava.
+const Rig = ({
+  reduced,
+  parallax,
+  suavidade,
+  scrollRecuo,
+}: {
+  reduced: boolean;
+  parallax: number;
+  suavidade: number;
+  scrollRecuo: number;
+}) => {
   const { camera, pointer } = useThree();
   const base = useMemo(() => new THREE.Vector3(...CAM_POS), []);
   const goal = useMemo(() => new THREE.Vector3(), []);
+  const alvo = useMemo(() => CAM_TARGET.clone(), []);
+  const progresso = useRef(0);
+
+  // 0 -> hero cheio na tela; 1 -> hero totalmente coberto
+  useEffect(() => {
+    if (reduced) return;
+    const ler = () => {
+      const h = window.innerHeight || 1;
+      progresso.current = Math.min(1, Math.max(0, window.scrollY / h));
+    };
+    ler();
+    window.addEventListener("scroll", ler, { passive: true });
+    window.addEventListener("resize", ler);
+    return () => {
+      window.removeEventListener("scroll", ler);
+      window.removeEventListener("resize", ler);
+    };
+  }, [reduced]);
 
   useFrame((_, dt) => {
     if (reduced) {
@@ -219,13 +326,18 @@ const Rig = ({ reduced, parallax, suavidade }: { reduced: boolean; parallax: num
       camera.lookAt(CAM_TARGET);
       return;
     }
+    const s = progresso.current;
+    // easeInOut pra o recuo nao arrancar no primeiro pixel de scroll
+    const e = s * s * (3 - 2 * s);
     goal.set(
-      base.x + pointer.x * parallax,
-      base.y + pointer.y * parallax * 0.55,
-      base.z - Math.abs(pointer.x) * parallax * 0.15,
+      base.x + pointer.x * parallax + e * scrollRecuo * 0.35,
+      base.y + pointer.y * parallax * 0.55 + e * scrollRecuo * 0.5,
+      base.z - Math.abs(pointer.x) * parallax * 0.15 + e * scrollRecuo,
     );
     camera.position.lerp(goal, 1 - Math.exp(-dt / Math.max(suavidade, 0.001)));
-    camera.lookAt(CAM_TARGET);
+    // o alvo desce junto: da a sensacao de estar se afastando pra cima
+    alvo.set(CAM_TARGET.x, CAM_TARGET.y - e * scrollRecuo * 0.25, CAM_TARGET.z);
+    camera.lookAt(alvo);
   });
 
   return null;
@@ -257,23 +369,31 @@ const Crt = () => {
 const HeroDiorama = () => {
   const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [label, setLabel] = useState<string | null>(null);
   useEffect(() => {
     setReduced(prefersReducedMotion());
     setMounted(true);
   }, []);
 
   // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, giroPausa, flicker } = useControls("interacao", {
+  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, flicker } = useControls("interacao", {
     parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
     suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
     banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
     banPausa: { value: 4, min: 1, max: 12, step: 0.5 },
     giroPausa: { value: 7, min: 2, max: 25, step: 0.5 },
+    scrollRecuo: { value: 1.1, min: 0, max: 3, step: 0.05 },
     flicker: { value: 1, min: 0, max: 3, step: 0.05 },
   });
 
   return (
-    <div className="h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
+    <div className="relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
+      {/* rotulo do objeto sob o cursor — mesma linguagem do [ ver ] do site */}
+      {label ? (
+        <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 border border-ink/25 bg-paper/90 px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ink">
+          [ {label} ]
+        </div>
+      ) : null}
       {mounted ? (
         <Canvas
           dpr={[1, 1.8]}
@@ -288,9 +408,9 @@ const HeroDiorama = () => {
           <ambientLight intensity={1.05} />
           <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
-          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} />
+          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
