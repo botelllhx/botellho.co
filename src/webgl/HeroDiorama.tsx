@@ -3,7 +3,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
-import { useControls } from "leva";
 import * as THREE from "three";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
@@ -73,14 +72,13 @@ export interface Foco {
 interface AnimProps {
   reduced: boolean;
   flicker: number;
-  telaLuz: number;
   giroPausa: number;
   onHover: (label: string | null) => void;
   onFocar: (f: Foco | null) => void;
   foco: Foco | null;
 }
 
-const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
   const screen = useRef<THREE.MeshBasicMaterial | null>(null);
   const [ativo, setAtivo] = useState<string | null>(null);
@@ -89,9 +87,6 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
   const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
   // a tela roda um boot DOS em loop e ACENDE a cena (unica fonte "viva" do diorama)
   const tela = useMemo(() => criarTelaViva(), []);
-  const luz = useRef<THREE.SpotLight>(null);
-  // alvo do spot: a luz da tela vai PRA FRENTE (mesa/cadeira), nao pra parede
-  const alvoLuz = useMemo(() => new THREE.Object3D(), []);
   const ativoObj = useRef<THREE.Object3D | null>(null);
   const escala0 = useRef(new THREE.Vector3(1, 1, 1));
 
@@ -152,10 +147,6 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
     if (screen.current) {
       const b = SCREEN_BASE + f * flicker;
       screen.current.color.setRGB(b, b, b);
-    }
-    // ...e a MESMA cintilancia vai na luz: a tela ilumina o quarto de verdade
-    if (luz.current) {
-      luz.current.intensity = telaLuz * tela.brilho() * (1 + f * flicker);
     }
     // hover: PISCA em blocos, tipo seleção de terminal. Sob a paleta 1-bit um
     // brilho suave e literalmente invisivel (ou o pixel cruza a banda do branco
@@ -242,6 +233,23 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
     };
   }, [scene, ativo]);
 
+  // devolve escala e cor do ultimo item em hover
+  const limparHover = () => {
+    const ao = ativoObj.current;
+    if (ao) {
+      ao.scale.copy(escala0.current);
+      ao.traverse((c) => {
+        const cm = c as THREE.Mesh;
+        const mm = cm.material as THREE.MeshStandardMaterial;
+        if (mm?.userData?.__base !== undefined) mm.color.setHex(mm.userData.__base);
+      });
+    }
+    ativoObj.current = null;
+    setAtivo(null);
+    onHover(null);
+    document.body.style.cursor = "";
+  };
+
   // O raycast do R3F entrega a malha; o alvo pode estar nela ou num pai.
   const tagDe = (o: THREE.Object3D | null): string | null => {
     let p: THREE.Object3D | null = o;
@@ -264,29 +272,24 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
 
   return (
     <>
-      {/* A tela acende o quarto. pointLight irradiava pros dois lados e batia na
-          parede DE TRAS; spot joga a luz pra frente, como monitor de verdade:
-          pega a mesa, o teclado e quem senta na cadeira. */}
-      <primitive object={alvoLuz} position={[0, 0.55, 0.75]} />
-      <spotLight
-        ref={luz}
-        position={[0, 1.0, -0.55]}
-        target={alvoLuz}
-        angle={1.15}
-        penumbra={1}
-        color="#6f8bff"
-        distance={3.4}
-        decay={1.2}
-      />
       <primitive
         object={scene}
-        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+        // onPointerMove, NAO onPointerOver: o handler esta na RAIZ do diorama, e o
+      // `over` do R3F so dispara ao entrar nesse objeto — trocar de filho (chao ->
+      // quadro) nao redispara. Por isso o hover parecia morto e "acordava" quando
+      // um alt-tab / print forcava um pointerout+over novo. O `move` reporta o
+      // alvo debaixo do cursor a cada movimento.
+      onPointerMove={(e: ThreeEvent<PointerEvent>) => {
         if (foco) return;
         const nome = tagDe(e.object);
-        if (!nome) return;
-        e.stopPropagation();
         const alvo = objDe(e.object);
-        if (alvo && ativoObj.current !== alvo) {
+        if (!nome || !alvo) {
+          if (ativoObj.current) limparHover();
+          return;
+        }
+        e.stopPropagation();
+        if (ativoObj.current !== alvo) {
+          limparHover();
           // guarda a escala INTEIRA: os quadros sao nao-uniformes (PicV .52/.52/1,
           // PicH .66/.37/1) e usar so o X deformava a altura deles.
           escala0.current.copy(alvo.scale);
@@ -296,30 +299,13 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
         onHover(ALVOS[nome].label);
         document.body.style.cursor = "pointer";
       }}
-      onPointerOut={() => {
-        if (ativoObj.current) {
-          ativoObj.current.scale.copy(escala0.current);
-          ativoObj.current.traverse((c) => {
-            const cm = c as THREE.Mesh;
-            const mm = cm.material as THREE.MeshStandardMaterial;
-            if (mm?.userData?.__base !== undefined) mm.color.setHex(mm.userData.__base);
-          });
-        }
-        ativoObj.current = null;
-        setAtivo(null);
-        onHover(null);
-        document.body.style.cursor = "";
-      }}
+      onPointerOut={() => limparHover()}
       onClick={(e: ThreeEvent<MouseEvent>) => {
         const alvo = objDe(e.object);
         const nome = tagDe(e.object);
         if (!alvo || !nome) return;
         e.stopPropagation();
-        if (ativoObj.current) ativoObj.current.scale.copy(escala0.current);
-        ativoObj.current = null;
-        setAtivo(null);
-        onHover(null);
-        document.body.style.cursor = "";
+        limparHover();
         // click aproxima em vez de navegar: a camera vai ate o item, de frente
         onFocar({ obj: alvo, label: ALVOS[nome].label });
       }}
@@ -418,7 +404,9 @@ const Ban = ({
   return (
     <group
       ref={pivo}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+      // move (nao over) pelo mesmo motivo do diorama; e o stopPropagation impede
+      // que o diorama atras dele limpe o hover do Ban.
+      onPointerMove={(e: ThreeEvent<PointerEvent>) => {
         if (foco) return;
         e.stopPropagation();
         onHover(ALVOS.Ban.label);
@@ -613,11 +601,6 @@ const HeroDiorama = () => {
   const scrollRecuo = 3.0;
   const zoomMargem = 1.35;
   const flicker = 1.0;
-  // a luz da tela segue em calibragem (ver nota no spotLight): sob a paleta 1-bit
-  // ela so "aparece" se empurrar a superficie pra outra banda.
-  const { telaLuz } = useControls("luz", {
-    telaLuz: { value: 8.0, min: 0, max: 30, step: 0.5 },
-  });
 
   return (
     <div className="relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
@@ -651,7 +634,7 @@ const HeroDiorama = () => {
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
           <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} telaLuz={telaLuz} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}
