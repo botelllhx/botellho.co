@@ -28,7 +28,7 @@ export const useContactForm = () => {
 
                 console.warn('EmailJS credentials not configured in .env. Simulating success.');
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                toast.success('Mensagem enviada com sucesso! (Modo Simulação - Configure o .env)');
+                toast.success('Projeto enviado. (Modo simulação, configure o .env)');
                 return true;
             }
 
@@ -47,12 +47,12 @@ export const useContactForm = () => {
                 'g-recaptcha-response': captchaToken || ''
             }, publicKey);
 
-            toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+            toast.success('Projeto enviado. Retornamos em breve.');
             return true;
         } catch (error) {
             console.error('Erro ao enviar email:', error);
             // Verifica se é erro de captcha
-            if (error && typeof error === 'object' && 'text' in error && (error as any).text.includes('reCAPTCHA')) {
+            if (error && typeof error === 'object' && 'text' in error && String((error as { text: unknown }).text).includes('reCAPTCHA')) {
                 toast.error('Erro de validação do reCAPTCHA. Atualize a página e tente novamente.');
             } else {
                 toast.error('Erro ao enviar mensagem. Tente novamente mais tarde.');

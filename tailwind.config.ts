@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -47,11 +48,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Identidade 1-bit
+        ink: "hsl(var(--ink))",
+        paper: "hsl(var(--paper))",
+        phosphor: "hsl(var(--phosphor))",
       },
       fontFamily: {
-        display: ["Playfair Display", "serif"],
-        mono: ["Space Mono", "monospace"],
-        sans: ["Inter", "sans-serif"],
+        display: ["var(--font-display)"],
+        mono: ["var(--font-mono)"],
+        sans: ["var(--font-sans)"],
+        bitmap: ["var(--font-bitmap)"],
+        serif: ["var(--font-serif)"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -99,5 +106,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

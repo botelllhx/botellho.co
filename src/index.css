@@ -1,82 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Geist+Pixel&family=Geist:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
-
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 5%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-
-    --primary: 227 87% 34%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 5%;
-
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 40%;
-
-    --accent: 227 87% 34%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
-    --ring: 227 87% 34%;
-
-    --radius: 0px;
-
-    /* Typography */
-    --font-display: 'Syne', sans-serif;
-    --font-mono: 'Space Grotesk', sans-serif;
-    --font-sans: 'Inter', sans-serif;
-
-    /* Legacy Compatibility Layer */
-    --color-surface: hsl(var(--background));
-    --color-text-inverse: hsl(var(--foreground));
-    --color-text-inverse-secondary: hsl(var(--muted-foreground));
-    --color-text-primary: hsl(var(--primary));
-    --color-text-muted: hsl(var(--muted-foreground));
-    --color-bg: hsl(var(--background));
-
-    /* Spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
-    --spacing-2xl: 4rem;
-    --spacing-3xl: 6rem;
-    --spacing-4xl: 8rem;
-    --font-size-small: 0.875rem;
-    --font-size-body: 1rem;
-    --font-size-body-large: 1.125rem;
-    --font-weight-medium: 500;
-    --font-weight-bold: 700;
-    --font-weight-black: 900;
-    --font-serif: var(--font-display);
-    --font-body: var(--font-sans);
-    --header-height: 80px;
-    --transition-base: 0.3s ease;
-  }
-
-  .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
-  }
+/* DOS bitmap: IBM VGA 8x16 do int10h (CC BY-SA 4.0, charset Plus com acentos) */
+@font-face {
+  font-family: 'IBM VGA';
+  src: url('/fonts/int10h/WebPlus_IBM_VGA_8x16.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
 }
 
 @layer base {
+  :root {
+    /* Identidade 1-bit: ink (apagado) / paper (campo) / phosphor (aceso) */
+    --ink: 0 0% 5%;
+    --paper: 0 0% 100%;
+    --phosphor: 227 87% 34%;
+
+    /* Mapeamento shadcn (Admin e primitivas de UI) */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 0 0% 98%;
+    --card-foreground: var(--ink);
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+    --primary: var(--phosphor);
+    --primary-foreground: var(--paper);
+    --secondary: 0 0% 96%;
+    --secondary-foreground: var(--ink);
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 40%;
+    --accent: var(--phosphor);
+    --accent-foreground: var(--paper);
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 88%;
+    --input: 0 0% 96%;
+    --ring: var(--phosphor);
+    --radius: 0px;
+
+    /* Motion (Secao 5.1: nada de valor solto) */
+    --dur-instant: 80ms;
+    --dur-fast: 180ms;
+    --dur-base: 320ms;
+    --dur-slow: 640ms;
+    --dur-cine: 1000ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-inout: cubic-bezier(0.65, 0.05, 0.36, 1);
+
+    /* Tipografia por papel (Secao 14 da direcao criativa) */
+    --font-display: 'Archivo Black', sans-serif;
+    --font-mono: 'Geist Pixel', ui-monospace, monospace;
+    --font-bitmap: 'IBM VGA', 'Geist Pixel', monospace;
+    --font-serif: 'Averia Serif Libre', Georgia, serif;
+    --font-sans: 'Geist', sans-serif;
+
+    /* Estrutura do terminal */
+    --bar-h: 44px;
+  }
+
+  /* Modo escuro e a inversao literal ink/paper; o phosphor nao muda */
+  .dark {
+    --background: var(--ink);
+    --foreground: var(--paper);
+    --card: 0 0% 8%;
+    --card-foreground: var(--paper);
+    --popover: var(--ink);
+    --popover-foreground: var(--paper);
+    --secondary: 0 0% 12%;
+    --secondary-foreground: var(--paper);
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 62%;
+    --border: 0 0% 18%;
+    --input: 0 0% 12%;
+  }
+
   * {
     @apply border-border;
   }
@@ -92,455 +93,596 @@
   }
 
   ::selection {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background: hsl(var(--phosphor));
+    color: hsl(var(--paper));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--phosphor));
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar DOS: trilho fino, thumb phosphor, radius 0 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--phosphor)) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--phosphor));
+    border-radius: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
 @layer components {
-  .font-display {
+
+  /* ===== Tipos do sistema ===== */
+
+  /* A tese: Archivo Black gigante, tracking apertado (peso unico 400) */
+  .type-tese {
     font-family: var(--font-display);
-  }
-
-  .font-mono {
-    font-family: var(--font-mono);
-  }
-
-  .font-sans {
-    font-family: var(--font-sans);
-  }
-
-  /* Neo-brutalist button - minimal, bold */
-  .neo-button {
-    @apply relative inline-flex items-center justify-center px-8 py-4;
-    @apply font-mono text-sm font-semibold uppercase tracking-wider;
-    @apply bg-primary text-primary-foreground;
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .neo-button:hover {
-    @apply bg-foreground;
-  }
-
-  .neo-button-outline {
-    @apply neo-button bg-transparent text-foreground;
-    @apply border-2 border-foreground;
-  }
-
-  .neo-button-outline:hover {
-    @apply bg-foreground text-background;
-  }
-
-  /* Text reveal animation */
-  .text-reveal {
-    @apply overflow-hidden;
-  }
-
-  .text-reveal span {
-    @apply inline-block;
-    animation: reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-  }
-
-  /* Massive typography */
-  .text-massive {
-    font-size: clamp(3rem, 15vw, 18rem);
-    line-height: 0.85;
-    letter-spacing: -0.04em;
-  }
-
-  .text-huge {
-    font-size: clamp(2.5rem, 10vw, 10rem);
-    line-height: 0.9;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 7vw, 7rem);
+    line-height: 0.92;
     letter-spacing: -0.03em;
   }
 
-  .text-large {
-    font-size: clamp(2rem, 6vw, 6rem);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-  }
-
-  /* Stroke text */
-  .text-stroke {
-    -webkit-text-stroke: 2px hsl(var(--foreground));
-    color: transparent;
-  }
-
-  .text-stroke-primary {
-    -webkit-text-stroke: 2px hsl(var(--primary));
-    color: transparent;
-  }
-
-  /* Marquee */
-  .marquee-container {
-    @apply overflow-hidden whitespace-nowrap;
-  }
-
-  .marquee-content {
-    @apply inline-flex;
-    animation: marquee 30s linear infinite;
-  }
-
-  .marquee-content-reverse {
-    @apply inline-flex;
-    animation: marquee-reverse 25s linear infinite;
-  }
-
-  /* Scroll indicator */
-  .scroll-indicator {
-    animation: scroll-bounce 2s ease-in-out infinite;
-  }
-
-
-  .logo-char {
-    display: inline-block;
-    animation: logoFontShuffle 12s ease-in-out infinite;
-    animation-delay: calc(var(--char-index, 0) * 0.18s);
-    will-change: font-family, font-weight, font-style;
-    animation-fill-mode: both;
-    width: 0.7em;
-    text-align: center;
-  }
-
-  .creative-card {
-    transform-style: preserve-3d;
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-  }
-
-  .creative-card:hover {
-    transform: perspective(1400px) rotateX(1.8deg) rotateY(-2.2deg) translateY(-4px);
-  }
-
-}
-
-@layer utilities {
-
-  /* Fade up animation for scroll */
-  .animate-fade-up {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .animate-fade-up-delay-1 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-2 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-3 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-4 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
-    opacity: 0;
-  }
-
-  .animate-fade-up-delay-5 {
-    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
-    opacity: 0;
-  }
-
-  /* Slide animations */
-  .animate-slide-left {
-    animation: slideLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .animate-slide-right {
-    animation: slideRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Scale animation */
-  .animate-scale-in {
-    animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Rotate animation */
-  .animate-rotate {
-    animation: rotate 20s linear infinite;
-  }
-
-  /* Pulse animation */
-  .animate-pulse-slow {
-    animation: pulseSlow 3s ease-in-out infinite;
-  }
-}
-
-/* Keyframes */
-@keyframes reveal {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(60px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideRight {
-  0% {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-reverse {
-  0% {
-    transform: translateX(-50%);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes logoFontShuffle {
-
-  0%,
-  100% {
+  .type-title {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
   }
 
-  8% {
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
-    font-style: normal;
+  /* Rotulo tecnico: Departure Mono, caixa alta, tracking largo */
+  .type-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
   }
 
-  10% {
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
-    font-style: normal;
+  /* Momento DOS de verdade: bitmap sem suavizacao */
+  .type-dos {
+    font-family: var(--font-bitmap);
+    -webkit-font-smoothing: none;
+    font-smooth: never;
   }
 
-  20% {
-    font-family: 'Georgia', serif;
-    font-weight: 800;
-    font-style: normal;
+  .font-bitmap {
+    font-family: var(--font-bitmap);
+    -webkit-font-smoothing: none;
+    font-smooth: never;
   }
 
-  30% {
-    font-family: 'Georgia', serif;
-    font-weight: 700;
-    font-style: italic;
+  .font-serif {
+    font-family: var(--font-serif);
   }
 
-  38% {
-    font-family: monospace;
-    font-weight: 800;
-    font-style: normal;
+  /* Regua fina do grid exposto */
+  .rule {
+    border-top: 1px solid hsl(var(--foreground) / 0.12);
   }
 
-  40% {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-style: italic;
+  .rule-phosphor {
+    border-top: 1px solid hsl(var(--phosphor) / 0.45);
   }
 
-  50% {
-    font-family: 'Times New Roman', serif;
-    font-weight: 900;
-    font-style: normal;
+  /* ===== Controles do terminal ===== */
+
+  .cmd-button {
+    @apply inline-flex items-center gap-3 px-6 py-3;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: hsl(var(--paper));
+    background: hsl(var(--phosphor));
+    border: 1px solid hsl(var(--phosphor));
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
   }
 
-  60% {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
+  .cmd-button:hover {
+    background: hsl(var(--foreground));
+    border-color: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  68% {
-    font-family: monospace;
-    font-weight: 900;
-    font-style: normal;
+  /* Press de tecla fisica: desloca 1px */
+  .cmd-button:active {
+    transform: translate(1px, 1px);
   }
 
-  70% {
-    font-family: 'Verdana', sans-serif;
-    font-weight: 800;
-    font-style: normal;
+  .cmd-button-ghost {
+    @apply cmd-button;
+    background: transparent;
+    border-color: hsl(var(--foreground) / 0.4);
+    color: hsl(var(--foreground));
   }
 
-  80% {
-    font-family: 'Arial', sans-serif;
-    font-weight: 900;
-    font-style: normal;
+  .cmd-button-ghost:hover {
+    background: hsl(var(--foreground));
+    border-color: hsl(var(--foreground));
+    color: hsl(var(--background));
   }
 
-  90% {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-style: normal;
+  /* Linha de diretorio (indice de programas, tabelas do arquivo) */
+  .dir-row {
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .dir-row:hover {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+
+  /* Linha de log (lab): hover acende uma scanline de fosforo */
+  .lab-row {
+    position: relative;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .lab-row:hover {
+    background: hsl(var(--phosphor) / 0.1);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      hsl(var(--phosphor) / 0.14) 3px
+    );
+  }
+
+  /* ===== Janela (window chrome): a linguagem DOS profissional ===== */
+  .win {
+    border: 2px solid hsl(var(--foreground));
+    background: hsl(var(--background));
+  }
+
+  .win__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 8px;
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    user-select: none;
+  }
+
+  .win__bar--phosphor {
+    background: hsl(var(--phosphor));
+    color: hsl(var(--paper));
+  }
+
+  .win__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .win__widgets {
+    display: flex;
+    flex: none;
+    gap: 4px;
+  }
+
+  .win__widget {
+    display: inline-flex;
+    height: 12px;
+    width: 14px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid currentColor;
+    font-size: 8px;
+    line-height: 1;
+  }
+
+  .win__body {
+    padding: 1.25rem;
+  }
+
+  /* Painel com relevo 3D sutil (raised) */
+  .bevel {
+    border: 2px solid;
+    border-top-color: hsl(var(--foreground) / 0.22);
+    border-left-color: hsl(var(--foreground) / 0.22);
+    border-bottom-color: hsl(var(--foreground));
+    border-right-color: hsl(var(--foreground));
+  }
+
+  /* Faixa de metadados estatica (sem carrossel) */
+  .metastrip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
   }
 }
 
-@keyframes pulseSlow {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes scroll-bounce {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(10px);
-  }
-}
-
-
-@keyframes loader-progress {
-  0% {
-    width: 0%;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-/* Custom scrollbar - minimal */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--foreground));
-}
-
-/* Loader specific */
-.loader-bar {
-  animation: loader-progress 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Custom Cursor */
+/* ===== Cursor custom: bloco/caret de terminal (Secao 5.6) ===== */
 @media (pointer: fine) {
-  html {
-    cursor: none;
+
+  html,
+  html * {
+    cursor: none !important;
   }
+
+  /* Excecao: o hero 3D e interativo (hover/click nos objetos do diorama), entao
+     ali vale o cursor nativo — com pointer nos alvos. O cursor custom fica
+     escondido enquanto o ponteiro esta sobre ele. */
+  [data-cursor="nativo"],
+  [data-cursor="nativo"] * {
+    cursor: auto !important;
+  }
+
+  [data-cursor="nativo"] canvas {
+    cursor: inherit !important;
+  }
+
+  /* maozinha sobre os objetos clicaveis do diorama. Precisa de !important e de
+     specificity maior que `html *`, senao o `cursor: none` do cursor custom
+     vence — e por isso um style inline no body nao resolvia. */
+  [data-cursor="nativo"] .hero-alvo,
+  [data-cursor="nativo"] .hero-alvo canvas {
+    cursor: pointer !important;
+  }
+}
+
+.cursor.is-off,
+.cursor-dot.is-off,
+.cursor-label.is-off {
+  opacity: 0 !important;
 }
 
 .cursor {
   position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #fff;
-  border-radius: 50%;
+  width: 11px;
+  height: 22px;
+  background: hsl(var(--phosphor));
+  border: 0 solid hsl(var(--phosphor));
+  border-radius: 0;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
-  mix-blend-mode: difference;
   transform: translate(-50%, -50%);
+  transition:
+    width var(--dur-fast) var(--ease-out),
+    height var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    border-width var(--dur-fast) var(--ease-out);
+  animation: cursor-blink 1.06s steps(1, end) infinite;
 }
 
 .cursor-dot {
   position: fixed;
   width: 4px;
   height: 4px;
-  background: #fff;
-  border-radius: 50%;
+  background: hsl(var(--phosphor));
   pointer-events: none;
   z-index: 9999;
-  transition: transform 0.1s ease;
-  mix-blend-mode: difference;
   transform: translate(-50%, -50%);
 }
 
-.cursor.hover {
-  transform: translate(-50%, -50%) scale(1.5);
-  border-color: #fff;
-  opacity: 0.8;
-  background: rgba(255, 255, 255, 0.1);
+/* Sobre link/controle: moldura [ ] sem blink */
+.cursor.is-hover {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-width: 2px;
+  animation: none;
 }
 
-.cursor.click {
-  transform: translate(-50%, -50%) scale(0.8);
+/* Sobre area 3D: crosshair/mira */
+.cursor.is-crosshair {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border-width: 0;
+  animation: none;
+}
+
+.cursor.is-crosshair::before,
+.cursor.is-crosshair::after {
+  content: "";
+  position: absolute;
+  background: hsl(var(--phosphor));
+}
+
+.cursor.is-crosshair::before {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+
+.cursor.is-crosshair::after {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.cursor.is-press {
+  transform: translate(calc(-50% + 1px), calc(-50% + 1px));
+}
+
+/* Sobre card: o bloco some e um rotulo [ ver ] em bitmap segue o cursor */
+.cursor.is-card {
+  opacity: 0;
+}
+
+.cursor-label {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translate(14px, 8px);
+  padding: 2px 6px;
+  background: hsl(var(--phosphor));
+  color: hsl(var(--paper));
+  font-family: var(--font-bitmap);
+  font-size: 12px;
+  -webkit-font-smoothing: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.cursor-label.is-on {
+  opacity: 1;
+}
+
+/* Em fundo escuro/azul o cursor phosphor some: inverte pra paper */
+.cursor.is-on-dark {
+  background: hsl(var(--paper));
+  border-color: hsl(var(--paper));
+}
+
+.cursor.is-on-dark.is-hover,
+.cursor.is-on-dark.is-crosshair {
+  background: transparent;
+}
+
+.cursor.is-on-dark.is-crosshair::before,
+.cursor.is-on-dark.is-crosshair::after {
+  background: hsl(var(--paper));
+}
+
+.cursor-dot.is-on-dark {
+  background: hsl(var(--paper));
+}
+
+.cursor-label.is-on-dark {
+  background: hsl(var(--paper));
+  color: hsl(var(--ink));
+}
+
+@keyframes cursor-blink {
+
+  0%,
+  54% {
+    opacity: 1;
+  }
+
+  55%,
+  100% {
+    opacity: 0.12;
+  }
+}
+
+/* ===== Wordmark gigante do rodape (dithered, resolve no hover) ===== */
+.wordmark {
+  display: block;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 22vw, 20rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px hsl(var(--foreground) / 0.22);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath fill='%230b2ca2' d='M0 0h2v2H0zM3 3h2v2H3z'/%3E%3C/svg%3E");
+  background-size: 6px 6px;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: wordmark-drift 8s linear infinite;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.wordmark:hover {
+  -webkit-text-stroke: 0;
+  background-image: none;
+  background-color: hsl(var(--phosphor));
+  animation: none;
+}
+
+@keyframes wordmark-drift {
+  to {
+    background-position: 60px 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark {
+    animation: none;
+  }
+}
+
+/* ===== Vidro do hero cena-cheia: scrim + vinheta + scanlines ===== */
+.hero-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, hsl(var(--ink) / 0.94) 0%, hsl(var(--ink) / 0.25) 46%, transparent 72%),
+    radial-gradient(125% 125% at 50% 42%, transparent 54%, hsl(var(--ink) / 0.7) 100%),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, hsl(var(--ink) / 0.18) 3px);
+}
+
+/* ===== Moldura CRT do hero (a "tela" e a excecao ao radius 0) ===== */
+.crt-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: hsl(var(--ink));
+  border: 1px solid hsl(var(--foreground) / 0.18);
+  box-shadow:
+    inset 0 0 0 8px hsl(var(--ink)),
+    inset 0 0 90px hsl(var(--ink) / 0.9),
+    0 0 0 1px hsl(var(--foreground) / 0.08);
+}
+
+/* Vidro: vinheta + scanlines discretas por cima do canvas */
+.crt-frame__glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 120% at 50% 50%, transparent 58%, hsl(var(--ink) / 0.85) 100%),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, hsl(var(--ink) / 0.22) 3px);
+}
+
+.crt-frame__tag {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  color: hsl(var(--phosphor));
+  opacity: 0.8;
+}
+
+/* ===== Ruido de "sem sinal" (404) ===== */
+.static-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.043 0 0 0 0 0.172 0 0 0 0 0.635 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  animation: static-shift 0.6s steps(4) infinite;
+}
+
+@keyframes static-shift {
+  0% { background-position: 0 0; }
+  25% { background-position: -40px 20px; }
+  50% { background-position: 30px -30px; }
+  75% { background-position: -20px -10px; }
+  100% { background-position: 10px 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .static-noise {
+    animation: none;
+  }
+}
+
+/* ===== Boot / loader: boot DOS em tela azul (primeira impressao da marca) ===== */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: hsl(var(--phosphor));
+  color: hsl(var(--paper));
+  font-family: var(--font-bitmap);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  overflow: hidden;
+  transform: translateY(0);
+}
+
+/* Saida elegante: a tela sobe revelando o site (coerente com a page-wipe) */
+.boot--off {
+  transform: translateY(-101%);
+  transition: transform 560ms var(--ease-inout);
+}
+
+/* Scanlines discretas em paper por cima do azul */
+.boot__scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    hsl(var(--paper) / 0.05) 3px
+  );
+}
+
+/* Ban horizontal (marca) revelando da esquerda pra direita, tipo impressao.
+   Tamanho vem do Tailwind (altura fixa, largura natural), sem estourar o layout. */
+.boot__ban-img {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Cada linha do log entra com um reveal curto */
+.boot__line {
+  animation: boot-line-in 280ms var(--ease-out) both;
+}
+
+@keyframes boot-line-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.boot__caret::after {
+  content: "█";
+  margin-left: 2px;
+  animation: cursor-blink 1s steps(1, end) infinite;
+}
+
+/* ===== Transicao de rota: painel limpo que sobe revelando (sem dither) ===== */
+.page-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: hsl(var(--background));
+  border-bottom: 3px solid hsl(var(--phosphor));
+  animation: page-lift 520ms var(--ease-inout) forwards;
+}
+
+@keyframes page-lift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-101%); }
+}
+
+/* Caret piscante em rotulos/typing */
+.caret::after {
+  content: "▌";
+  color: hsl(var(--phosphor));
+  animation: cursor-blink 1.06s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .cursor,
+  .caret::after {
+    animation: none;
+  }
 }

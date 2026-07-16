@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Fontes de asset: nao vao pra public/ (tudo la e servido no dominio) nem pro
+# bundle. As texturas dos quadros ja estao embutidas no diorama.glb como webp.
+assets/ban-source
 .env
 .env.*
 !.env.example
@@ -25,3 +29,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Modelos 3D brutos (grandes; os otimizados ficam em public/3d)
+assets/3d-source

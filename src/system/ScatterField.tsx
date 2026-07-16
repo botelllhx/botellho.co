@@ -1,0 +1,176 @@
+import { useEffect, useRef } from "react";
+import Scramble, { type ScrambleHandle } from "@/motion/Scramble";
+import { prefersReducedMotion } from "@/motion/prefs";
+
+// "Como a gente trabalha": funde duas coisas do Locomotive/DVD.
+// (1) Replicacao: cada frase aparece empilhada varias vezes (eco), cada copia
+//     com modo/duracao propria; elas embaralham SO quando os stacks se tocam.
+// (2) Fisica de DVD: cada stack (a frase e seus ecos) deriva pelo palco, bate
+//     nas bordas trocando de cor (azul <-> preto) e colide com os outros,
+//     disparando o embaralhamento no contato.
+// Afirmativo: o METODO. As recusas ficam em "regras da casa".
+const FRASES = [
+  "a gente escreve o próprio código",
+  "3d que roda em qualquer máquina",
+  "design que passa no acessível",
+  "performance faz parte do craft",
+  "arte e engenharia na mesma mesa",
+  "entrega no prazo combinado",
+];
+
+const REPS = 4;
+const MODES = ["ltr", "random", "center", "random"] as const;
+const INK = "hsl(var(--foreground))";
+const BLUE = "hsl(var(--phosphor))";
+
+const ScatterField = () => {
+  const stage = useRef<HTMLDivElement>(null);
+  const itens = useRef<HTMLDivElement[]>([]);
+  const handles = useRef<ScrambleHandle[][]>([]);
+
+  useEffect(() => {
+    const st = stage.current;
+    if (!st) return;
+
+    let W = st.clientWidth;
+    let H = st.clientHeight;
+
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const corpos = itens.current.filter(Boolean).map((el, i) => {
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const azul = i % 2 === 0;
+      el.style.color = azul ? BLUE : INK;
+      el.style.opacity = "1";
+      return {
+        el, w, h,
+        x: rand(0, Math.max(1, W - w)),
+        y: rand(0, Math.max(1, H - h)),
+        vx: (Math.random() < 0.5 ? -1 : 1) * rand(34, 64),
+        vy: (Math.random() < 0.5 ? -1 : 1) * rand(34, 64),
+        azul,
+      };
+    });
+
+    // reduced-motion: coluna legivel, sem fisica
+    if (prefersReducedMotion()) {
+      let y = 0;
+      for (const c of corpos) {
+        c.el.style.transform = `translate(0px, ${y}px)`;
+        y += c.h + 28;
+      }
+      return;
+    }
+
+    const flip = (c: (typeof corpos)[number]) => {
+      c.azul = !c.azul;
+      c.el.style.color = c.azul ? BLUE : INK;
+    };
+
+    const colidindo = new Set<string>();
+    const embaralha = (i: number) => (handles.current[i] || []).forEach((h) => h?.scramble());
+
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+
+      for (const c of corpos) {
+        c.x += c.vx * dt;
+        c.y += c.vy * dt;
+        if (c.x <= 0) { c.x = 0; c.vx = Math.abs(c.vx); flip(c); }
+        else if (c.x + c.w >= W) { c.x = W - c.w; c.vx = -Math.abs(c.vx); flip(c); }
+        if (c.y <= 0) { c.y = 0; c.vy = Math.abs(c.vy); flip(c); }
+        else if (c.y + c.h >= H) { c.y = H - c.h; c.vy = -Math.abs(c.vy); flip(c); }
+      }
+
+      for (let a = 0; a < corpos.length; a += 1) {
+        for (let b = a + 1; b < corpos.length; b += 1) {
+          const A = corpos[a];
+          const B = corpos[b];
+          const chave = `${a}-${b}`;
+          if (A.x < B.x + B.w && A.x + A.w > B.x && A.y < B.y + B.h && A.y + A.h > B.y) {
+            const ox = Math.min(A.x + A.w - B.x, B.x + B.w - A.x);
+            const oy = Math.min(A.y + A.h - B.y, B.y + B.h - A.y);
+            if (ox < oy) {
+              const push = ox / 2;
+              if (A.x < B.x) { A.x -= push; B.x += push; } else { A.x += push; B.x -= push; }
+              const t = A.vx; A.vx = B.vx; B.vx = t;
+            } else {
+              const push = oy / 2;
+              if (A.y < B.y) { A.y -= push; B.y += push; } else { A.y += push; B.y -= push; }
+              const t = A.vy; A.vy = B.vy; B.vy = t;
+            }
+            // embaralha so na entrada do contato (quando se tocam)
+            if (!colidindo.has(chave)) {
+              colidindo.add(chave);
+              embaralha(a);
+              embaralha(b);
+            }
+          } else {
+            colidindo.delete(chave);
+          }
+        }
+      }
+
+      for (const c of corpos) c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const onResize = () => {
+      W = st.clientWidth;
+      H = st.clientHeight;
+      for (const c of corpos) {
+        c.x = Math.min(c.x, Math.max(0, W - c.w));
+        c.y = Math.min(c.y, Math.max(0, H - c.h));
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  return (
+    <section className="overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
+      <span className="type-label text-muted-foreground">como a gente trabalha</span>
+
+      {/* desktop: stacks replicados quicando pelo palco */}
+      <div ref={stage} className="relative mt-8 hidden h-[80vh] overflow-hidden border border-foreground/15 md:block">
+        {FRASES.map((f, i) => (
+          <div
+            key={f}
+            ref={(el) => { if (el) itens.current[i] = el; }}
+            style={{ opacity: 0, willChange: "transform" }}
+            className="absolute left-0 top-0"
+          >
+            {Array.from({ length: REPS }).map((_, k) => (
+              <Scramble
+                key={k}
+                as="span"
+                text={f}
+                manual
+                mode={MODES[k]}
+                duration={760 + k * 120}
+                ref={(h) => { if (h) { (handles.current[i] ||= [])[k] = h; } }}
+                className="block whitespace-nowrap font-sans text-lg font-medium leading-[1.08] md:text-2xl"
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* mobile / reduced-motion: lista estatica legivel (sem replica) */}
+      <ul className="mt-8 flex flex-col gap-4 md:hidden">
+        {FRASES.map((f, i) => (
+          <li key={f} className={`font-sans text-2xl font-medium leading-tight ${i % 2 === 0 ? "text-phosphor" : "text-foreground"}`}>{f}</li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+export default ScatterField;

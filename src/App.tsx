@@ -1,57 +1,46 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import type { RouteRecord } from "vite-react-ssg";
+import { Navigate } from "react-router-dom";
+import Layout from "./Layout";
+import Home from "./pages/Home";
 import Studio from "./pages/Studio";
-// @ts-ignore
-import BlogPage from "./pages/legacy/BlogPage";
-// @ts-ignore
-import BlogPostPage from "./pages/legacy/BlogPostPage";
-// @ts-ignore
-import ServicePage from "./pages/legacy/ServicePage";
+import Work from "./pages/Work";
+import WorkCase from "./pages/WorkCase";
+import Lab from "./pages/Lab";
+import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+import SlugRedirect from "./system/SlugRedirect";
+import { worksLoader, workCaseLoader } from "./pages/workLoaders";
 
-import { useCustomCursor } from "@/hooks/useCustomCursor";
-import ExitIntentModal from "@/components/ExitIntentModal";
+export const routes: RouteRecord[] = [
+  {
+    path: "/",
+    element: <Layout />,
+    entry: "src/Layout.tsx",
+    children: [
+      { index: true, Component: Home, loader: worksLoader },
+      { path: "estudio", Component: Studio },
+      { path: "trabalhos", Component: Work, loader: worksLoader },
+      { path: "trabalhos/:slug", Component: WorkCase, loader: workCaseLoader },
+      { path: "laboratorio", Component: Lab },
+      { path: "contato", Component: Contact },
+      { path: "admin", Component: Admin },
 
-const queryClient = new QueryClient();
+      // Slugs EN antigos -> PT
+      { path: "studio", element: <Navigate to="/estudio" replace /> },
+      { path: "work", element: <Navigate to="/trabalhos" replace /> },
+      { path: "work/:slug", element: <SlugRedirect base="/trabalhos" /> },
+      { path: "lab", element: <Navigate to="/laboratorio" replace /> },
+      { path: "contact", element: <Navigate to="/contato" replace /> },
 
-const App = () => {
-  useCustomCursor();
+      // Legado WordPress
+      { path: "blog", element: <Navigate to="/laboratorio" replace /> },
+      { path: "blog/:slug", element: <Navigate to="/laboratorio" replace /> },
+      { path: "services/:slug", element: <Navigate to="/estudio" replace /> },
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <ExitIntentModal />
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/studio" element={<Studio />} />
+      { path: "*", Component: NotFound },
+    ],
+  },
+];
 
-            {/* Legacy Routes */}
-            {/* @ts-ignore */}
-            <Route path="/blog" element={<BlogPage />} />
-            {/* @ts-ignore */}
-            <Route path="/blog/:slug" element={<BlogPostPage />} />
-            {/* @ts-ignore */}
-            <Route path="/services/:slug" element={<ServicePage />} />
-
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-};
-
-export default App;
+export default routes;

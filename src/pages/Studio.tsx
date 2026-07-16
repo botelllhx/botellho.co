@@ -1,542 +1,181 @@
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
-import { Loader2, LogOut, Pencil, Plus, Save, Trash2, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
-import { useSupabaseSession } from "@/hooks/useSupabaseSession";
-import { useAdminPortfolioProjects } from "@/hooks/useAdminPortfolioProjects";
-import type { PortfolioProject, PortfolioProjectInput } from "@/types/portfolio";
+import { Head } from "vite-react-ssg";
+import { Link } from "react-router-dom";
+import Scramble from "@/motion/Scramble";
+import Reveal from "@/motion/Reveal";
+import Typing from "@/motion/Typing";
+import Window from "@/system/Window";
+import HeroSlot from "@/webgl/HeroSlot";
 
-const emptyForm: PortfolioProjectInput = {
-  slug: "",
-  title: "",
-  category: "Projeto",
-  short_description: "",
-  full_description: "",
-  cover_media_url: "",
-  media_type: "image",
-  tags: [],
-  project_url: "",
-  repo_url: "",
-  status: "draft",
-  featured: false,
-  display_order: 0,
-  published_at: null,
-};
+const FAZEMOS = [
+  { nome: "sites e plataformas", desc: "Do institucional ao produto: presença digital com clareza, acessibilidade e performance, construída à mão." },
+  { nome: "experiências 3d e webgl", desc: "3D, motion e imersivo para marcas, lançamentos e exposições. A experiência é a própria mensagem." },
+  { nome: "direção de arte digital", desc: "O visual como diferencial, não como enfeite. Uma identidade que se move e se lembra." },
+  { nome: "cultura e instituições", desc: "Acervo, memória e patrimônio de um jeito que as pessoas realmente querem explorar." },
+];
+
+const PASSOS = [
+  { num: "01", nome: "imersão", desc: "Entender o setor, o público e o objetivo antes de desenhar qualquer tela." },
+  { num: "02", nome: "conceito", desc: "A ideia que organiza tudo: a tese que o projeto vai defender." },
+  { num: "03", nome: "arte + engenharia", desc: "Direção de arte e construção andando juntas, nunca em sequência." },
+  { num: "04", nome: "craft", desc: "O detalhe do qual a gente se orgulha: o shader, a transição, o sistema." },
+  { num: "05", nome: "no ar", desc: "Entrega medindo o que importa: performance, acessibilidade e SEO." },
+];
+
+const CRENCAS = [
+  { titulo: "engenharia e arte na mesma mesa", img: "/ban/ban-2.png", desc: "Direção de arte e código não se revezam: acontecem juntos, do briefing ao deploy." },
+  { titulo: "o detalhe é o produto", img: "/ban/ban-4.png", desc: "O shader, a transição, o microcopy. É no detalhe que mora a diferença entre bom e memorável." },
+  { titulo: "web aberta, rápida e acessível", img: "/ban/ban-5.png", desc: "Performance e acessibilidade não são extras: são parte do craft, medidas em toda entrega." },
+];
+
+const COM_QUEM = [
+  "Marcas e lançamentos",
+  "Cultura e instituições",
+  "Educação",
+  "Produto digital",
+  "Estúdios parceiros (white-label)",
+];
 
 const Studio = () => {
-  const { session, loading: sessionLoading } = useSupabaseSession();
-  const { projects, loading, createProject, updateProject, deleteProject, uploadMedia } =
-    useAdminPortfolioProjects();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [checkingAdmin, setCheckingAdmin] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
-  const [form, setForm] = useState<PortfolioProjectInput>(emptyForm);
-  const [tagsInput, setTagsInput] = useState("");
-
-  useEffect(() => {
-    if (!session?.user?.id || !supabase) {
-      setIsAdmin(false);
-      return;
-    }
-
-    const checkAdmin = async () => {
-      setCheckingAdmin(true);
-      const { data, error } = await supabase
-        .from("admin_users")
-        .select("user_id")
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-
-      if (error) {
-        setIsAdmin(false);
-        toast.error("Nao foi possivel validar acesso administrativo.");
-      } else {
-        setIsAdmin(Boolean(data));
-      }
-      setCheckingAdmin(false);
-    };
-
-    checkAdmin();
-  }, [session?.user?.id]);
-
-  const sortedProjects = useMemo(
-    () =>
-      [...projects].sort((a, b) => {
-        if (a.display_order !== b.display_order) return a.display_order - b.display_order;
-        return a.title.localeCompare(b.title);
-      }),
-    [projects],
-  );
-
-  const resetForm = () => {
-    setEditingProjectId(null);
-    setForm(emptyForm);
-    setTagsInput("");
-  };
-
-  const fillForm = (project: PortfolioProject) => {
-    setEditingProjectId(project.id);
-    setForm({
-      slug: project.slug,
-      title: project.title,
-      category: project.category,
-      short_description: project.short_description,
-      full_description: project.full_description ?? "",
-      cover_media_url: project.cover_media_url,
-      media_type: project.media_type,
-      tags: project.tags ?? [],
-      project_url: project.project_url ?? "",
-      repo_url: project.repo_url ?? "",
-      status: project.status,
-      featured: project.featured,
-      display_order: project.display_order,
-      published_at: project.published_at,
-    });
-    setTagsInput((project.tags ?? []).join(", "));
-  };
-
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!supabase) return;
-
-    setSaving(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setSaving(false);
-
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    setEmail("");
-    setPassword("");
-    toast.success("Login realizado.");
-  };
-
-  const handleSignOut = async () => {
-    if (!supabase) return;
-    await supabase.auth.signOut();
-    toast.success("Sessao encerrada.");
-    resetForm();
-  };
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const nextTags = tagsInput
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
-
-    const payload: PortfolioProjectInput = {
-      ...form,
-      slug: form.slug.trim(),
-      title: form.title.trim(),
-      category: form.category.trim() || "Projeto",
-      short_description: form.short_description.trim(),
-      full_description: form.full_description?.trim() || null,
-      cover_media_url: form.cover_media_url.trim(),
-      project_url: form.project_url?.trim() || null,
-      repo_url: form.repo_url?.trim() || null,
-      tags: nextTags,
-      published_at: form.status === "published" ? form.published_at ?? new Date().toISOString() : null,
-    };
-
-    if (!payload.slug || !payload.title || !payload.short_description || !payload.cover_media_url) {
-      toast.error("Preencha os campos obrigatorios.");
-      return;
-    }
-
-    setSaving(true);
-    try {
-      if (editingProjectId) {
-        await updateProject(editingProjectId, payload);
-        toast.success("Projeto atualizado.");
-      } else {
-        await createProject(payload);
-        toast.success("Projeto criado.");
-      }
-      resetForm();
-    } catch (error) {
-      toast.error("Erro ao salvar projeto.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    const confirmed = window.confirm("Deseja remover este projeto?");
-    if (!confirmed) return;
-
-    try {
-      await deleteProject(id);
-      if (editingProjectId === id) resetForm();
-      toast.success("Projeto removido.");
-    } catch {
-      toast.error("Erro ao remover projeto.");
-    }
-  };
-
-  const handleStatusToggle = async (project: PortfolioProject) => {
-    try {
-      const nextStatus = project.status === "published" ? "draft" : "published";
-      await updateProject(project.id, {
-        status: nextStatus,
-        published_at: nextStatus === "published" ? new Date().toISOString() : null,
-      });
-      toast.success(nextStatus === "published" ? "Projeto publicado." : "Projeto movido para rascunho.");
-    } catch {
-      toast.error("Erro ao atualizar status.");
-    }
-  };
-
-  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !session?.user?.id) return;
-
-    const isVideo = file.type.startsWith("video/");
-    const isImage = file.type.startsWith("image/");
-    if (!isVideo && !isImage) {
-      toast.error("Envie apenas imagem ou video.");
-      return;
-    }
-
-    setUploading(true);
-    try {
-      const publicUrl = await uploadMedia(file, session.user.id);
-      setForm((prev) => ({
-        ...prev,
-        cover_media_url: publicUrl,
-        media_type: isVideo ? "video" : "image",
-      }));
-      toast.success("Midia enviada com sucesso.");
-    } catch {
-      toast.error("Falha no upload.");
-    } finally {
-      setUploading(false);
-      event.target.value = "";
-    }
-  };
-
-  if (!isSupabaseConfigured) {
-    return (
-      <main className="min-h-screen bg-background px-6 py-16 text-foreground">
-        <div className="mx-auto max-w-3xl rounded border border-border p-8">
-          <h1 className="text-3xl font-display font-bold mb-4">Studio indisponivel</h1>
-          <p className="text-muted-foreground">
-            Configure <code>VITE_SUPABASE_URL</code> e <code>VITE_SUPABASE_ANON_KEY</code> para ativar
-            a area privada.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  if (sessionLoading || checkingAdmin) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </main>
-    );
-  }
-
-  if (!session) {
-    return (
-      <main className="min-h-screen bg-primary px-6 py-16">
-        <div className="mx-auto max-w-md rounded border border-primary-foreground/20 bg-primary p-8 text-primary-foreground">
-          <h1 className="text-3xl font-display font-bold mb-2">Studio</h1>
-          <p className="mb-8 text-primary-foreground/70">Acesso privado para gestao do portfolio.</p>
-          <form className="space-y-4" onSubmit={handleSignIn}>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                required
-                className="bg-primary-foreground text-primary"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                required
-                className="bg-primary-foreground text-primary"
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={saving}>
-              {saving ? "Entrando..." : "Entrar"}
-            </Button>
-          </form>
-        </div>
-      </main>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <main className="min-h-screen bg-background px-6 py-16 text-foreground">
-        <div className="mx-auto max-w-3xl rounded border border-border p-8">
-          <h1 className="text-3xl font-display font-bold mb-4">Acesso negado</h1>
-          <p className="text-muted-foreground mb-6">
-            Seu usuario autenticado nao esta cadastrado na tabela <code>admin_users</code>.
-          </p>
-          <Button onClick={handleSignOut} variant="outline">
-            Sair
-          </Button>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">(studio)</p>
-            <h1 className="text-2xl font-display font-bold">Gestao de Portfolio</h1>
-          </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="mr-2 h-4 w-4" /> Sair
-          </Button>
+    <>
+      <Head>
+        <title>Estúdio | botellho</title>
+        <meta name="description" content="botellho é um estúdio de web e experiências digitais. Engenharia e direção de arte na mesma mesa, do site institucional ao imersivo em 3D, com craft de nível de prêmio." />
+        <link rel="canonical" href="https://botellho.com/estudio" />
+        <meta property="og:title" content="Estúdio | botellho" />
+        <meta property="og:description" content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas." />
+        <meta property="og:url" content="https://botellho.com/estudio" />
+        <meta property="og:image" content="https://botellho.com/og-image.jpg" />
+      </Head>
+
+      {/* ===== 1 · Abertura (branco, sticky): identidade + janela com o Ban ===== */}
+      {/* ===== 1 · Abertura: titulo full width (como as outras paginas) e o
+              diorama logo abaixo, cravado na tela do monitor ===== */}
+      <section className="sticky top-[var(--bar-h)] z-0 flex flex-col bg-background">
+        <div className="px-4 pb-6 pt-8 md:px-6 md:pb-8 md:pt-10">
+          <Typing text="> estúdio" className="type-label text-muted-foreground" />
+          {/* mesma escala do /trabalhos (que nao usa type-tese: tem clamp proprio,
+              maior que o teto de 7rem dele) */}
+          <Scramble as="h1" text="o estúdio." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" onMount />
+          <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
+            botellho junta engenharia de verdade com direção de arte, do site
+            institucional ao imersivo em 3D, sempre com a mesma régua de craft.
+            Para marcas, cultura e instituições que querem ser lembradas.
+          </p>
         </div>
-      </header>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded border border-border p-6">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-display font-semibold">
-              {editingProjectId ? "Editar projeto" : "Novo projeto"}
-            </h2>
-            {editingProjectId ? (
-              <Button variant="ghost" onClick={resetForm}>
-                <Plus className="mr-2 h-4 w-4" /> Novo
-              </Button>
-            ) : null}
+        {/* o diorama toma a largura toda e o que sobra de altura. Aqui ele e
+            cenario: camera travada na tela, sem Esc nem click pra sair. */}
+        <div className="relative h-[52svh] shrink-0 md:h-[58svh]" data-cursor="nativo">
+          <HeroSlot focoInicial="Monitor" travado className="h-full" alt="O estúdio do Ban em 3D, com a câmera na tela do monitor" />
+          <span className="pointer-events-none absolute bottom-4 right-4 z-10 border border-paper/25 bg-ink/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-paper">
+            estudio.exe
+          </span>
+        </div>
+      </section>
+
+      {/* O resto empilha sobre a abertura (stacking, como na home) */}
+      <div className="relative z-10">
+        {/* ===== 2 · Manifesto (azul): declaracao gigante full-width ===== */}
+        <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
+          <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+            <span>manifesto</span>
+            <span className="normal-case tracking-normal">/estudio/manifesto.txt</span>
           </div>
 
-          <form className="space-y-4" onSubmit={handleSave}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="title">Titulo *</Label>
-                <Input
-                  id="title"
-                  value={form.title}
-                  onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug *</Label>
-                <Input
-                  id="slug"
-                  value={form.slug}
-                  onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value.toLowerCase() }))}
-                  required
-                />
-              </div>
-            </div>
+          <div className="flex flex-1 items-center py-14">
+            <Scramble as="p" text="Um site pode ser tão bem construído quanto aquilo que ele apresenta." className="block font-display leading-[0.9] tracking-[-0.02em] text-[clamp(2.75rem,8.4vw,10rem)]" duration={1100} />
+          </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="category">Categoria</Label>
-                <Input
-                  id="category"
-                  value={form.category}
-                  onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tags">Tags (separadas por virgula)</Label>
-                <Input id="tags" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="shortDescription">Descricao curta *</Label>
-              <textarea
-                id="shortDescription"
-                value={form.short_description}
-                onChange={(e) => setForm((prev) => ({ ...prev, short_description: e.target.value }))}
-                rows={3}
-                className="w-full rounded border border-input bg-background px-3 py-2 text-sm"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="fullDescription">Descricao completa</Label>
-              <textarea
-                id="fullDescription"
-                value={form.full_description ?? ""}
-                onChange={(e) => setForm((prev) => ({ ...prev, full_description: e.target.value }))}
-                rows={5}
-                className="w-full rounded border border-input bg-background px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="projectUrl">URL do projeto</Label>
-                <Input
-                  id="projectUrl"
-                  value={form.project_url ?? ""}
-                  onChange={(e) => setForm((prev) => ({ ...prev, project_url: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="repoUrl">URL do repositorio</Label>
-                <Input
-                  id="repoUrl"
-                  value={form.repo_url ?? ""}
-                  onChange={(e) => setForm((prev) => ({ ...prev, repo_url: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <select
-                  id="status"
-                  value={form.status}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, status: e.target.value as PortfolioProject["status"] }))
-                  }
-                  className="h-10 w-full rounded border border-input bg-background px-3 text-sm"
-                >
-                  <option value="draft">Rascunho</option>
-                  <option value="published">Publicado</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="displayOrder">Ordem de exibicao</Label>
-                <Input
-                  id="displayOrder"
-                  type="number"
-                  value={form.display_order}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, display_order: Number.parseInt(e.target.value || "0", 10) }))
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="coverMediaUrl">URL da capa *</Label>
-                <Input
-                  id="coverMediaUrl"
-                  value={form.cover_media_url}
-                  onChange={(e) => setForm((prev) => ({ ...prev, cover_media_url: e.target.value }))}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="mediaType">Tipo de midia</Label>
-                <select
-                  id="mediaType"
-                  value={form.media_type}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, media_type: e.target.value as PortfolioProject["media_type"] }))
-                  }
-                  className="h-10 w-full rounded border border-input bg-background px-3 text-sm"
-                >
-                  <option value="image">Imagem</option>
-                  <option value="video">Video</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="mediaUpload">Upload de midia</Label>
-              <div className="flex items-center gap-3">
-                <Input id="mediaUpload" type="file" accept="image/*,video/*" onChange={handleUpload} />
-                <Button type="button" variant="outline" disabled={uploading}>
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => setForm((prev) => ({ ...prev, featured: e.target.checked }))}
-              />
-              Projeto em destaque
-            </label>
-
-            <Button type="submit" disabled={saving}>
-              {saving ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : editingProjectId ? (
-                <Save className="mr-2 h-4 w-4" />
-              ) : (
-                <Plus className="mr-2 h-4 w-4" />
-              )}
-              {editingProjectId ? "Salvar alteracoes" : "Criar projeto"}
-            </Button>
-          </form>
+          <p className="max-w-xl border-t border-paper/25 pt-6 font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
+            Craft não é enfeite: é o que separa o memorável do esquecível. E é a
+            única régua que a gente aplica igual, do institucional ao experimental.
+          </p>
         </section>
 
-        <section className="rounded border border-border p-6">
-          <h2 className="mb-6 text-xl font-display font-semibold">Projetos cadastrados</h2>
-          {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Carregando...
-            </div>
-          ) : sortedProjects.length === 0 ? (
-            <p className="text-muted-foreground">Nenhum projeto cadastrado ainda.</p>
-          ) : (
-            <div className="space-y-4">
-              {sortedProjects.map((project) => (
-                <article key={project.id} className="rounded border border-border p-4">
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <h3 className="font-semibold">{project.title}</h3>
-                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                      {project.status}
-                    </span>
-                  </div>
-                  <p className="mb-3 text-sm text-muted-foreground">{project.short_description}</p>
-                  <div className="mb-3 flex flex-wrap gap-2">
-                    {(project.tags ?? []).map((tag) => (
-                      <span key={tag} className="rounded bg-secondary px-2 py-1 text-xs">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button size="sm" variant="outline" onClick={() => fillForm(project)}>
-                      <Pencil className="mr-2 h-3.5 w-3.5" /> Editar
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleStatusToggle(project)}>
-                      {project.status === "published" ? "Despublicar" : "Publicar"}
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(project.id)}>
-                      <Trash2 className="mr-2 h-3.5 w-3.5" /> Excluir
-                    </Button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+        {/* ===== 3 · O que fazemos (branco): grid 2x2 a la basement ===== */}
+        <section className="bg-background px-4 py-20 md:px-6 md:py-28">
+          <span className="type-label text-muted-foreground">o que fazemos</span>
+          <div className="mt-10 grid gap-x-10 gap-y-14 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-x-16">
+            {FAZEMOS.map((f) => (
+              <Reveal as="div" key={f.nome}>
+                <span className="font-mono text-xs uppercase tracking-widest text-phosphor">{f.nome}</span>
+                <p className="mt-4 font-sans text-2xl font-medium leading-snug text-foreground md:text-3xl">{f.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ===== 4 · Como trabalhamos (azul): sequencia de passos, numeros em archivo ===== */}
+        <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
+          <div className="border-b border-paper/25 pb-6">
+            <span className="type-label text-paper/60">como trabalhamos · 5 passos</span>
+            <Scramble as="h2" text="Do setor à medição no ar." className="type-title mt-3" />
+          </div>
+          <ol>
+            {PASSOS.map((passo) => (
+              <Reveal as="li" key={passo.num} className="grid grid-cols-[auto_1fr] items-start gap-6 border-b border-paper/25 py-8 md:grid-cols-[9rem_1fr] md:gap-10 md:py-10">
+                <span className="font-display text-5xl leading-none text-paper/70 md:text-8xl">{passo.num}</span>
+                <div className="pt-1">
+                  <h3 className="font-display text-3xl leading-none md:text-5xl">{passo.nome}</h3>
+                  <p className="mt-3 max-w-lg font-sans text-base leading-relaxed text-paper/80">{passo.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </section>
+
+        {/* ===== 5 · No que a gente acredita (branco): imagem gigante + texto que EMPILHA (basement people) ===== */}
+        <section className="bg-background px-4 pt-20 md:px-6 md:pt-28">
+          <span className="type-label text-muted-foreground">no que a gente acredita</span>
+          <div className="mt-8">
+            {CRENCAS.map((c) => (
+              <div
+                key={c.titulo}
+                className="sticky top-[var(--bar-h)] grid min-h-[calc(100svh-var(--bar-h))] items-center gap-8 border-t border-foreground/15 bg-background py-8 md:grid-cols-[1fr_1.1fr_0.9fr] md:gap-12"
+              >
+                <h3 className="font-display text-3xl leading-[0.95] md:text-5xl">{c.titulo}</h3>
+                <div className="flex aspect-[4/3] items-center justify-center border border-foreground/15 bg-paper" data-cursor="3d">
+                  <img src={c.img} alt="Ban, o mascote, em bitmap" className="h-4/5 w-4/5 object-contain grayscale contrast-[1.3]" style={{ imageRendering: "pixelated" }} />
+                </div>
+                <p className="font-sans text-lg leading-relaxed text-muted-foreground md:text-xl">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ===== 6 · Fechamento (azul): janela IBM com quem trabalhamos + cta ===== */}
+        <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
+          <div className="mx-auto max-w-4xl">
+            <Window title="com-quem.txt" draggable={false} className="text-foreground" bodyClassName="!p-0">
+              <div className="metastrip border-b border-foreground/15 px-4 py-2" aria-hidden>
+                <span className="type-label text-muted-foreground">botellho</span>
+                <span className="type-label text-phosphor">disponível para novos projetos</span>
+                <span className="type-label text-muted-foreground">belo horizonte, br</span>
+              </div>
+              <div className="p-5 md:p-8">
+                <span className="type-label text-muted-foreground">com quem trabalhamos</span>
+                <ul className="mt-6 divide-y divide-foreground/10 border-y border-foreground/10">
+                  {COM_QUEM.map((quem) => (
+                    <li key={quem} className="flex items-baseline gap-4 px-1 py-4 md:px-2">
+                      <span className="text-phosphor">▪</span>
+                      <span className="font-display text-2xl md:text-3xl">{quem}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-8 max-w-lg font-sans text-base leading-relaxed text-muted-foreground">
+                  Se você trata o digital como parte da obra, e não como obrigação, a gente se entende.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link to="/contato" className="cmd-button">Começar um projeto</Link>
+                  <Link to="/trabalhos" className="cmd-button-ghost">Ver trabalhos</Link>
+                </div>
+              </div>
+            </Window>
+          </div>
         </section>
       </div>
-    </main>
+    </>
   );
 };
 
