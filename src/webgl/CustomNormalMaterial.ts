@@ -7,13 +7,30 @@ import * as THREE from "three";
 //   Sobel contornar o brilho (specular moebius).
 // - Alfa = PROFUNDIDADE LINEAR (view-Z) em float -> o Sobel nela dá os contornos
 //   EXTERNOS sem o banding do depth buffer do composer.
+// CRITICO: este material vira scene.overrideMaterial no passe de normais. Sem
+// suporte a SKINNING ele desenha o personagem na BIND POSE -> o Moebius tira
+// contorno e hachura de um cao rigido enquanto o beauty mostra o cao animado, e
+// voce ve DOIS caes sobrepostos. Os chunks abaixo sao os do proprio three: o
+// define USE_SKINNING entra sozinho em SkinnedMesh e some no resto (mesh comum
+// nao paga nada).
 const vertexShader = /* glsl */ `
+  #include <common>
+  #include <skinning_pars_vertex>
+
   varying vec3 vNormalView;
   varying vec3 vViewPos;
+
   void main() {
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    vec3 objectNormal = normalize(normal);
+    vec3 transformed = position;
+
+    #include <skinbase_vertex>
+    #include <skinnormal_vertex>
+    #include <skinning_vertex>
+
+    vNormalView = normalize(normalMatrix * objectNormal);
+    vec4 mv = modelViewMatrix * vec4(transformed, 1.0);
     vViewPos = mv.xyz;
-    vNormalView = normalize(normalMatrix * normal);
     gl_Position = projectionMatrix * mv;
   }
 `;
