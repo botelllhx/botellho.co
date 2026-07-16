@@ -48,7 +48,10 @@ SIM: DOS a sério (janelas retrô, bitmap, glifos); imagens reais e gigantes fil
 - Window-chrome (barra de título, widgets, bordas 3D) levado a sério, mas NÃO em tudo, só onde agrega.
 - As janelas retrô têm que ser ARRASTÁVEIS/móveis pela interface; sem isso o conceito não se sustenta.
 - Glifos de bloco/seta (▀ ▫ █ ► ↘) como ornamento tipográfico. Rótulos sempre em português claro.
-- Bitmap com pixelização fixa em pixel-size 6.
+- Bitmap com pixelização CALIBRÁVEL, leve o bastante para preservar o detalhe da
+  cena. Não há valor fixo: calibra-se por contexto e trava-se no código (o hero
+  usa 2, em `RetroEffect`). A regra antiga de "pixel-size 6 fixo" está APOSENTADA:
+  naquele valor a cena vira mancha e a hachura do Moebius some.
 
 ## 5. Header
 Manter o header atual (o Mateus gosta). Não mexer além do necessário para coerência.
@@ -80,7 +83,10 @@ Muito mais rico: baseado em TEXTO, com espaço em branco e reveal elegante do te
 - Mantém o escopo anterior: o ESTÚDIO-DIORAMA DO BAN (cena 3D, quarto/estúdio com o Ban vivendo nele), dentro da moldura de tela CRT, com o texto fora da tela.
 - Assets 3D: o Mateus já separou e vai colocar em public/3d (mesa com setup gamer já incluído, cadeira gamer, vaso de planta). Falta só o modelo do Ban. Usar os que ele forneceu.
 - MUITO mais animação, e uma animação que conecta a home: a PRÓXIMA seção EMPILHA (stacking scroll) sobre o hero conforme o scroll.
-- Renderizado no pipeline bitmap pixel-6 + CRT (aplicado na web). Fallback estático + reduced-motion + 60fps.
+- Renderizado no pipeline Moebius (full-res) → retrô 1-bit (pixelização calibrável
+  + Bayer 4x4 + paleta ink/azul/branco) → CRT. A ordem é obrigatória: o Moebius
+  precisa rodar em resolução cheia ANTES de pixelizar, senão o contorno nasce
+  serrilhado. Fallback estático + reduced-motion + 60fps.
 
 ## 10. Footer
 Manter o footer atual (o Mateus gosta de tudo nele), MAS adicionar o efeito à la AREA17: o LOGO/wordmark GIGANTE que fica escondido atrás de uma seção e se revela grande conforme o scroll, com transição de seção trabalhada. Tirar o jargão da copy (nada de "fósforo azul").
