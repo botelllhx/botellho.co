@@ -22,12 +22,13 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Ban 1-bit (scripts/gen-favicon.mjs). O .ico leva arte propria por tamanho
-       (16 desenhado, 32/48 vindos da logo), entao NAO ha favicon.svg: o
-       navegador prefere o svg ao ico e uma arte so anularia esse ganho.
-       O ?v e cache-busting: favicon fica cacheado por meses sem isso. -->
-  <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+  <!-- O Ban da logo (scripts/gen-favicon.mjs). O .ico leva o tamanho nativo de
+       cada uso, entao NAO ha favicon.svg: o navegador prefere o svg ao ico e uma
+       arte so anularia esse ganho.
+       O ?v e cache-busting: favicon fica cacheado por meses sem isso, e foi
+       assim que o icone antigo sobreviveu tanto tempo. -->
+  <link rel="icon" href="/favicon.ico?v=4" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
 
   <!-- Tags globais e constantes. Titulo, description, canonical e OG por rota
        sao definidos via <Head> em cada pagina (react-helmet-async). -->
