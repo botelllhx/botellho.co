@@ -1,9 +1,13 @@
 import * as THREE from "three";
 
-// A tela do monitor, VIVA: um boot DOS rodando em loop, na mesma linguagem do
-// BootOverlay do site (log linha a linha com leaders pontilhados + barra em
-// blocos). Sai num CanvasTexture, entao e barato: redesenha ~12x/s, nao 60.
-// Ela e a unica fonte de luz "acesa" do diorama — por isso importa que brilhe.
+// A tela do monitor, VIVA: um pequeno sistema operacional fake rodando em loop,
+// na linguagem do BootOverlay do site. Sai num CanvasTexture, entao e barato:
+// redesenha ~12x/s, nao 60. Sao tres "programas" que se revezam, pra a tela nao
+// virar um loop de 9s obvio: boot -> gráfico -> ban ASCII.
+const AZUL = "#0b2ca2";
+const CLARO = "#dfe6ff";
+const MEIO = "rgba(223,230,255,0.30)";
+
 const LINHAS: [string, string][] = [
   ["sites e plataformas", "online"],
   ["experiencias 3d", "online"],
@@ -12,10 +16,19 @@ const LINHAS: [string, string][] = [
   ["acessibilidade", "wcag aa"],
 ];
 
-const AZUL = "#0b2ca2";
-const CLARO = "#dfe6ff";
-const CELLS = 22;
-const CICLO = 9; // segundos ate reiniciar o boot
+// o Ban em ASCII: some junto com o resto quando a tela troca de programa
+const BAN_ASCII = [
+  "        __        ",
+  "   ___ / _\\__     ",
+  "  /    \\_/   \\__  ",
+  " | o          _ \\ ",
+  "  \\__  ___   / /  ",
+  "     |/   |_/ /   ",
+  "     ||   ||      ",
+];
+
+const CICLO = 24; // segundos do ciclo inteiro (3 programas de 8s)
+const PROG = 8;
 
 export interface TelaViva {
   textura: THREE.CanvasTexture;
@@ -38,50 +51,96 @@ export const criarTelaViva = (): TelaViva => {
   let ultimo = -1;
   let luz = 1;
 
+  const cabecalho = (titulo: string, t: number) => {
+    ctx.fillStyle = CLARO;
+    ctx.font = "18px monospace";
+    ctx.fillText(titulo, 22, 16);
+    // cursor piscando na barra de titulo
+    if (Math.floor(t * 2) % 2 === 0) ctx.fillRect(22 + ctx.measureText(titulo).width + 6, 16, 9, 15);
+    ctx.fillStyle = MEIO;
+    ctx.fillRect(22, 40, 468, 1);
+  };
+
+  // 1) boot: log com leaders pontilhados + barra em blocos
+  const boot = (u: number, t: number) => {
+    cabecalho("botellho :: boot", t);
+    ctx.font = "15px monospace";
+    const n = Math.min(LINHAS.length, Math.floor(u * PROG / 0.8));
+    for (let i = 0; i < n; i++) {
+      const [rot, val] = LINHAS[i];
+      const y = 58 + i * 22;
+      ctx.fillStyle = CLARO;
+      ctx.fillText(rot, 22, y);
+      const x0 = 22 + ctx.measureText(rot).width + 6;
+      const x1 = 490 - ctx.measureText(val).width;
+      ctx.fillStyle = MEIO;
+      for (let x = x0; x < x1 - 4; x += 7) ctx.fillText(".", x, y);
+      ctx.fillStyle = CLARO;
+      ctx.fillText(val, x1, y);
+    }
+    const p = Math.min(1, Math.max(0, (u * PROG - 0.4) / 4.6));
+    for (let i = 0; i < 22; i++) {
+      ctx.fillStyle = i < Math.floor(p * 22) ? CLARO : MEIO;
+      ctx.fillRect(22 + i * 21, 196, 16, 18);
+    }
+    return 0.75 + p * 0.35;
+  };
+
+  // 2) grafico de barras "subindo": leitura de estudio trabalhando
+  const grafico = (u: number, t: number) => {
+    cabecalho("botellho :: build", t);
+    const N = 16;
+    for (let i = 0; i < N; i++) {
+      // cada barra tem sua propria onda, entao o grafico nunca repete igual
+      const h = (0.35 + 0.65 * Math.abs(Math.sin(t * 1.1 + i * 0.7))) * (0.3 + 0.7 * Math.min(1, u * 3));
+      const alt = Math.round(h * 130);
+      ctx.fillStyle = i % 2 === 0 ? CLARO : MEIO;
+      ctx.fillRect(24 + i * 29, 200 - alt, 20, alt);
+    }
+    ctx.fillStyle = MEIO;
+    ctx.fillRect(22, 202, 468, 1);
+    ctx.fillStyle = CLARO;
+    ctx.font = "13px monospace";
+    ctx.fillText("frames/s ......... 60", 22, 222);
+    return 0.8 + 0.3 * Math.abs(Math.sin(t * 1.1));
+  };
+
+  // 3) o Ban em ASCII, digitando linha a linha
+  const banAscii = (u: number, t: number) => {
+    cabecalho("botellho :: ban.exe", t);
+    ctx.font = "16px monospace";
+    ctx.fillStyle = CLARO;
+    const n = Math.min(BAN_ASCII.length, Math.floor(u * PROG / 0.35));
+    for (let i = 0; i < n; i++) ctx.fillText(BAN_ASCII[i], 120, 62 + i * 19);
+    if (n >= BAN_ASCII.length) {
+      ctx.font = "13px monospace";
+      ctx.fillText("ban, o salsicha // mascote", 120, 210);
+    }
+    return 0.85;
+  };
+
   const desenhar = (t: number) => {
     // ~12fps: a tela e um monitor velho, nao precisa de 60. E poupa CPU.
     const passo = Math.floor(t * 12);
     if (passo === ultimo) return;
     ultimo = passo;
 
-    const ciclo = t % CICLO;
+    const c = t % CICLO;
+    const qual = Math.floor(c / PROG); // 0,1,2
+    const u = (c % PROG) / PROG; // 0..1 dentro do programa
+
     ctx.fillStyle = AZUL;
     ctx.fillRect(0, 0, 512, 256);
-
-    ctx.font = "20px monospace";
     ctx.textBaseline = "top";
-    ctx.fillStyle = CLARO;
-    ctx.fillText("botellho", 24, 20);
 
-    // log revelando linha a linha, com leaders pontilhados
-    const reveladas = Math.min(LINHAS.length, Math.floor(ciclo / 0.7));
-    ctx.font = "16px monospace";
-    for (let i = 0; i < reveladas; i++) {
-      const [rot, val] = LINHAS[i];
-      const y = 62 + i * 24;
-      ctx.fillText(rot, 24, y);
-      const x0 = 24 + ctx.measureText(rot).width + 8;
-      const x1 = 488 - ctx.measureText(val).width - 8;
-      for (let x = x0; x < x1; x += 8) ctx.fillText(".", x, y);
-      ctx.fillText(val, x1, y);
+    luz = qual === 0 ? boot(u, t) : qual === 1 ? grafico(u, t) : banAscii(u, t);
+
+    // troca de programa: um flash de tubo, como quem muda de canal
+    if (u > 0.94) {
+      ctx.fillStyle = `rgba(223,230,255,${(u - 0.94) / 0.06 * 0.85})`;
+      ctx.fillRect(0, 0, 512, 256);
+      luz = 1.4;
     }
-
-    // barra de progresso em blocos
-    const p = Math.min(1, Math.max(0, (ciclo - 0.4) / 5.2));
-    const cheias = Math.floor(p * CELLS);
-    for (let i = 0; i < CELLS; i++) {
-      ctx.fillStyle = i < cheias ? CLARO : "rgba(223,230,255,0.22)";
-      ctx.fillRect(24 + i * 20, 196, 15, 18);
-    }
-
-    // cursor piscando quando termina
-    if (p >= 1 && Math.floor(t * 2) % 2 === 0) {
-      ctx.fillStyle = CLARO;
-      ctx.fillRect(24, 226, 10, 16);
-    }
-
-    // brilho pra luz da cena: pulsa junto com o preenchimento da barra
-    luz = 0.75 + p * 0.35;
     textura.needsUpdate = true;
   };
 

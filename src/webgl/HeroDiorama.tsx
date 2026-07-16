@@ -585,11 +585,14 @@ const Crt = () => {
 interface HeroProps {
   /** abre a cena ja focada num alvo. Ex.: "Monitor" na pagina do estudio. */
   focoInicial?: string;
+  /** trava a camera no foco inicial: sem Esc, sem click pra sair, sem legenda de
+   *  saida. E o caso do /estudio, onde o diorama e cenario, nao brinquedo. */
+  travado?: boolean;
   /** altura do container. Padrao: a tela toda abaixo da barra (home). */
   className?: string;
 }
 
-const HeroDiorama = ({ focoInicial, className }: HeroProps = {}) => {
+const HeroDiorama = ({ focoInicial, travado, className }: HeroProps = {}) => {
   const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
@@ -608,13 +611,13 @@ const HeroDiorama = ({ focoInicial, className }: HeroProps = {}) => {
 
   // Esc devolve a camera. Sem isso o usuario fica preso no zoom.
   useEffect(() => {
-    if (!foco) return;
+    if (!foco || travado) return;
     const sair = (e: KeyboardEvent) => {
       if (e.key === "Escape") setFoco(null);
     };
     window.addEventListener("keydown", sair);
     return () => window.removeEventListener("keydown", sair);
-  }, [foco]);
+  }, [foco, travado]);
   useEffect(() => {
     setReduced(prefersReducedMotion());
     setMounted(true);
@@ -637,18 +640,18 @@ const HeroDiorama = ({ focoInicial, className }: HeroProps = {}) => {
       } ${label && !foco ? "hero-alvo" : ""}`}
     >
       {/* focado: clicar em qualquer lugar volta */}
-      {foco ? <div className="absolute inset-0 z-10" onClick={() => setFoco(null)} /> : null}
+      {foco && !travado ? <div className="absolute inset-0 z-10" onClick={() => setFoco(null)} /> : null}
 
       {/* a legenda COLA no cursor (fixed, seguindo o mouse) — some quando nao ha
           nada sob o ponteiro nem item focado */}
       <div
         ref={cursor}
         className={`pointer-events-none fixed left-0 top-0 z-20 flex items-center gap-2 border border-ink/25 bg-paper/95 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-ink transition-opacity duration-150 ${
-          label || foco ? "opacity-100" : "opacity-0"
+          label || (foco && !travado) ? "opacity-100" : "opacity-0"
         }`}
       >
-        <span>{foco ? foco.label : label}</span>
-        {foco ? <span className="text-ink/45">esc para voltar</span> : null}
+        <span>{foco && !travado ? foco.label : label}</span>
+        {foco && !travado ? <span className="text-ink/45">esc para voltar</span> : null}
       </div>
       {mounted ? (
         <Canvas

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Geist+Pixel&family=Inter:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Geist+Pixel&family=Geist:wght@300;400;500;600;700&family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -56,7 +56,7 @@
     --font-mono: 'Geist Pixel', ui-monospace, monospace;
     --font-bitmap: 'IBM VGA', 'Geist Pixel', monospace;
     --font-serif: 'Averia Serif Libre', Georgia, serif;
-    --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Geist', sans-serif;
 
     /* Estrutura do terminal */
     --bar-h: 44px;

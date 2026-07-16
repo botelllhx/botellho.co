@@ -49,9 +49,11 @@ const Studio = () => {
       </Head>
 
       {/* ===== 1 · Abertura (branco, sticky): identidade + janela com o Ban ===== */}
-      <section className="sticky top-[var(--bar-h)] z-0 bg-background px-4 md:px-6">
-        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 py-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+      {/* o diorama encosta na direita e vai de topo a base: sem faixa branca
+          sobrando. O texto fica no respiro da esquerda. */}
+      <section className="sticky top-[var(--bar-h)] z-0 bg-background">
+        <div className="grid min-h-[calc(100svh-var(--bar-h))] items-center gap-10 lg:grid-cols-[1fr_0.95fr]">
+          <div className="px-4 py-10 md:px-6">
             <Typing text="> estúdio" className="type-label text-muted-foreground" />
             <h1 className="type-tese mt-6">
               <Scramble as="span" text="estúdio de" className="block" onMount />
@@ -64,15 +66,15 @@ const Studio = () => {
             </p>
           </div>
 
-          {/* o mesmo diorama do hero, mas abrindo focado NA TELA — que roda o
-              boot com os servicos do estudio. Clicar puxa a camera pra tras e
-              revela o estudio inteiro. */}
-          <Window title="estudio.exe" phosphor bodyClassName="!p-0">
-            <div className="relative aspect-[4/3]" data-cursor="nativo">
-              <HeroDiorama focoInicial="Monitor" className="h-full" />
-              <span className="crt-frame__tag type-label !text-foreground/60">clique para revelar o estúdio</span>
-            </div>
-          </Window>
+          {/* o mesmo diorama do hero, mas cravado NA TELA — que roda os programas
+              do estudio. Aqui e cenario: a camera fica travada (`travado`), sem
+              Esc nem click pra sair. */}
+          <div className="relative hidden h-[calc(100svh-var(--bar-h))] lg:block" data-cursor="nativo">
+            <HeroDiorama focoInicial="Monitor" travado className="h-full" />
+            <span className="pointer-events-none absolute bottom-4 right-4 z-10 border border-paper/25 bg-ink/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-paper">
+              estudio.exe
+            </span>
+          </div>
         </div>
       </section>
 
