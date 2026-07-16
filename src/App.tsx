@@ -9,7 +9,6 @@ import Lab from "./pages/Lab";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
-import BanTest from "./pages/BanTest";
 import SlugRedirect from "./system/SlugRedirect";
 import { worksLoader, workCaseLoader } from "./pages/workLoaders";
 
@@ -26,8 +25,6 @@ export const routes: RouteRecord[] = [
       { path: "laboratorio", Component: Lab },
       { path: "contato", Component: Contact },
       { path: "admin", Component: Admin },
-      // diagnostico temporario do rig do Ban (cena pelada, sem efeitos)
-      { path: "bantest", Component: BanTest },
 
       // Slugs EN antigos -> PT
       { path: "studio", element: <Navigate to="/estudio" replace /> },
