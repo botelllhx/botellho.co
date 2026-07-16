@@ -5,7 +5,6 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import { useControls } from "leva";
 import * as THREE from "three";
-import { useNavigate } from "react-router-dom";
 import { prefersReducedMotion } from "@/motion/prefs";
 import { MoebiusEffect } from "./MoebiusEffect";
 import { RetroEffect } from "./RetroEffect";
@@ -46,25 +45,35 @@ const CAM_FOV = 43;
 
 const SCREEN_BASE = 1.3;
 
-// Objetos "vivos" do diorama: hover acende, click navega. O nome bate com o nó
-// do glb. E o gancho pra ideia do site rodando dentro do monitor.
-const ALVOS: Record<string, { rota: string; label: string }> = {
-  ChairTop: { rota: "/estudio", label: "o estúdio" },
-  PicV: { rota: "/trabalhos", label: "trabalhos" },
-  PicH: { rota: "/laboratorio", label: "laboratório" },
+// Textura da tela: ela ACENDE e mostra algo, em vez de ser retangulo azul morto.
+const TELA = "/ban/ban-mark.png";
+
+// Objetos "vivos" do diorama. Click NAO navega: a camera vai ate o item, de
+// frente, e a legenda aparece. Clicar de novo (ou Esc) volta.
+// A chave e a tag que o traverse poe em userData.alvo.
+const ALVOS: Record<string, { label: string }> = {
+  Monitor: { label: "o estúdio" },
+  PicV: { label: "trabalhos" },
+  PicH: { label: "laboratório" },
 };
+
+export interface Foco {
+  obj: THREE.Object3D;
+  label: string;
+}
 
 interface AnimProps {
   reduced: boolean;
   flicker: number;
   giroPausa: number;
   onHover: (label: string | null) => void;
+  onFocar: (f: Foco | null) => void;
+  foco: Foco | null;
 }
 
-const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
+const Diorama = ({ reduced, flicker, giroPausa, onHover, onFocar, foco }: AnimProps) => {
   const { scene } = useGLTF(DIORAMA, DRACO);
-  const navigate = useNavigate();
-  const screen = useRef<THREE.MeshStandardMaterial | null>(null);
+  const screen = useRef<THREE.MeshBasicMaterial | null>(null);
   const [ativo, setAtivo] = useState<string | null>(null);
   // parte de cima da cadeira gamer: gira sozinha, a base fica parada
   const cadeira = useRef<THREE.Object3D | null>(null);
@@ -74,14 +83,31 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
     scene.traverse((o) => {
       // o assento (separado da base no Blender; origem no eixo do pistao)
       if (o.name === "ChairTop") cadeira.current = o;
+      // os quadros ja tem no proprio: tago pelo nome
+      if (o.name === "PicV" || o.name === "PicH") o.userData.alvo = o.name;
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const mat = m.material as THREE.MeshStandardMaterial;
+      // o vidro da tela: so o brilho azul de fundo. Nao da pra texturizar aqui —
+      // as faces vem do pack com UV de atlas, entao qualquer imagem sai chapada.
       if (mat && mat.name === "MonitorScreen") {
         mat.emissive = new THREE.Color("#1c3fd6");
-        mat.emissiveIntensity = SCREEN_BASE;
+        mat.emissiveIntensity = SCREEN_BASE * 0.5;
         mat.toneMapped = false;
-        screen.current = mat;
+        m.userData.alvo = "Monitor";
+      }
+      // a tela ACESA: plano proprio, criado no Blender com UV 0-1 na frente do
+      // monitor. unlit pra a marca brilhar sozinha e sobreviver ao 1-bit.
+      if (mat && mat.name === "MonitorTela") {
+        const img = mat.map ?? mat.emissiveMap;
+        if (img) img.colorSpace = THREE.SRGBColorSpace;
+        m.material = new THREE.MeshBasicMaterial({
+          map: img,
+          toneMapped: false,
+          side: THREE.DoubleSide,
+        });
+        screen.current = m.material as THREE.MeshBasicMaterial;
+        m.userData.alvo = "Monitor";
       }
       // quadros: unlit (imagem cheia) pra a arte aparecer forte; a hachura por
       // luminancia so pega as partes escuras da capa (poucas hachuras).
@@ -103,10 +129,12 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
   useFrame((state) => {
     if (reduced) return;
     const t = state.clock.elapsedTime;
-    // monitor: cintilancia de tubo velho (duas senoides dessincronizadas)
+    // monitor: cintilancia de tubo velho (duas senoides dessincronizadas).
+    // a tela e unlit, entao o nervosismo vai na COLOR (que multiplica a textura).
     if (screen.current && flicker > 0) {
       const f = Math.sin(t * 8.0) * 0.05 + Math.sin(t * 27.0) * 0.03;
-      screen.current.emissiveIntensity = SCREEN_BASE + f * flicker;
+      const b = SCREEN_BASE + f * flicker;
+      screen.current.color.setRGB(b, b, b);
     }
     // cadeira: de tempos em tempos o assento roda. So o topo — a base fica
     // cravada, como cadeira gamer de verdade.
@@ -142,31 +170,53 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
-      let p: THREE.Object3D | null = o;
-      let nome: string | null = null;
-      while (p) { if (ALVOS[p.name]) { nome = p.name; break; } p = p.parent; }
-      // so o alvo em hover. sem `ativo` acima, null !== null era falso e isso
+      const nome = tagDe(o);
+      // so o alvo em hover. sem o `ativo` acima, null !== null era falso e isso
       // acendia a cena inteira.
       if (!nome || nome !== ativo) return;
       const mat = m.material as THREE.MeshStandardMaterial;
-      if (!mat || !("emissive" in mat)) return;
-      orig.set(mat, mat.emissiveIntensity ?? 1);
-      mat.emissive = new THREE.Color("#ffffff");
-      mat.emissiveIntensity = 0.55;
+      if (!mat) return;
+      // os quadros viraram MeshBasicMaterial (unlit) e NAO tem emissive — era
+      // por isso que o realce nao acontecia neles. Nesse caso clareia a `color`,
+      // que multiplica a textura; no resto usa emissive mesmo.
+      if ("emissive" in mat && mat.emissive) {
+        orig.set(mat, mat.emissiveIntensity ?? 1);
+        mat.userData.__emissive = mat.emissive.getHex();
+        mat.emissive = new THREE.Color("#ffffff");
+        mat.emissiveIntensity = 1.6;
+      } else {
+        orig.set(mat, -1); // marca: e basic, restaura pela color
+        mat.userData.__color = mat.color.getHex();
+        mat.color = new THREE.Color(2.2, 2.2, 2.2);
+      }
     });
     return () => {
       orig.forEach((v, mat) => {
-        mat.emissive = new THREE.Color("#000000");
-        mat.emissiveIntensity = v;
+        if (v === -1) {
+          mat.color = new THREE.Color(mat.userData.__color ?? 0xffffff);
+        } else {
+          mat.emissive = new THREE.Color(mat.userData.__emissive ?? 0x000000);
+          mat.emissiveIntensity = v;
+        }
       });
     };
   }, [scene, ativo]);
 
-  // O raycast do R3F sobe pelos pais, entao acho o alvo subindo a hierarquia.
-  const alvoDe = (o: THREE.Object3D | null): string | null => {
+  // O raycast do R3F entrega a malha; o alvo pode estar nela ou num pai.
+  const tagDe = (o: THREE.Object3D | null): string | null => {
     let p: THREE.Object3D | null = o;
     while (p) {
-      if (ALVOS[p.name]) return p.name;
+      const tag = p.userData?.alvo as string | undefined;
+      if (tag && ALVOS[tag]) return tag;
+      p = p.parent;
+    }
+    return null;
+  };
+  const objDe = (o: THREE.Object3D | null): THREE.Object3D | null => {
+    let p: THREE.Object3D | null = o;
+    while (p) {
+      const tag = p.userData?.alvo as string | undefined;
+      if (tag && ALVOS[tag]) return p;
       p = p.parent;
     }
     return null;
@@ -176,7 +226,8 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
     <primitive
       object={scene}
       onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-        const nome = alvoDe(e.object);
+        if (foco) return;
+        const nome = tagDe(e.object);
         if (!nome) return;
         e.stopPropagation();
         setAtivo(nome);
@@ -189,11 +240,15 @@ const Diorama = ({ reduced, flicker, giroPausa, onHover }: AnimProps) => {
         document.body.style.cursor = "";
       }}
       onClick={(e: ThreeEvent<MouseEvent>) => {
-        const nome = alvoDe(e.object);
-        if (!nome) return;
+        const alvo = objDe(e.object);
+        const nome = tagDe(e.object);
+        if (!alvo || !nome) return;
         e.stopPropagation();
+        setAtivo(null);
+        onHover(null);
         document.body.style.cursor = "";
-        navigate(ALVOS[nome].rota);
+        // click aproxima em vez de navegar: a camera vai ate o item, de frente
+        onFocar({ obj: alvo, label: ALVOS[nome].label });
       }}
     />
   );
@@ -292,17 +347,36 @@ const Rig = ({
   parallax,
   suavidade,
   scrollRecuo,
+  foco,
+  zoomMargem,
 }: {
   reduced: boolean;
   parallax: number;
   suavidade: number;
   scrollRecuo: number;
+  foco: Foco | null;
+  zoomMargem: number;
 }) => {
   const { camera, pointer } = useThree();
   const base = useMemo(() => new THREE.Vector3(...CAM_POS), []);
   const goal = useMemo(() => new THREE.Vector3(), []);
   const alvo = useMemo(() => CAM_TARGET.clone(), []);
   const progresso = useRef(0);
+
+  // Onde a camera precisa ficar pra enquadrar o item DE FRENTE. Tudo que e
+  // clicavel (quadros na parede do fundo, monitor) encara +Z, entao a camera vai
+  // pro +Z do centro do objeto, a uma distancia que faz ele preencher o quadro.
+  const destino = useMemo(() => {
+    if (!foco) return null;
+    const box = new THREE.Box3().setFromObject(foco.obj);
+    const centro = box.getCenter(new THREE.Vector3());
+    const tam = box.getSize(new THREE.Vector3());
+    const cam = camera as THREE.PerspectiveCamera;
+    const fov = THREE.MathUtils.degToRad(cam.fov);
+    const meia = Math.max(tam.y, tam.x / cam.aspect) / 2;
+    const dist = (meia / Math.tan(fov / 2)) * zoomMargem;
+    return { pos: centro.clone().add(new THREE.Vector3(0, 0, dist)), olhar: centro };
+  }, [foco, camera, zoomMargem]);
 
   // 0 -> hero cheio na tela; 1 -> hero totalmente coberto
   useEffect(() => {
@@ -324,6 +398,15 @@ const Rig = ({
     if (reduced) {
       camera.position.copy(base);
       camera.lookAt(CAM_TARGET);
+      return;
+    }
+    // focado: a camera cruza ate o item e ignora mouse/scroll. Damping mais
+    // lento (0.5s) pra o movimento ler como cinema, nao como teleporte.
+    if (destino) {
+      const k = 1 - Math.exp(-dt / 0.5);
+      camera.position.lerp(destino.pos, k);
+      alvo.lerp(destino.olhar, k);
+      camera.lookAt(alvo);
       return;
     }
     const s = progresso.current;
@@ -370,28 +453,50 @@ const HeroDiorama = () => {
   const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
+  const [foco, setFoco] = useState<Foco | null>(null);
+
+  // Esc devolve a camera. Sem isso o usuario fica preso no zoom.
+  useEffect(() => {
+    if (!foco) return;
+    const sair = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFoco(null);
+    };
+    window.addEventListener("keydown", sair);
+    return () => window.removeEventListener("keydown", sair);
+  }, [foco]);
   useEffect(() => {
     setReduced(prefersReducedMotion());
     setMounted(true);
   }, []);
 
   // Etapa 7 em calibragem
-  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, flicker } = useControls("interacao", {
+  const { parallax, suavidade, banSpeed, banPausa, giroPausa, scrollRecuo, zoomMargem, flicker } = useControls("interacao", {
     parallax: { value: 0.35, min: 0, max: 1.2, step: 0.01 },
     suavidade: { value: 0.18, min: 0.02, max: 0.8, step: 0.01 },
     banSpeed: { value: 0.22, min: 0.05, max: 0.8, step: 0.01 },
     banPausa: { value: 4, min: 1, max: 12, step: 0.5 },
     giroPausa: { value: 7, min: 2, max: 25, step: 0.5 },
     scrollRecuo: { value: 1.1, min: 0, max: 3, step: 0.05 },
+    zoomMargem: { value: 1.35, min: 1, max: 3, step: 0.05 },
     flicker: { value: 1, min: 0, max: 3, step: 0.05 },
   });
 
   return (
     <div className="relative h-[calc(100svh-var(--bar-h))] w-full bg-[#b7bbc0]">
       {/* rotulo do objeto sob o cursor — mesma linguagem do [ ver ] do site */}
-      {label ? (
+      {label && !foco ? (
         <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 border border-ink/25 bg-paper/90 px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ink">
           [ {label} ]
+        </div>
+      ) : null}
+
+      {/* focado: legenda do item + saida. clicar em qualquer lugar tambem volta */}
+      {foco ? (
+        <div className="absolute inset-0 z-10" onClick={() => setFoco(null)}>
+          <div className="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-3 border border-ink/25 bg-paper/90 px-4 py-2 font-mono text-xs uppercase tracking-widest text-ink">
+            <span>{foco.label}</span>
+            <span className="text-ink/45">esc ou clique para voltar</span>
+          </div>
         </div>
       ) : null}
       {mounted ? (
@@ -408,9 +513,9 @@ const HeroDiorama = () => {
           <ambientLight intensity={1.05} />
           <directionalLight position={[4.5, 6, 3.5]} intensity={2.7} />
           <directionalLight position={[-4, 3, -2]} intensity={0.7} />
-          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} />
+          <Rig reduced={reduced} parallax={parallax} suavidade={suavidade} scrollRecuo={scrollRecuo} foco={foco} zoomMargem={zoomMargem} />
           <Suspense fallback={null}>
-            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} />
+            <Diorama reduced={reduced} flicker={flicker} giroPausa={giroPausa} onHover={setLabel} onFocar={setFoco} foco={foco} />
             <Ban reduced={reduced} speed={banSpeed} pausa={banPausa} />
           </Suspense>
           {/* ordem: Moebius (passe proprio, full-res) -> retro -> CRT */}

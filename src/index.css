@@ -332,6 +332,24 @@
   html * {
     cursor: none !important;
   }
+
+  /* Excecao: o hero 3D e interativo (hover/click nos objetos do diorama), entao
+     ali vale o cursor nativo — com pointer nos alvos. O cursor custom fica
+     escondido enquanto o ponteiro esta sobre ele. */
+  [data-cursor="nativo"],
+  [data-cursor="nativo"] * {
+    cursor: auto !important;
+  }
+
+  [data-cursor="nativo"] canvas {
+    cursor: inherit !important;
+  }
+}
+
+.cursor.is-off,
+.cursor-dot.is-off,
+.cursor-label.is-off {
+  opacity: 0 !important;
 }
 
 .cursor {

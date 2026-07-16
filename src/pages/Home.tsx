@@ -54,7 +54,9 @@ const Home = () => {
       </Head>
 
       {/* ===== 1 · Hero: estudio-diorama do Ban (cena crua, sem texto por enquanto) ===== */}
-      <section className="sticky top-[var(--bar-h)] z-0 bg-background" data-cursor="3d">
+      {/* cursor NATIVO: o hero e interativo (hover/click nos objetos do diorama),
+          entao ali vale o ponteiro de verdade, com pointer nos alvos */}
+      <section className="sticky top-[var(--bar-h)] z-0 bg-background" data-cursor="nativo">
         <HeroDiorama />
       </section>
 

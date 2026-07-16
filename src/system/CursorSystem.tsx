@@ -59,6 +59,13 @@ const CursorSystem = () => {
       mouseX = event.clientX;
       mouseY = event.clientY;
       const target = event.target as HTMLElement | null;
+      // areas com cursor nativo (hero 3D interativo): esconde o cursor custom,
+      // senao ficariam os dois desenhados ao mesmo tempo
+      const nativo = !!target?.closest('[data-cursor="nativo"]');
+      block.classList.toggle("is-off", nativo);
+      dot.classList.toggle("is-off", nativo);
+      label.classList.toggle("is-off", nativo);
+      if (nativo) return;
       const isCrosshair = !!target?.closest('[data-cursor="3d"]');
       const card = target?.closest("[data-cursor-label]") as HTMLElement | null;
       const isHover = !isCrosshair && !card && !!target?.closest(INTERACTIVE);
