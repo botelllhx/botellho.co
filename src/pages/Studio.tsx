@@ -4,7 +4,7 @@ import Scramble from "@/motion/Scramble";
 import Reveal from "@/motion/Reveal";
 import Typing from "@/motion/Typing";
 import Window from "@/system/Window";
-import HeroDiorama from "@/webgl/HeroDiorama";
+import HeroSlot from "@/webgl/HeroSlot";
 
 const FAZEMOS = [
   { nome: "sites e plataformas", desc: "Do institucional ao produto: presença digital com clareza, acessibilidade e performance, construída à mão." },
@@ -67,7 +67,7 @@ const Studio = () => {
         {/* o diorama toma a largura toda e o que sobra de altura. Aqui ele e
             cenario: camera travada na tela, sem Esc nem click pra sair. */}
         <div className="relative h-[52svh] shrink-0 md:h-[58svh]" data-cursor="nativo">
-          <HeroDiorama focoInicial="Monitor" travado className="h-full" />
+          <HeroSlot focoInicial="Monitor" travado className="h-full" alt="O estúdio do Ban em 3D, com a câmera na tela do monitor" />
           <span className="pointer-events-none absolute bottom-4 right-4 z-10 border border-paper/25 bg-ink/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-paper">
             estudio.exe
           </span>

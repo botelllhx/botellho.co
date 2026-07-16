@@ -9,7 +9,7 @@ import ProjectMedia from "@/system/ProjectMedia";
 import ScatterField from "@/system/ScatterField";
 import GifList from "@/system/GifList";
 import RetroDesktop from "@/system/RetroDesktop";
-import HeroDiorama from "@/webgl/HeroDiorama";
+import HeroSlot from "@/webgl/HeroSlot";
 import type { WorksLoaderData } from "@/pages/workLoaders";
 
 const SERVICOS = [
@@ -57,7 +57,7 @@ const Home = () => {
       {/* cursor NATIVO: o hero e interativo (hover/click nos objetos do diorama),
           entao ali vale o ponteiro de verdade, com pointer nos alvos */}
       <section className="sticky top-[var(--bar-h)] z-0 bg-background" data-cursor="nativo">
-        <HeroDiorama />
+        <HeroSlot />
       </section>
 
       {/* O resto empilha sobre o hero (stacking) */}
