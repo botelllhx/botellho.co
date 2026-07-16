@@ -1,5 +1,5 @@
-import { FormEvent, useRef, useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { FormEvent, Suspense, lazy, useEffect, useRef, useState } from "react";
+import type ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "sonner";
 import { useContactForm } from "@/hooks/useContactForm";
 
@@ -33,10 +33,20 @@ const FAIXAS = [
 const fieldClass =
   "w-full border-b border-foreground/25 bg-transparent px-0 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-phosphor focus:outline-none transition-colors";
 
+// O react-google-recaptcha e CommonJS: no SSR o default do interop vem como
+// objeto de modulo, nao componente, e o pre-render de /contato morre com
+// "Element type is invalid... but got: object". Isso so aparecia com a chave
+// presente (ou seja, so no CI). Como o widget precisa de window pra existir,
+// ele e carregado no cliente, depois da montagem.
+const ReCaptchaLazy = lazy(() => import("react-google-recaptcha"));
+
 const ContactForm = () => {
   const { sendEmail, loading } = useContactForm();
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  // so monta o widget no cliente: no SSR ele nem deve existir
+  const [montado, setMontado] = useState(false);
+  useEffect(() => setMontado(true), []);
 
   const [form, setForm] = useState({
     name: "",
@@ -163,8 +173,10 @@ const ContactForm = () => {
         {loading ? "Enviando..." : "Enviar projeto"}
       </button>
 
-      {recaptchaSiteKey ? (
-        <ReCAPTCHA ref={recaptchaRef} size="invisible" sitekey={recaptchaSiteKey} />
+      {recaptchaSiteKey && montado ? (
+        <Suspense fallback={null}>
+          <ReCaptchaLazy ref={recaptchaRef} size="invisible" sitekey={recaptchaSiteKey} />
+        </Suspense>
       ) : null}
     </form>
   );
