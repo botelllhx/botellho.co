@@ -82,7 +82,9 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
   const giro = useRef({ ate: 5, de: 0, para: 0, t0: 0, dur: 0 });
   // a tela roda um boot DOS em loop e ACENDE a cena (unica fonte "viva" do diorama)
   const tela = useMemo(() => criarTelaViva(), []);
-  const luz = useRef<THREE.PointLight>(null);
+  const luz = useRef<THREE.SpotLight>(null);
+  // alvo do spot: a luz da tela vai PRA FRENTE (mesa/cadeira), nao pra parede
+  const alvoLuz = useMemo(() => new THREE.Object3D(), []);
   const ativoObj = useRef<THREE.Object3D | null>(null);
   const escala0 = useRef(1);
 
@@ -243,9 +245,20 @@ const Diorama = ({ reduced, flicker, telaLuz, giroPausa, onHover, onFocar, foco 
 
   return (
     <>
-      {/* a tela acende o quarto de verdade: luz na frente do monitor, na cor do
-          fosforo, pulsando junto com a cintilancia dela */}
-      <pointLight ref={luz} position={[0, 1.0, -0.42]} color="#6f8bff" distance={2.6} decay={1.6} />
+      {/* A tela acende o quarto. pointLight irradiava pros dois lados e batia na
+          parede DE TRAS; spot joga a luz pra frente, como monitor de verdade:
+          pega a mesa, o teclado e quem senta na cadeira. */}
+      <primitive object={alvoLuz} position={[0, 0.55, 0.75]} />
+      <spotLight
+        ref={luz}
+        position={[0, 1.0, -0.55]}
+        target={alvoLuz}
+        angle={1.15}
+        penumbra={1}
+        color="#6f8bff"
+        distance={3.4}
+        decay={1.2}
+      />
       <primitive
         object={scene}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
