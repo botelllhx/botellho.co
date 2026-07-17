@@ -688,6 +688,19 @@
   animation: cursor-blink 1.06s steps(1, end) infinite;
 }
 
+/* Coracao que bate, na dedicatoria (ParaLeticia) */
+.coracao {
+  display: inline-block;
+  animation: bate 1.4s var(--ease-inout) infinite;
+}
+
+@keyframes bate {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.28); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.16); }
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .cursor,

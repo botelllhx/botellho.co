@@ -15,6 +15,9 @@ dist-ssr
 # Fontes de asset: nao vao pra public/ (tudo la e servido no dominio) nem pro
 # bundle. As texturas dos quadros ja estao embutidas no diorama.glb como webp.
 assets/ban-source
+# A foto original da Leticia fica so na maquina: o repo e publico, e o que sobe
+# e o dither gerado em public/leticia. Privacidade dela vem antes.
+assets/leticia.jpeg
 .env
 .env.*
 !.env.example
