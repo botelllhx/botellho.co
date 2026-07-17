@@ -14,8 +14,8 @@ const OUT = "public/leticia";
 // Enquadra no rosto: corta a janela do topo e a parede da esquerda.
 const CROP = { x0: 0.34, y0: 0.05, x1: 0.99, y1: 0.86 };
 const LARGURA = 224; // resolucao do grid; sobe com image-rendering: pixelated
-const CONTRASTE = 1.18;
-const BRILHO = 1.16;
+const CONTRASTE = 1.08;
+const BRILHO = 1.4; // claro de proposito: o rosto dela tem que saltar do azul
 
 mkdirSync(OUT, { recursive: true });
 
@@ -68,8 +68,9 @@ const gerar = async () => {
       v = (v - 128) * CONTRASTE + 128;
       v = v * BRILHO;
       const d = Math.hypot(x - cx, y - cy) / rmax;
-      const k = Math.max(0, 1 - Math.max(0, d - 0.4) / 0.6);
-      lum[i] = Math.max(0, Math.min(255, v * k));
+      const k = Math.max(0, 1 - Math.max(0, d - 0.6) / 0.4);
+      // fade suave: escurece a borda pra ela emergir, mas nunca apaga (piso 0.35)
+      lum[i] = Math.max(0, Math.min(255, v * (0.35 + 0.65 * k)));
     }
   }
 

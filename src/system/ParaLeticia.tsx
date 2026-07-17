@@ -11,11 +11,14 @@ import { prefersReducedMotion } from "@/motion/prefs";
 // nunca e indexada.
 const SENHA = "leticia";
 
-const REGISTRO = [
-  "toda vez que você diz que tem orgulho de mim, alguma coisa em mim se endireita",
-  "nos dias difíceis, eu releio as suas palavras antes de continuar",
-  "você acredita em mim um pouco antes de eu acreditar, e isso muda tudo",
-];
+// Coracao pixelart no estilo pixelarticons (grid 24, blocos de 2, currentColor),
+// igual aos icones do RetroDesktop. Bate pela classe .coracao (menos em
+// reduced-motion).
+const IconeCoracao = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+    <path d="M2 3h4v2h-4zM18 3h4v2h-4zM0 5h8v2h-8zM16 5h8v2h-8zM0 7h10v2h-10zM14 7h10v2h-10zM0 9h24v2h-24zM2 11h20v2h-20zM4 13h16v2h-16zM6 15h12v2h-12zM8 17h8v2h-8zM10 19h4v2h-4z" />
+  </svg>
+);
 
 const ParaLeticia = () => {
   const [aberta, setAberta] = useState(false);
@@ -104,15 +107,13 @@ const ParaLeticia = () => {
             alt="Letícia, sorrindo, em dither"
             width={224}
             height={302}
-            className="mx-auto h-40 w-auto shrink-0 sm:mx-0 sm:h-48"
+            className="mx-auto h-56 w-auto shrink-0 sm:mx-0 sm:h-72"
             style={{ imageRendering: "pixelated" }}
           />
           <div className="min-w-0 flex-1">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-center gap-2">
               <span className="type-dos text-xl md:text-2xl">@leticia</span>
-              <span className={semMovimento ? "text-paper" : "coracao text-paper"} aria-hidden>
-                ♡
-              </span>
+              <IconeCoracao className={`h-5 w-5 text-paper ${semMovimento ? "" : "coracao"}`} />
             </div>
             <p className="mt-1 text-sm text-paper/80">a pessoa que tem orgulho de mim</p>
 
@@ -136,39 +137,16 @@ const ParaLeticia = () => {
             <span className="text-paper/40">fixado</span>
           </div>
 
-          <div className="mt-5 space-y-4 font-sans text-[15px] leading-relaxed text-paper/90">
-            <p>Letícia,</p>
+          <div className="type-dos mt-6 space-y-5 text-[15px] leading-[1.7] text-paper/90 md:text-base">
+            <p>Amor,</p>
             <p>
-              Tem uma coisa que você faz sem medir o tamanho. Você diz que tem
-              orgulho de mim. E cada vez que você diz, o dia inteiro fica mais leve
-              de carregar.
+              Você é a melhor coisa que eu não precisei aprender a construir.
+              Sempre teu, Sempre minha, Sempre nosso.
             </p>
             <p>
-              Eu construí este esconderijo pra guardar um obrigado que não cabia
-              numa mensagem: obrigado por todas as suas palavras que demonstram
-              orgulho de mim. Elas me sustentam justo nos dias em que eu esqueço de
-              ter orgulho de mim mesmo.
+              te amo <span className={semMovimento ? "" : "caret"} />
             </p>
           </div>
-
-          {/* registro: reaproveita o "changelog" da referencia como carinho */}
-          <ul className="mt-6 space-y-2 border-t border-phosphor/25 pt-5 text-sm text-paper/80">
-            {REGISTRO.map((linha) => (
-              <li key={linha} className="flex gap-2">
-                <span className="text-phosphor" aria-hidden>
-                  •
-                </span>
-                <span>{linha}</span>
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-6 font-serif text-lg italic text-paper">
-            Você é a melhor coisa que eu não precisei aprender a construir.
-          </p>
-          <p className="mt-3 text-sm text-paper/70">
-            te amo <span className={semMovimento ? "" : "caret"} />
-          </p>
         </div>
 
         {/* rail de baixo, com os atalhos, igual a referencia */}
