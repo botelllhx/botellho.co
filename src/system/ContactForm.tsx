@@ -1,7 +1,8 @@
-import { FormEvent, Suspense, lazy, useEffect, useRef, useState } from "react";
+import { FormEvent, Suspense, lazy, useRef, useState } from "react";
 import type ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "sonner";
 import { useContactForm } from "@/hooks/useContactForm";
+import LimiteDeErro from "@/system/LimiteDeErro";
 
 // Formulario de contato como sessao de terminal, compartilhado entre a home
 // (secao embutida) e a pagina /contato. Qualificacao por tipo, setor e faixa.
@@ -37,16 +38,25 @@ const fieldClass =
 // objeto de modulo, nao componente, e o pre-render de /contato morre com
 // "Element type is invalid... but got: object". Isso so aparecia com a chave
 // presente (ou seja, so no CI). Como o widget precisa de window pra existir,
-// ele e carregado no cliente, depois da montagem.
+// ele e carregado no cliente.
 const ReCaptchaLazy = lazy(() => import("react-google-recaptcha"));
+
+const CONTATO = "contato@botellho.com";
 
 const ContactForm = () => {
   const { sendEmail, loading } = useContactForm();
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-  // so monta o widget no cliente: no SSR ele nem deve existir
-  const [montado, setMontado] = useState(false);
-  useEffect(() => setMontado(true), []);
+
+  // O widget so monta quando a pessoa mexe no formulario de verdade. Antes ele
+  // montava junto com a pagina, entao TODO visitante da home baixava o chunk e o
+  // script do Google sem nunca enviar nada. Quem nunca interage (o crawler, e a
+  // maioria das visitas) nem tenta carregar: some a causa do soft 404, e ainda
+  // sobra uma requisicao a menos e menos rastreio de terceiro.
+  // Comeca false no servidor e no cliente, entao a hidratacao casa.
+  const [querCaptcha, setQuerCaptcha] = useState(false);
+  const [captchaFalhou, setCaptchaFalhou] = useState(false);
+  const acordarCaptcha = () => setQuerCaptcha(true);
 
   const [form, setForm] = useState({
     name: "",
@@ -60,8 +70,20 @@ const ContactForm = () => {
   const set = (key: keyof typeof form) => (value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
+  // O widget so comeca a baixar no primeiro foco, entao num preenchimento
+  // relampago ele pode nao estar pronto no envio: espera um pouco em vez de
+  // acusar erro na cara da pessoa.
+  const esperarCaptcha = async (ms = 4000) => {
+    const ate = Date.now() + ms;
+    while (!recaptchaRef.current && Date.now() < ate) {
+      await new Promise((r) => setTimeout(r, 80));
+    }
+    return recaptchaRef.current;
+  };
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    acordarCaptcha();
     if (!form.name || !form.email || !form.message) {
       toast.warning("Preencha nome, email e mensagem.");
       return;
@@ -81,24 +103,34 @@ const ContactForm = () => {
       if (ok) reset();
       return;
     }
+    // Se o widget nao carregou (bloqueador, rede, renderizador que desistiu), o
+    // formulario segue de pe: a pessoa recebe uma saida real em vez de uma tela
+    // quebrada ou um botao que nao faz nada.
+    const widget = captchaFalhou ? null : await esperarCaptcha();
+    if (!widget) {
+      toast.error(`Não foi possível carregar a verificação anti-spam. Escreva direto para ${CONTATO}.`);
+      return;
+    }
     try {
-      const token = await recaptchaRef.current?.executeAsync();
+      const token = await widget.executeAsync();
       if (!token) {
-        toast.error("Não foi possível validar o reCAPTCHA.");
+        toast.error("Não foi possível validar o reCAPTCHA. Tente enviar de novo.");
         return;
       }
       const ok = await sendEmail(payload, token);
       if (ok) {
         reset();
-        recaptchaRef.current?.reset();
+        widget.reset();
       }
     } catch {
-      toast.error("Erro ao validar o reCAPTCHA. Recarregue a página.");
+      toast.error(`Erro ao validar o reCAPTCHA. Tente de novo ou escreva para ${CONTATO}.`);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    // onFocus borbulha no React (usa focusin), entao pegar aqui cobre todos os
+    // campos sem pendurar handler em cada um.
+    <form onSubmit={handleSubmit} onFocus={acordarCaptcha} className="space-y-8">
       <div className="grid gap-8 md:grid-cols-2">
         <label className="block">
           <span className="type-label block text-muted-foreground">&gt; nome:</span>
@@ -173,10 +205,15 @@ const ContactForm = () => {
         {loading ? "Enviando..." : "Enviar projeto"}
       </button>
 
-      {recaptchaSiteKey && montado ? (
-        <Suspense fallback={null}>
-          <ReCaptchaLazy ref={recaptchaRef} size="invisible" sitekey={recaptchaSiteKey} />
-        </Suspense>
+      {/* Widget invisivel, opcional, que so serve no envio. Se o chunk nao vier,
+          o boundary devolve null e o formulario continua inteiro: sem ele, o
+          erro de render subia ate o React Router e apagava a pagina toda. */}
+      {recaptchaSiteKey && querCaptcha ? (
+        <LimiteDeErro aoFalhar={() => setCaptchaFalhou(true)}>
+          <Suspense fallback={null}>
+            <ReCaptchaLazy ref={recaptchaRef} size="invisible" sitekey={recaptchaSiteKey} />
+          </Suspense>
+        </LimiteDeErro>
       ) : null}
     </form>
   );
