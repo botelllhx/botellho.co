@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/motion/prefs";
-import { registrarHero } from "@/system/heroPronto";
+import { marcarHeroPronto, registrarHero } from "@/system/heroPronto";
+import LimiteDeErro from "@/system/LimiteDeErro";
 
 // Portao do hero 3D. Three + R3F + postprocessing + shaders somam ~1.8MB: se o
 // import for direto, isso entra no bundle da pagina que e o LCP e atrasa a
@@ -64,9 +65,16 @@ const HeroSlot = ({ focoInicial, travado, className }: HeroSlotProps) => {
   return (
     <div ref={box} className={`relative w-full bg-[#b7bbc0] ${altura}`}>
       {carregar && !estatico ? (
-        <Suspense fallback={null}>
-          <HeroDiorama focoInicial={focoInicial} travado={travado} className="h-full" />
-        </Suspense>
+        // O canvas sao ~1.8MB em chunk: e o import mais provavel de nao chegar.
+        // Sem o boundary o erro subiria ate o React Router e apagaria a pagina
+        // inteira por causa de um enfeite. Aqui ele vira o campo vazio.
+        // O marcarHeroPronto solta o boot: sem isso ele esperaria o teto inteiro
+        // por um hero que nunca vai chegar.
+        <LimiteDeErro aoFalhar={marcarHeroPronto}>
+          <Suspense fallback={null}>
+            <HeroDiorama focoInicial={focoInicial} travado={travado} className="h-full" />
+          </Suspense>
+        </LimiteDeErro>
       ) : null}
     </div>
   );
