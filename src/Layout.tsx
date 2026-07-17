@@ -11,6 +11,7 @@ import CommandBar from "@/system/CommandBar";
 import CommandPalette from "@/system/CommandPalette";
 import StatusBar from "@/system/StatusBar";
 import SiteFooter from "@/system/SiteFooter";
+import ParaLeticia from "@/system/ParaLeticia";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const Layout = () => {
             </main>
             <SiteFooter />
             <StatusBar />
+            <ParaLeticia />
           </>
         )}
       </TooltipProvider>
