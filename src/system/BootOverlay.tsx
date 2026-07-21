@@ -134,7 +134,7 @@ const BootOverlay = () => {
           />
           <div className="mt-5 leading-none">
             <span className="text-4xl md:text-5xl">botellho<span className="text-paper/50">▪</span></span>
-            <p className="mt-3 text-xs uppercase tracking-[0.18em] text-paper/60">estúdio de web e experiências</p>
+            <p className="mt-3 text-xs uppercase tracking-[0.18em] text-paper/60">mateus botelho · desenvolvedor criativo</p>
           </div>
         </div>
 
