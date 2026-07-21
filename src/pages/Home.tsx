@@ -17,7 +17,7 @@ const SERVICOS = [
   { n: "02", nome: "Experiências 3D e WebGL", img: "/ban/ban-3.png", desc: "3D, motion e experiência para marcas, lançamentos e exposições. A experiência é a mensagem." },
   { n: "03", nome: "Direção de arte digital", img: "/ban/ban-4.png", desc: "O visual como diferencial, não como enfeite. Identidade que se move." },
   { n: "04", nome: "Cultura e instituições", img: "/ban/ban-5.png", desc: "Acervo, memória e patrimônio de um jeito que as pessoas querem explorar." },
-  { n: "05", nome: "Parceria white-label", img: "/ban/ban-1.png", desc: "Construímos o front e as interações que outros estúdios desenham." },
+  { n: "05", nome: "Parceria white-label", img: "/ban/ban-1.png", desc: "Construo o front e as interações que outros estúdios desenham." },
 ];
 
 const SETORES = [
@@ -41,15 +41,15 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>botellho | Estúdio de web e experiências digitais</title>
-        <meta name="description" content="Web que se move: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições. Estúdio brasileiro de web e experiências digitais." />
+        <title>botellho | Desenvolvedor criativo</title>
+        <meta name="description" content="Sou o Mateus Botelho, desenvolvedor criativo. Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições. botellho é a minha assinatura." />
         <link rel="canonical" href="https://botellho.com/" />
-        <meta property="og:title" content="botellho | Estúdio de web e experiências digitais" />
-        <meta property="og:description" content="Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições." />
+        <meta property="og:title" content="botellho | Desenvolvedor criativo" />
+        <meta property="og:description" content="Mateus Botelho: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições." />
         <meta property="og:url" content="https://botellho.com/" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
-        <meta name="twitter:title" content="botellho | Estúdio de web e experiências digitais" />
-        <meta name="twitter:description" content="Sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições." />
+        <meta name="twitter:title" content="botellho | Desenvolvedor criativo" />
+        <meta name="twitter:description" content="Mateus Botelho: sites, experiências 3D e WebGL com craft de nível de prêmio, para marcas, cultura e instituições." />
         <meta name="twitter:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
@@ -70,7 +70,7 @@ const Home = () => {
           </div>
 
           <div className="flex flex-1 items-center py-14">
-            <Scramble as="p" text="A maior parte do digital é esquecível. A gente faz o contrário." className="block font-display leading-[0.9] tracking-[-0.02em] text-[clamp(2.75rem,8.4vw,10rem)]" duration={1100} />
+            <Scramble as="p" text="A maior parte do digital é esquecível. Eu faço o contrário." className="block font-display leading-[0.9] tracking-[-0.02em] text-[clamp(2.75rem,8.4vw,10rem)]" duration={1100} />
           </div>
 
           <div className="grid gap-8 border-t border-paper/25 pt-8 md:grid-cols-[minmax(0,auto)_1fr_auto] md:items-end">
@@ -78,16 +78,16 @@ const Home = () => {
 craft = engenharia
       + direção de arte`}</pre>
             <p className="max-w-xl font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
-              Juntamos engenharia de verdade com direção de arte, do site
+              Junto engenharia de verdade com direção de arte, do site
               institucional ao imersivo em 3D, sempre com a mesma régua de craft.
             </p>
-            <Link to="/estudio" className="shrink-0 font-mono text-sm text-paper underline-offset-4 hover:underline">conheça o estúdio ►</Link>
+            <Link to="/sobre" className="shrink-0 font-mono text-sm text-paper underline-offset-4 hover:underline">sobre mim ►</Link>
           </div>
         </section>
 
         {/* ===== 3 · O que fazemos (branco; lista gigante com hover, AREA17) ===== */}
         <section className="relative overflow-hidden bg-background px-4 py-20 md:px-6 md:py-28">
-          <span className="type-label text-muted-foreground">o que fazemos</span>
+          <span className="type-label text-muted-foreground">o que eu faço</span>
           <ul className="mt-8 border-t border-foreground/15">
             {SERVICOS.map((s, i) => (
               <li
@@ -163,8 +163,8 @@ craft = engenharia
               <span className="type-label text-muted-foreground">por que confiar</span>
               <Scramble as="h2" text="A mesma régua de craft em qualquer setor." className="type-title mt-5" />
               <p className="mt-6 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
-                Do institucional ao experimental, cada projeto recebe a mesma
-                exigência técnica e visual. O setor muda, a régua não.
+                Do institucional ao experimental, aplico a mesma exigência
+                técnica e visual em cada projeto. O setor muda, a régua não.
               </p>
             </div>
             <ul className="border-t border-foreground/15">
@@ -188,7 +188,7 @@ craft = engenharia
             <Window title="começar_um_projeto.exe" phosphor draggable bounded className="w-full max-w-2xl text-foreground">
               <p className="mb-8 font-sans text-base text-muted-foreground">
                 Conte o que você quer construir. Quanto mais específico, melhor a
-                nossa resposta. Arraste a janela pela barra se quiser.
+                minha resposta. Arraste a janela pela barra se quiser.
               </p>
               <ContactForm />
             </Window>
