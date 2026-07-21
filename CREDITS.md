@@ -18,5 +18,5 @@ também deve aparecer de forma visível no site (rodapé ou área do hero).
 
 ## Fontes
 
-- IBM VGA (WebPlus_IBM_VGA) — int10h.org/oldschool-pc-fonts/ (CC BY-SA 4.0)
-- Archivo Black, Geist, Inter — Google Fonts (OFL)
+- IBM VGA (WebPlus_IBM_VGA), via int10h.org/oldschool-pc-fonts (CC BY-SA 4.0)
+- Archivo Black, Geist e Averia Serif Libre, via Google Fonts (OFL)

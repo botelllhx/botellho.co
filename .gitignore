@@ -35,3 +35,9 @@ assets/leticia.jpeg
 
 # Modelos 3D brutos (grandes; os otimizados ficam em public/3d)
 assets/3d-source
+
+# Ferramental de agente e notas internas: nao pertencem ao repo publico
+.claude/
+.agents/
+skills-lock.json
+docs/
