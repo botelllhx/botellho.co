@@ -2,9 +2,11 @@
 
 <p align="center">
   <a href="https://botellho.com">
-    <img src="public/og-image.jpg" alt="botellho, desenvolvedor criativo" width="760">
+    <img src=".github/preview.gif" alt="botellho, o site em movimento" width="720">
   </a>
 </p>
+
+<p align="center"><sub><a href="https://botellho.com"><strong>▸ abrir botellho.com</strong></a></sub></p>
 
 <p align="center">
   <a href="https://botellho.com"><img src="https://img.shields.io/badge/live-botellho.com-0b2ca2?style=flat-square&labelColor=0d0d0d"></a>
