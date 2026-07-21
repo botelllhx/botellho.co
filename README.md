@@ -1,10 +1,34 @@
 # botellho
 
-Portfólio pessoal de **Mateus Botelho**, desenvolvedor criativo. O próprio site é a peça: uma interface 1-bit em linguagem de terminal, com um diorama 3D interativo na home.
+<p align="center">
+  <a href="https://botellho.com">
+    <img src="public/og-image.jpg" alt="botellho, desenvolvedor criativo" width="760">
+  </a>
+</p>
 
-### → [botellho.com](https://botellho.com)
+<p align="center">
+  <a href="https://botellho.com"><img src="https://img.shields.io/badge/live-botellho.com-0b2ca2?style=flat-square&labelColor=0d0d0d"></a>
+  <img src="https://img.shields.io/badge/React-0b2ca2?style=flat-square&logo=react&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/TypeScript-0b2ca2?style=flat-square&logo=typescript&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Three.js-0b2ca2?style=flat-square&logo=threedotjs&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Vite-0b2ca2?style=flat-square&logo=vite&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Tailwind-0b2ca2?style=flat-square&logo=tailwindcss&logoColor=white&labelColor=0d0d0d">
+</p>
 
-![botellho, desenvolvedor criativo](public/og-image.jpg)
+<p align="center">
+  <em>Portfólio pessoal de <strong>Mateus Botelho</strong>, desenvolvedor criativo.<br>
+  O próprio site é a peça: interface 1-bit, linguagem de terminal, diorama 3D na home.</em>
+</p>
+
+```text
+> botellho --boot
+BOTELLHO MICROSYSTEMS .......................... BIOS v2.6
+paleta 1-bit ................................... ok
+diorama 3d + shaders proprios .................. ok
+ban, o dachshund ............................... acordado
+performance, acessibilidade, seo ............... ok
+pronto. abrindo botellho.com
+```
 
 ## Sobre
 
