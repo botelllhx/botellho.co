@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const NOMES: Record<string, string> = {
   "/": "início",
-  "/estudio": "estúdio",
+  "/sobre": "sobre",
   "/trabalhos": "trabalhos",
   "/laboratorio": "laboratório",
   "/contato": "contato",
@@ -38,7 +38,7 @@ const StatusBar = () => {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 hidden h-7 items-center justify-between border-t border-foreground/15 bg-background px-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:flex" aria-hidden>
       <span>seção · {nome}</span>
-      <span className="hidden lg:block">botellho · estúdio de web</span>
+      <span className="hidden lg:block">botellho · mateus botelho</span>
       <span>leitura <span className="text-phosphor">{String(progress).padStart(2, "0")}%</span></span>
     </div>
   );

@@ -77,7 +77,7 @@ const RetroDesktop = ({ children }: RetroDesktopProps) => {
       {/* icones da area de trabalho */}
       <div className="pointer-events-none absolute left-4 top-14 flex flex-col gap-5">
         <div className="pointer-events-auto"><Icone label="trabalhos" to="/trabalhos"><IconeFolder /></Icone></div>
-        <div className="pointer-events-auto"><Icone label="estúdio" to="/estudio"><IconeMonitor /></Icone></div>
+        <div className="pointer-events-auto"><Icone label="sobre" to="/sobre"><IconeMonitor /></Icone></div>
         <div className="pointer-events-auto"><Icone label="laboratório" to="/laboratorio"><IconeFloppy /></Icone></div>
         <div className="pointer-events-auto"><Icone label="leia-me"><IconeDoc /></Icone></div>
         <div className="pointer-events-auto">

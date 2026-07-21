@@ -2,7 +2,7 @@ import type { RouteRecord } from "vite-react-ssg";
 import { Navigate } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./pages/Home";
-import Studio from "./pages/Studio";
+import Sobre from "./pages/Sobre";
 import Work from "./pages/Work";
 import WorkCase from "./pages/WorkCase";
 import Lab from "./pages/Lab";
@@ -15,7 +15,7 @@ import { worksLoader, workCaseLoader } from "./pages/workLoaders";
 
 const paginas: RouteRecord[] = [
   { index: true, Component: Home, loader: worksLoader },
-  { path: "estudio", Component: Studio },
+  { path: "sobre", Component: Sobre },
   { path: "trabalhos", Component: Work, loader: worksLoader },
   { path: "trabalhos/:slug", Component: WorkCase, loader: workCaseLoader },
   { path: "laboratorio", Component: Lab },
@@ -24,8 +24,10 @@ const paginas: RouteRecord[] = [
 ];
 
 const redirects: RouteRecord[] = [
+  // /estudio virou /sobre (portfolio). Mantem quem tem o link antigo.
+  { path: "estudio", element: <Navigate to="/sobre" replace /> },
   // Slugs EN antigos -> PT
-  { path: "studio", element: <Navigate to="/estudio" replace /> },
+  { path: "studio", element: <Navigate to="/sobre" replace /> },
   { path: "work", element: <Navigate to="/trabalhos" replace /> },
   { path: "work/:slug", element: <SlugRedirect base="/trabalhos" /> },
   { path: "lab", element: <Navigate to="/laboratorio" replace /> },
@@ -34,7 +36,7 @@ const redirects: RouteRecord[] = [
   // Legado WordPress
   { path: "blog", element: <Navigate to="/laboratorio" replace /> },
   { path: "blog/:slug", element: <Navigate to="/laboratorio" replace /> },
-  { path: "services/:slug", element: <Navigate to="/estudio" replace /> },
+  { path: "services/:slug", element: <Navigate to="/sobre" replace /> },
 ];
 
 export const routes: RouteRecord[] = [

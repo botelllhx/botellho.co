@@ -26,7 +26,7 @@ const Work = () => {
         <title>Trabalhos | botellho</title>
         <meta
           name="description"
-          content="Arquivo de trabalhos do botellho: sites institucionais, experiências 3D e WebGL, direção de arte e acervo digital para marcas, cultura e instituições."
+          content="Arquivo de trabalhos por Mateus Botelho (botellho): sites institucionais, experiências 3D e WebGL e direção de arte para marcas, cultura e instituições."
         />
         <link rel="canonical" href="https://botellho.com/trabalhos" />
         <meta property="og:title" content="Trabalhos | botellho" />
@@ -37,7 +37,7 @@ const Work = () => {
 
       <section className="px-4 pb-8 pt-16 md:px-6 md:pt-24">
         <Typing text="> listando trabalhos" className="type-label text-muted-foreground" />
-        <Scramble as="h1" text="O arquivo do estúdio." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
+        <Scramble as="h1" text="O arquivo." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Do institucional ao imersivo, a mesma régua de craft. Cada bloco é um
           case com contexto, conceito, abordagem e resultado.

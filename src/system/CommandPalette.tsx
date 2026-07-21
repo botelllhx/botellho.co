@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 // "ban" invoca o Ban. Esc fecha.
 const COMMANDS = [
   { cmd: "home", to: "/" },
-  { cmd: "estudio", to: "/estudio" },
+  { cmd: "sobre", to: "/sobre" },
   { cmd: "trabalhos", to: "/trabalhos" },
   { cmd: "laboratorio", to: "/laboratorio" },
   { cmd: "contato", to: "/contato" },
