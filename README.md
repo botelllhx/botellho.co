@@ -1,121 +1,69 @@
 # botellho
 
-Estúdio de web e experiências digitais. Site do estúdio: sites institucionais, experiências 3D e WebGL, motion e direção de arte para marcas, cultura e instituições.
+Portfólio pessoal de **Mateus Botelho**, desenvolvedor criativo. Sites, experiências 3D e WebGL, motion e direção de arte, para marcas, cultura e instituições.
 
-Domínio canônico: https://botellho.com
+**Site:** https://botellho.com
+
+O próprio site é a peça: uma interface com estética 1-bit e linguagem de terminal, com um diorama 3D interativo na home.
 
 ## Stack
 
-- Vite + React + TypeScript
-- Tailwind CSS + shadcn/ui (Radix)
-- Three.js, GSAP, Lenis, Framer Motion, split-type
-- Supabase (portfólio e admin), EmailJS + reCAPTCHA (contato)
-- vite-react-ssg (SSG por rota) + react-helmet-async (head por rota)
-- Deploy: GitHub Pages (branch `gh-pages`, via GitHub Actions)
+- Vite, React e TypeScript
+- Tailwind CSS e shadcn/ui (Radix)
+- Three.js, React Three Fiber e postprocessing (shaders próprios)
+- GSAP e Lenis
+- Supabase (conteúdo do portfólio), EmailJS e reCAPTCHA (contato)
+- vite-react-ssg (pré-render por rota) e react-helmet-async
+- GitHub Pages
 
 ## Requisitos
 
 - Node 20+
 
-## Instalação
+## Rodando localmente
 
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env   # preencha as chaves de Supabase, EmailJS e reCAPTCHA
+npm run dev
 ```
-
-Preencha o `.env` com as chaves de Supabase, EmailJS e reCAPTCHA.
 
 ## Scripts
 
 ```bash
 npm run dev      # desenvolvimento (Vite)
-npm run build    # build estático com SSG (vite-react-ssg)
-npm run preview  # serve o build local
+npm run build    # build estático com pré-render (vite-react-ssg)
+npm run preview  # serve o build localmente
 npm run lint     # ESLint
 npm run test     # Vitest
 ```
 
 ## Rotas
 
-Em português. As rotas EN antigas continuam funcionando por redirect.
+Em português. As rotas antigas em inglês redirecionam para as equivalentes.
 
-- `/` home (hero: o diorama 3D do Ban)
-- `/estudio` o estúdio
-- `/trabalhos` e `/trabalhos/:slug` cases (Supabase)
-- `/laboratorio` experimentos e teardowns
+- `/` home, com o hero 3D
+- `/sobre` sobre
+- `/trabalhos` e `/trabalhos/:slug` cases
+- `/laboratorio` experimentos e notas técnicas
 - `/contato` contato
-- `/admin` área privada (Supabase auth, fora do sitemap e bloqueada no robots)
 
-### Redirects das rotas antigas: decisão conhecida
+## Arquitetura
 
-`/studio`, `/work`, `/work/:slug`, `/lab` e `/contact` redirecionam via `<Navigate>`
-no cliente, **não** por 301 de servidor: o GitHub Pages não emite 301. O Google
-segue redirect de cliente, mas passa menos autoridade que um 301. É uma limitação
-da hospedagem, não um descuido. Se um dia o site sair do Pages, vale trocar por
-301 de verdade.
+### Pré-render e SEO
 
-## Como o SSG e o sitemap funcionam
+`vite-react-ssg` pré-renderiza cada rota pública em HTML no build, então o conteúdo chega pronto no DOM sem depender de JavaScript para ser indexado. As rotas ficam em `STATIC_ROUTES` (`vite.config.ts`), fonte única para dois consumidores: o pré-render e o `sitemap.xml`, gerado no build com a data do dia. Os cases publicados entram lendo o Supabase no momento do build.
 
-`vite-react-ssg` pré-renderiza cada rota pública em HTML de verdade no build, então
-o conteúdo chega pronto no DOM (não depende de JS pra ser indexado). As rotas
-vivem em `STATIC_ROUTES`, no `vite.config.ts`, que é a fonte única para dois
-consumidores:
+### Hero 3D
 
-1. **pré-render**: quais páginas viram HTML estático
-2. **sitemap.xml**: gerado no `onFinished` do build, com `lastmod` do dia
+O diorama é carregado sob demanda (`HeroSlot`): Three, R3F e postprocessing somam cerca de 1 MB e ficam num chunk separado, baixado só quando o hero entra na viewport. Em `prefers-reduced-motion` ou em aparelhos limitados, o canvas não é carregado.
 
-Os slugs dos cases entram no pré-render e no sitemap lendo o Supabase **no momento
-do build** (só os `published`). Sem credenciais no ambiente (dev local), a lista
-volta vazia e os cases não pré-renderizam: isso é esperado, eles só congelam no CI.
-
-O mesmo `onFinished` remove qualquer `.md` do `dist`. Tudo em `public/` é servido
-na raiz do domínio, e documento interno ali vaza (a direção criativa já esteve
-pública e indexável em `/docs/`). Fonte de asset e documento interno ficam em
-`assets/` e `docs/`, fora do `public/`.
-
-## Hero 3D
-
-O diorama é carregado sob demanda (`HeroSlot`): Three + R3F + postprocessing somam
-~1MB e ficam num chunk separado, que só baixa quando o hero entra na viewport.
-Em `prefers-reduced-motion` ou aparelho fraco, entra o `hero-fallback.png` estático
-no lugar do canvas.
-
-O pipeline de render tem ordem obrigatória: **Moebius (full-res) → Retro (1-bit) →
-CRT**. O Moebius roda em passe próprio (marcado como `CONVOLUTION`) justamente pra
-o contorno ser calculado em resolução cheia antes do Retro pixelizar.
-
-## Supabase (portfólio e admin)
-
-- Dados públicos do portfólio: tabela `portfolio_projects`
-- Mídia: bucket `portfolio-media`
-- Autenticação da área privada: Supabase Auth (email/senha)
-
-Setup:
-
-1. Preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `.env`.
-2. Rode `supabase/schema.sql` no SQL Editor do Supabase.
-3. Crie seu usuário no Supabase Auth.
-4. Cadastre o usuário como admin:
-   ```sql
-   insert into public.admin_users (user_id) values ('SEU_AUTH_USER_UUID');
-   ```
-5. Acesse `/admin` para administrar os projetos.
+O pipeline de render tem ordem definida: **Moebius (resolução cheia), depois Retro (1-bit), depois CRT**. O passe do Moebius roda separado para o contorno ser calculado em resolução cheia antes da pixelização.
 
 ## Deploy
 
-Push na `main` dispara `.github/workflows/deploy.yml`, que builda e publica o
-conteúdo estático em `gh-pages`. O `CNAME` mantém o domínio `botellho.com`.
+O push na `main` dispara `.github/workflows/deploy.yml`, que builda e publica o estático em `gh-pages`. O `CNAME` mantém o domínio.
 
-Atenção: **todo push na `main` publica**. Não há passo de aprovação entre o merge
-e o site no ar.
+## Créditos
 
-## Assets sociais
-
-`og-image.jpg` e `apple-touch-icon.png` são gerados por `scripts/gen-og-assets.mjs` (requer `sharp` como dev).
-
-## Mídia da home
-
-Os clipes da seção "regras da casa" são `<video>` (mp4 + webm), não gif: os gifs
-originais somavam 19MB e viraram 1.5MB sem perda visível. Para adicionar um novo,
-veja `public/gifs/README.md`.
+Atribuições de terceiros (modelo 3D, fontes) em [CREDITS.md](CREDITS.md).
