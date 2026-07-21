@@ -1,6 +1,6 @@
 {
-  "_client-uKFZMz8r.js": {
-    "file": "assets/client-uKFZMz8r.js",
+  "_client-AEsCgUUq.js": {
+    "file": "assets/client-AEsCgUUq.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
@@ -8,22 +8,22 @@
     ]
   },
   "index.html": {
-    "file": "assets/app-LCEnL02g.js",
+    "file": "assets/app-BAzjPIcf.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
-      "_client-uKFZMz8r.js",
-      "_client-uKFZMz8r.js",
+      "_client-AEsCgUUq.js",
+      "_client-AEsCgUUq.js",
       "node_modules/react-google-recaptcha/lib/esm/index.js",
       "src/webgl/HeroDiorama.tsx"
     ],
     "css": [
-      "assets/app-DrAD0Hsy.css"
+      "assets/app-Bsmf9AYL.css"
     ]
   },
   "node_modules/react-google-recaptcha/lib/esm/index.js": {
-    "file": "assets/index-h8ZDacLZ.js",
+    "file": "assets/index-DvgAz4TS.js",
     "name": "index",
     "src": "node_modules/react-google-recaptcha/lib/esm/index.js",
     "isDynamicEntry": true,
@@ -32,7 +32,7 @@
     ]
   },
   "src/webgl/HeroDiorama.tsx": {
-    "file": "assets/HeroDiorama-BWUJlLYc.js",
+    "file": "assets/HeroDiorama-TSbMFl5i.js",
     "name": "HeroDiorama",
     "src": "src/webgl/HeroDiorama.tsx",
     "isDynamicEntry": true,
