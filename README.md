@@ -1,68 +1,67 @@
 # botellho
 
-Portfólio pessoal de **Mateus Botelho**, desenvolvedor criativo. Sites, experiências 3D e WebGL, motion e direção de arte, para marcas, cultura e instituições.
+<p align="center">
+  <a href="https://botellho.com">
+    <img src=".github/preview.gif" alt="botellho, o site em movimento" width="720">
+  </a>
+</p>
 
-**Site:** https://botellho.com
+<p align="center"><sub><a href="https://botellho.com"><strong>▸ abrir botellho.com</strong></a></sub></p>
 
-O próprio site é a peça: uma interface com estética 1-bit e linguagem de terminal, com um diorama 3D interativo na home.
+<p align="center">
+  <a href="https://botellho.com"><img src="https://img.shields.io/badge/live-botellho.com-0b2ca2?style=flat-square&labelColor=0d0d0d"></a>
+  <img src="https://img.shields.io/badge/React-0b2ca2?style=flat-square&logo=react&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/TypeScript-0b2ca2?style=flat-square&logo=typescript&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Three.js-0b2ca2?style=flat-square&logo=threedotjs&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Vite-0b2ca2?style=flat-square&logo=vite&logoColor=white&labelColor=0d0d0d">
+  <img src="https://img.shields.io/badge/Tailwind-0b2ca2?style=flat-square&logo=tailwindcss&logoColor=white&labelColor=0d0d0d">
+</p>
 
-## Stack
+<p align="center">
+  <em>Portfólio pessoal de <strong>Mateus Botelho</strong>, desenvolvedor criativo.<br>
+  O próprio site é a peça: interface 1-bit, linguagem de terminal, diorama 3D na home.</em>
+</p>
 
-- Vite, React e TypeScript
-- Tailwind CSS e shadcn/ui (Radix)
-- Three.js, React Three Fiber e postprocessing (shaders próprios)
-- GSAP e Lenis
-- Supabase (conteúdo do portfólio), EmailJS e reCAPTCHA (contato)
-- vite-react-ssg (pré-render por rota) e react-helmet-async
-- GitHub Pages
-
-## Requisitos
-
-- Node 20+
-
-## Rodando localmente
-
-```bash
-npm install
-cp .env.example .env   # preencha as chaves de Supabase, EmailJS e reCAPTCHA
-npm run dev
+```text
+> botellho --boot
+BOTELLHO MICROSYSTEMS .......................... BIOS v2.6
+paleta 1-bit ................................... ok
+diorama 3d + shaders proprios .................. ok
+ban, o dachshund ............................... acordado
+performance, acessibilidade, seo ............... ok
+pronto. abrindo botellho.com
 ```
 
-## Scripts
+## Sobre
 
-```bash
-npm run dev      # desenvolvimento (Vite)
-npm run build    # build estático com pré-render (vite-react-ssg)
-npm run preview  # serve o build localmente
-npm run lint     # ESLint
-npm run test     # Vitest
-```
+A maioria dos portfólios lista projetos. Este é o projeto. A proposta foi tratar a interface como uma obra em vez de uma vitrine: uma máquina antiga que liga na sua frente, com estética de dois tons, tipografia de bitmap e navegação de terminal. Cada página é um programa. A home é um diorama 3D onde o Ban, meu cachorro (um dachshund de verdade, modelado em 3D), circula pelo cenário.
 
-## Rotas
+A intenção nunca foi decorar. Foi demonstrar, no próprio meio, o tipo de trabalho que eu faço: engenharia e direção de arte tratadas como a mesma disciplina.
 
-Em português. As rotas antigas em inglês redirecionam para as equivalentes.
+## Conceito
 
-- `/` home, com o hero 3D
-- `/sobre` sobre
-- `/trabalhos` e `/trabalhos/:slug` cases
-- `/laboratorio` experimentos e notas técnicas
-- `/contato` contato
+- A paleta é de duas cores, azul de fósforo e branco, na linguagem de um monitor CRT. Sem gradiente, sem sombra suave.
+- A primeira visita abre com uma sequência de boot no estilo BIOS, com log e barra de progresso, antes de revelar o site.
+- A navegação funciona como um terminal: um command palette responde à tecla `/`, e você digita para onde quer ir.
+- As fotos que entram no site passam por dither Floyd-Steinberg de 1-bit, gerado no build, não por filtro de CSS.
 
-## Arquitetura
+## Por baixo
 
-### Pré-render e SEO
+O centro técnico é o hero 3D. É um diorama em WebGL com React Three Fiber, renderizado por um pós-processamento de três shaders escritos à mão, em ordem obrigatória: contorno no estilo Moebius em resolução cheia, depois a pixelização retrô de 1-bit, depois a curvatura e as scanlines de um tubo CRT. O Ban tem esqueleto e animação próprios: ele caminha pelo cenário e abana o rabo.
 
-`vite-react-ssg` pré-renderiza cada rota pública em HTML no build, então o conteúdo chega pronto no DOM sem depender de JavaScript para ser indexado. As rotas ficam em `STATIC_ROUTES` (`vite.config.ts`), fonte única para dois consumidores: o pré-render e o `sitemap.xml`, gerado no build com a data do dia. Os cases publicados entram lendo o Supabase no momento do build.
+O diorama é pesado, então não segura a primeira pintura. Ele vive num chunk separado, baixado só quando entra na viewport, e não carrega para quem pediu menos movimento ou está num aparelho limitado.
 
-### Hero 3D
+Do lado do conteúdo, tudo é pré-renderizado. Cada rota pública vira HTML real no build, então o texto chega pronto ao DOM e é indexável sem depender de JavaScript. Uma fonte única de rotas alimenta ao mesmo tempo o pré-render e o `sitemap.xml`, e os cases publicados entram lendo o banco no momento em que o site é construído. Os dados estruturados descrevem o site como uma pessoa, não uma empresa.
 
-O diorama é carregado sob demanda (`HeroSlot`): Three, R3F e postprocessing somam cerca de 1 MB e ficam num chunk separado, baixado só quando o hero entra na viewport. Em `prefers-reduced-motion` ou em aparelhos limitados, o canvas não é carregado.
+## Tecnologias
 
-O pipeline de render tem ordem definida: **Moebius (resolução cheia), depois Retro (1-bit), depois CRT**. O passe do Moebius roda separado para o contorno ser calculado em resolução cheia antes da pixelização.
-
-## Deploy
-
-O push na `main` dispara `.github/workflows/deploy.yml`, que builda e publica o estático em `gh-pages`. O `CNAME` mantém o domínio.
+- Base: Vite, React, TypeScript
+- Estilo: Tailwind CSS, shadcn/ui (Radix)
+- 3D e shaders: Three.js, React Three Fiber, postprocessing
+- Movimento: GSAP, Lenis
+- Conteúdo e contato: Supabase, EmailJS, reCAPTCHA
+- Render e SEO: vite-react-ssg (pré-render por rota), react-helmet-async
+- Infraestrutura: GitHub Pages, GitHub Actions
 
 ## Créditos
 

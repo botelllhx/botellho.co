@@ -1,29 +1,66 @@
-// Gera o card social (og-image) a partir de SVG.
+// Gera o card social (og-image) na estetica do site: azul de fósforo, o Ban da
+// logo em 1-bit, o wordmark botellho e a moldura de terminal (a mesma linguagem
+// da tela de boot). É o que aparece quando alguem compartilha botellho.com.
 // Uso: npm i -D sharp && node scripts/gen-og-assets.mjs
-// (sharp e usado apenas para gerar estes arquivos; nao e dependencia de runtime.)
-// A familia de icones (favicon.ico e apple-touch-icon) sai do gen-favicon.mjs,
-// que e o dono do Ban 1-bit.
+// (sharp so pra gerar; nao e dependencia de runtime. A familia de icones sai do
+// gen-favicon.mjs.)
 import sharp from "sharp";
 
-const BG = "#0d0d0d";
-const FG = "#fafafa";
-const PRIMARY = "#0b2ca2";
+const W = 1200;
+const H = 630;
+const AZUL = "#0b2ca2"; // --phosphor
+const PAPER = [246, 247, 251];
 
-const ogSvg = `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="${BG}"/>
-  <rect x="0" y="0" width="1200" height="10" fill="${PRIMARY}"/>
-  <g stroke="${PRIMARY}" fill="none" stroke-width="2" opacity="0.55">
-    <rect x="900" y="120" width="240" height="240"/>
-    <rect x="940" y="160" width="160" height="160"/>
-    <rect x="980" y="200" width="80" height="80"/>
-  </g>
-  <text x="90" y="150" font-family="Arial, sans-serif" font-size="26" fill="${PRIMARY}" letter-spacing="6" font-weight="700">ESTÚDIO DE WEB E EXPERIÊNCIAS DIGITAIS</text>
-  <text x="84" y="335" font-family="Arial, sans-serif" font-size="172" fill="${FG}" font-weight="800" letter-spacing="-6">botellho<tspan fill="${PRIMARY}">.</tspan></text>
-  <text x="90" y="432" font-family="Arial, sans-serif" font-size="38" fill="${FG}" fill-opacity="0.72">Sites e experiências digitais para instituições</text>
-  <text x="90" y="486" font-family="Arial, sans-serif" font-size="38" fill="${FG}" fill-opacity="0.72">que querem ser lembradas.</text>
-  <text x="90" y="576" font-family="Arial, sans-serif" font-size="26" fill="${FG}" fill-opacity="0.5" letter-spacing="2" font-weight="700">botellho.com</text>
+// O Ban da logo (ban-mark) em branco, com as bordas crisp (nearest), pra manter
+// o aspecto pixelado do 1-bit em vez de borrar no downscale.
+const banBranco = async (larguraAlvo) => {
+  const { data, info } = await sharp("public/ban/ban-mark.png")
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const out = Buffer.alloc(info.width * info.height * 4);
+  for (let i = 0; i < info.width * info.height; i += 1) {
+    if (data[i * 4 + 3] > 128) {
+      out[i * 4] = PAPER[0];
+      out[i * 4 + 1] = PAPER[1];
+      out[i * 4 + 2] = PAPER[2];
+      out[i * 4 + 3] = 255;
+    }
+  }
+  const altura = Math.round((larguraAlvo * info.height) / info.width);
+  const buf = await sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .resize(larguraAlvo, altura, { kernel: "nearest" })
+    .png()
+    .toBuffer();
+  return { buf, largura: larguraAlvo, altura };
+};
+
+const scanlines = `<pattern id="scan" width="3" height="3" patternUnits="userSpaceOnUse">
+    <rect width="3" height="1" y="2" fill="#ffffff" opacity="0.06"/>
+  </pattern>`;
+
+const cardSvg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>${scanlines}</defs>
+  <rect width="${W}" height="${H}" fill="${AZUL}"/>
+  <rect width="${W}" height="${H}" fill="url(#scan)"/>
+
+  <line x1="80" y1="98" x2="1120" y2="98" stroke="#ffffff" stroke-opacity="0.28"/>
+  <text x="80" y="78" font-family="'DejaVu Sans Mono',monospace" font-size="22" letter-spacing="4" fill="#ffffff" fill-opacity="0.6">BOTELLHO MICROSYSTEMS</text>
+  <text x="1120" y="78" text-anchor="end" font-family="'DejaVu Sans Mono',monospace" font-size="22" letter-spacing="4" fill="#ffffff" fill-opacity="0.6">BIOS V2.6</text>
+
+  <text x="80" y="250" font-family="'DejaVu Sans Mono',monospace" font-size="24" letter-spacing="6" fill="#ffffff" fill-opacity="0.6">DESENVOLVEDOR CRIATIVO</text>
+  <text x="74" y="392" font-family="Arial,'Liberation Sans',sans-serif" font-size="150" font-weight="900" letter-spacing="-7" fill="#ffffff">botellho</text>
+  <text x="80" y="466" font-family="'DejaVu Sans Mono',monospace" font-size="30" fill="#ffffff" fill-opacity="0.9">Mateus Botelho</text>
+  <text x="80" y="508" font-family="'DejaVu Sans Mono',monospace" font-size="24" fill="#ffffff" fill-opacity="0.55">web, 3D e direção de arte</text>
+
+  <line x1="80" y1="556" x2="1120" y2="556" stroke="#ffffff" stroke-opacity="0.28"/>
+  <text x="80" y="590" font-family="'DejaVu Sans Mono',monospace" font-size="24" letter-spacing="3" fill="#ffffff" fill-opacity="0.85">botellho.com</text>
 </svg>`;
 
-await sharp(Buffer.from(ogSvg)).jpeg({ quality: 90 }).toFile("public/og-image.jpg");
+const ban = await banBranco(430);
+await sharp(Buffer.from(cardSvg))
+  .composite([{ input: ban.buf, left: W - ban.largura - 64, top: Math.round((H - ban.altura) / 2) }])
+  .jpeg({ quality: 92 })
+  .toFile("public/og-image.jpg");
 
 console.log("Gerado: public/og-image.jpg (1200x630)");
