@@ -12,7 +12,7 @@ export interface RotaEstatica {
 
 export const STATIC_ROUTES: RotaEstatica[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/estudio", changefreq: "monthly", priority: "0.8" },
+  { path: "/sobre", changefreq: "monthly", priority: "0.8" },
   { path: "/trabalhos", changefreq: "weekly", priority: "0.9" },
   { path: "/laboratorio", changefreq: "weekly", priority: "0.7" },
   { path: "/contato", changefreq: "monthly", priority: "0.6" },

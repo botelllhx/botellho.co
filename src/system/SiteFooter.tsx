@@ -6,10 +6,10 @@ const SiteFooter = () => {
   return (
     <footer className="dark sticky bottom-0 z-0 border-t border-foreground/15 bg-background pb-10 text-foreground">
       <div className="metastrip border-b border-foreground/15 px-4 py-3 md:px-6" aria-hidden>
-        <span className="type-label text-foreground/55">botellho</span>
+        <span className="type-label text-foreground/55">botellho é mateus botelho</span>
         <span className="type-label text-phosphor">disponível para projetos</span>
         <span className="type-label text-foreground/55">belo horizonte, br</span>
-        <span className="type-label text-foreground/55">web e experiências digitais</span>
+        <span className="type-label text-foreground/55">desenvolvedor criativo</span>
       </div>
 
       <div className="grid gap-12 px-4 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:px-6">
@@ -20,7 +20,7 @@ const SiteFooter = () => {
           </a>
           <p className="mt-4 flex items-center gap-3 font-sans text-sm leading-relaxed text-muted-foreground">
             <img src="/ban/ban-mark.png" alt="Ban, o mascote" className="h-8 w-14 object-contain invert" style={{ imageRendering: "pixelated" }} />
-            Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas.
+            botellho é o Mateus Botelho, desenvolvedor criativo. Web, 3D e direção de arte para marcas, cultura e instituições que querem ser lembradas.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ const SiteFooter = () => {
           <ul className="mt-4 space-y-2">
             {[
               { to: "/", label: "Início" },
-              { to: "/estudio", label: "Estúdio" },
+              { to: "/sobre", label: "Sobre" },
               { to: "/trabalhos", label: "Trabalhos" },
               { to: "/laboratorio", label: "Laboratório" },
               { to: "/contato", label: "Contato" },

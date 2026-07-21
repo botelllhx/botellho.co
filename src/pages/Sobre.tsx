@@ -17,7 +17,7 @@ const PASSOS = [
   { num: "01", nome: "imersão", desc: "Entender o setor, o público e o objetivo antes de desenhar qualquer tela." },
   { num: "02", nome: "conceito", desc: "A ideia que organiza tudo: a tese que o projeto vai defender." },
   { num: "03", nome: "arte + engenharia", desc: "Direção de arte e construção andando juntas, nunca em sequência." },
-  { num: "04", nome: "craft", desc: "O detalhe do qual a gente se orgulha: o shader, a transição, o sistema." },
+  { num: "04", nome: "craft", desc: "O detalhe do qual eu me orgulho: o shader, a transição, o sistema." },
   { num: "05", nome: "no ar", desc: "Entrega medindo o que importa: performance, acessibilidade e SEO." },
 ];
 
@@ -35,32 +35,31 @@ const COM_QUEM = [
   "Estúdios parceiros (white-label)",
 ];
 
-const Studio = () => {
+const Sobre = () => {
   return (
     <>
       <Head>
-        <title>Estúdio | botellho</title>
-        <meta name="description" content="botellho é um estúdio de web e experiências digitais. Engenharia e direção de arte na mesma mesa, do site institucional ao imersivo em 3D, com craft de nível de prêmio." />
-        <link rel="canonical" href="https://botellho.com/estudio" />
-        <meta property="og:title" content="Estúdio | botellho" />
-        <meta property="og:description" content="Estúdio de web e experiências digitais para marcas, cultura e instituições que querem ser lembradas." />
-        <meta property="og:url" content="https://botellho.com/estudio" />
+        <title>Sobre | botellho</title>
+        <meta name="description" content="botellho é o Mateus Botelho, desenvolvedor criativo. Junto engenharia de verdade com direção de arte, do site institucional ao imersivo em 3D, para marcas, cultura e instituições." />
+        <link rel="canonical" href="https://botellho.com/sobre" />
+        <meta property="og:title" content="Sobre | botellho" />
+        <meta property="og:description" content="Mateus Botelho, desenvolvedor criativo: engenharia e direção de arte na mesma mesa, do site institucional ao imersivo em 3D." />
+        <meta property="og:url" content="https://botellho.com/sobre" />
         <meta property="og:image" content="https://botellho.com/og-image.jpg" />
       </Head>
 
-      {/* ===== 1 · Abertura (branco, sticky): identidade + janela com o Ban ===== */}
-      {/* ===== 1 · Abertura: titulo full width (como as outras paginas) e o
-              diorama logo abaixo, cravado na tela do monitor ===== */}
+      {/* ===== 1 · Abertura: titulo full width e o diorama logo abaixo, cravado
+              na tela do monitor (camera travada, cenario) ===== */}
       <section className="sticky top-[var(--bar-h)] z-0 flex flex-col bg-background">
         <div className="px-4 pb-6 pt-8 md:px-6 md:pb-8 md:pt-10">
-          <Typing text="> estúdio" className="type-label text-muted-foreground" />
-          {/* mesma escala do /trabalhos (que nao usa type-tese: tem clamp proprio,
-              maior que o teto de 7rem dele) */}
-          <Scramble as="h1" text="o estúdio." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" onMount />
+          <Typing text="> sobre" className="type-label text-muted-foreground" />
+          <Scramble as="h1" text="sobre mim." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" onMount />
           <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
-            botellho junta engenharia de verdade com direção de arte, do site
-            institucional ao imersivo em 3D, sempre com a mesma régua de craft.
-            Para marcas, cultura e instituições que querem ser lembradas.
+            botellho é como eu assino o que construo. Sou o Mateus Botelho,
+            desenvolvedor criativo: junto engenharia de verdade com direção de
+            arte, do site institucional ao imersivo em 3D, sempre com a mesma
+            régua de craft. Para marcas, cultura e instituições que querem ser
+            lembradas.
           </p>
         </div>
 
@@ -69,7 +68,7 @@ const Studio = () => {
         <div className="relative h-[52svh] shrink-0 md:h-[58svh]" data-cursor="nativo">
           <HeroSlot focoInicial="Monitor" travado className="h-full" />
           <span className="pointer-events-none absolute bottom-4 right-4 z-10 border border-paper/25 bg-ink/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-paper">
-            estudio.exe
+            sobre.exe
           </span>
         </div>
       </section>
@@ -80,7 +79,7 @@ const Studio = () => {
         <section className="flex min-h-screen flex-col justify-center bg-phosphor px-4 py-24 text-paper md:px-6">
           <div className="flex items-center justify-between border-b border-paper/25 pb-4 font-mono text-[11px] uppercase tracking-widest text-paper/55">
             <span>manifesto</span>
-            <span className="normal-case tracking-normal">/estudio/manifesto.txt</span>
+            <span className="normal-case tracking-normal">/sobre/manifesto.txt</span>
           </div>
 
           <div className="flex flex-1 items-center py-14">
@@ -89,13 +88,13 @@ const Studio = () => {
 
           <p className="max-w-xl border-t border-paper/25 pt-6 font-sans text-lg leading-relaxed text-paper/80 md:text-xl">
             Craft não é enfeite: é o que separa o memorável do esquecível. E é a
-            única régua que a gente aplica igual, do institucional ao experimental.
+            única régua que eu aplico igual, do institucional ao experimental.
           </p>
         </section>
 
-        {/* ===== 3 · O que fazemos (branco): grid 2x2 a la basement ===== */}
+        {/* ===== 3 · O que eu faço (branco): grid 2x2 a la basement ===== */}
         <section className="bg-background px-4 py-20 md:px-6 md:py-28">
-          <span className="type-label text-muted-foreground">o que fazemos</span>
+          <span className="type-label text-muted-foreground">o que eu faço</span>
           <div className="mt-10 grid gap-x-10 gap-y-14 border-t border-foreground/15 pt-12 md:grid-cols-2 md:gap-x-16">
             {FAZEMOS.map((f) => (
               <Reveal as="div" key={f.nome}>
@@ -106,10 +105,10 @@ const Studio = () => {
           </div>
         </section>
 
-        {/* ===== 4 · Como trabalhamos (azul): sequencia de passos, numeros em archivo ===== */}
+        {/* ===== 4 · Como eu trabalho (azul): sequencia de passos ===== */}
         <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
           <div className="border-b border-paper/25 pb-6">
-            <span className="type-label text-paper/60">como trabalhamos · 5 passos</span>
+            <span className="type-label text-paper/60">como eu trabalho · 5 passos</span>
             <Scramble as="h2" text="Do setor à medição no ar." className="type-title mt-3" />
           </div>
           <ol>
@@ -125,9 +124,9 @@ const Studio = () => {
           </ol>
         </section>
 
-        {/* ===== 5 · No que a gente acredita (branco): imagem gigante + texto que EMPILHA (basement people) ===== */}
+        {/* ===== 5 · No que eu acredito (branco): imagem gigante + texto que empilha ===== */}
         <section className="bg-background px-4 pt-20 md:px-6 md:pt-28">
-          <span className="type-label text-muted-foreground">no que a gente acredita</span>
+          <span className="type-label text-muted-foreground">no que eu acredito</span>
           <div className="mt-8">
             {CRENCAS.map((c) => (
               <div
@@ -144,17 +143,17 @@ const Studio = () => {
           </div>
         </section>
 
-        {/* ===== 6 · Fechamento (azul): janela IBM com quem trabalhamos + cta ===== */}
+        {/* ===== 6 · Fechamento (azul): janela IBM com quem eu trabalho + cta ===== */}
         <section className="bg-phosphor px-4 py-20 text-paper md:px-6 md:py-28">
           <div className="mx-auto max-w-4xl">
             <Window title="com-quem.txt" draggable={false} className="text-foreground" bodyClassName="!p-0">
               <div className="metastrip border-b border-foreground/15 px-4 py-2" aria-hidden>
-                <span className="type-label text-muted-foreground">botellho</span>
+                <span className="type-label text-muted-foreground">botellho é mateus botelho</span>
                 <span className="type-label text-phosphor">disponível para novos projetos</span>
                 <span className="type-label text-muted-foreground">belo horizonte, br</span>
               </div>
               <div className="p-5 md:p-8">
-                <span className="type-label text-muted-foreground">com quem trabalhamos</span>
+                <span className="type-label text-muted-foreground">com quem eu trabalho</span>
                 <ul className="mt-6 divide-y divide-foreground/10 border-y border-foreground/10">
                   {COM_QUEM.map((quem) => (
                     <li key={quem} className="flex items-baseline gap-4 px-1 py-4 md:px-2">
@@ -179,4 +178,4 @@ const Studio = () => {
   );
 };
 
-export default Studio;
+export default Sobre;
