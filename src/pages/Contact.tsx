@@ -28,7 +28,7 @@ const Contact = () => {
         <Scramble as="h1" text="Conte o que você quer construir." className="mt-8 block font-display leading-[0.9] tracking-[-0.03em] text-[clamp(2.5rem,8.5vw,9rem)]" />
         <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground">
           Institucional, experiência 3D, marca, evento ou parceria de
-          desenvolvimento: quanto mais específico, melhor a nossa resposta.
+          desenvolvimento: quanto mais específico, melhor a minha resposta.
         </p>
       </section>
 

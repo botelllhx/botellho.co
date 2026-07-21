@@ -47,7 +47,7 @@ export const useContactForm = () => {
                 'g-recaptcha-response': captchaToken || ''
             }, publicKey);
 
-            toast.success('Projeto enviado. Retornamos em breve.');
+            toast.success('Projeto enviado. Retorno em breve.');
             return true;
         } catch (error) {
             console.error('Erro ao enviar email:', error);
